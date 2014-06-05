@@ -24,7 +24,7 @@ public class Point{
     }
     
     public float X() {
-        return point.x;
+        return (int)point.x;
     }
 
     public float Y() {
