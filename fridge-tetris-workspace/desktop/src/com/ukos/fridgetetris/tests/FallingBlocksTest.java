@@ -77,40 +77,42 @@ public class FallingBlocksTest extends Assert {
             assertEquals(board.getFallingPiece().toString(),"1,2");
         }
     }
-    /*
-
+    
 
     public class When_a_block_reaches_the_bottom {
 
         @Before
         public void fallToLastRow() {
-            board.drop(new Block('X'));
-            board.tick();
-            board.tick();
+        	board.drop(new FixedShape(new Array<BlockDrawable>(
+					new BlockDrawable[] {
+							new BlockDrawable(new Point(0,0), "X")
+					})));
+        	board.update(0);
+        	try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {}
+            board.update(0);
         }
 
         @Test
         public void it_is_still_falling_on_the_last_row() {
-            assertEquals("" +
-                    "...\n" +
-                    "...\n" +
-                    ".X.\n", board.toString());
+            assertEquals(board.getFallingPiece().toString(),"1,0");
             assertTrue("the player should still be able to move the block", board.hasFalling());
         }
 
         @Test
         public void it_stops_when_it_hits_the_bottom() {
-            board.tick();
+        	try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {}
+            board.update(0);
             
-            assertEquals("" +
-                    "...\n" +
-                    "...\n" +
-                    ".X.\n", board.toString());
             assertFalse("the block should stop moving", board.hasFalling());
+            assertEquals(board.cellAt(new Point(1,0)),"X");
         }
     }
 
-
+/*
 
     public class When_a_block_lands_on_another_block {
 

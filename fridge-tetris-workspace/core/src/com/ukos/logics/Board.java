@@ -27,9 +27,6 @@ public class Board implements Grid{
     }
     
     public void drop(RotatableGrid piece) {
-//        if (hasFalling()) {
-//            throw new IllegalStateException("Already falling");
-//        }
     	if (!hasFalling()) {
 	        Point centro = new Point(width / 2, height-1);
 	        falling = new FallingPiece(piece).moveTo(centro);
@@ -253,8 +250,9 @@ public class Board implements Grid{
 	}
 
 	public void update(float delta) {
-		if (timeForAutoFall()) {
+		if (!hasFalling())
 			drop(bolsita.pullOut());
+		if (timeForAutoFall()) {
 			lastMove = 0;
 			movePieceDown();
 		}		
