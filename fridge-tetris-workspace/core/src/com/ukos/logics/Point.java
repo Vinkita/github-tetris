@@ -59,7 +59,7 @@ public class Point{
 
 	@Override
 	public String toString() {
-		return point.toString();
+		return "[" + (int)point.x + ":" + (int)point.y + "]";
 	}
 	
 	

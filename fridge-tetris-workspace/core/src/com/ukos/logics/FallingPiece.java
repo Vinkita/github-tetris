@@ -128,6 +128,9 @@ public class FallingPiece{
         return new FallingPiece(new Point(coord.X(), coord.Y()), innerPiece);
     }
 
+    public String toString() {
+    	return String.valueOf(Math.round(coord.X())) + "," + String.valueOf(Math.round(coord.Y()));
+    }
     
     
 }

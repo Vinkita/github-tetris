@@ -271,6 +271,12 @@ public class Board implements Grid{
 	private boolean moveTooFast() {
 		return moveTooFast(moveRate);
 	}
-    
+
+	
+	public FallingPiece getFallingPiece() {
+		return falling;
+	}
+	
+
    
 }

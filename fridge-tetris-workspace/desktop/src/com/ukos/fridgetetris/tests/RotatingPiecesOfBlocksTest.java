@@ -39,7 +39,7 @@ public class RotatingPiecesOfBlocksTest extends Assert {
         public void createPiece() {		
         	blockArray = new Array<BlockDrawable>(
 		    				new BlockDrawable[] {
-		    					new BlockDrawable(new Point(0,-1), "X"),
+		    					new BlockDrawable(new Point(0,1), "X"),
 		    					new BlockDrawable(new Point(0,0), "X")
 		    					});
             piece = new FixedShape(blockArray);            
@@ -47,7 +47,7 @@ public class RotatingPiecesOfBlocksTest extends Assert {
 
         @Test
         public void consists_of_many_blocks() {
-            assertEquals("[0:-1], " +
+            assertEquals("[0:1], " +
             		"[0:0]", piece.toString());
         }
 
@@ -117,44 +117,66 @@ public class RotatingPiecesOfBlocksTest extends Assert {
 
         @Before
         public void createPiece() {
-            piece = new FixedShape("" +
-                    "..XXX\n" +
-                    "..XX.\n" +
-                    "..X..\n" +
-                    ".....\n" +
-                    ".....\n");
+        	blockArray = new Array<BlockDrawable>(
+    				new BlockDrawable[] {
+						new BlockDrawable(new Point(2,2), "X"),
+						new BlockDrawable(new Point(1,2), "X"),
+						new BlockDrawable(new Point(0,2), "X"),
+						new BlockDrawable(new Point(1,1), "X"),
+    					new BlockDrawable(new Point(0,1), "X"),
+    					new BlockDrawable(new Point(0,0), "X")
+    					});
+//        	piece = new FixedShape("" +
+//        			"..XXX\n" +
+//        			"..XX.\n" +
+//        			"..X..\n" +
+//        			".....\n" +
+//        			".....\n");
+            piece = new FixedShape(blockArray);
         }
 
         @Test
         public void consists_of_many_blocks() {
-            assertEquals("" +
-                    "..XXX\n" +
-                    "..XX.\n" +
-                    "..X..\n" +
-                    ".....\n" +
-                    ".....\n", piece.toString());
+            assertEquals("[2:2], " +
+			"[1:2], " +
+			"[0:2], " +
+			"[1:1], " +
+			"[0:1], " +
+			"[0:0]", piece.toString());
         }
 
         @Test
         public void can_be_rotated_right() {
             piece = piece.rotateRight();
-            assertEquals("" +
-                    ".....\n" +
-                    ".....\n" +
-                    "..XXX\n" +
-                    "...XX\n" +
-                    "....X\n", piece.toString());
+            assertEquals("[2:-2], " +
+        			"[2:-1], " +
+        			"[2:0], " +
+        			"[1:-1], " +
+        			"[1:0], " +
+        			"[0:0]", piece.toString());
+//            assertEquals("" +
+//                    ".....\n" +
+//                    ".....\n" +
+//                    "..XXX\n" +
+//                    "...XX\n" +
+//                    "....X\n", piece.toString());
         }
 
         @Test
         public void can_be_rotated_left() {
             piece = piece.rotateLeft();
-            assertEquals("" +
-                    "X....\n" +
-                    "XX...\n" +
-                    "XXX..\n" +
-                    ".....\n" +
-                    ".....\n", piece.toString());
+            assertEquals("[-2:2], " +
+        			"[-2:1], " +
+        			"[-2:0], " +
+        			"[-1:1], " +
+        			"[-1:0], " +
+        			"[0:0]", piece.toString());
+//            assertEquals("" +
+//                    "X....\n" +
+//                    "XX...\n" +
+//                    "XXX..\n" +
+//                    ".....\n" +
+//                    ".....\n", piece.toString());
         }
     }
 
