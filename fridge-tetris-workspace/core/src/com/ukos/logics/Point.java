@@ -56,4 +56,11 @@ public class Point{
 		Vector2 aux = point.cpy();
 		return new Point(aux.add(x, y));
 	}
+
+	@Override
+	public String toString() {
+		return point.toString();
+	}
+	
+	
 }
