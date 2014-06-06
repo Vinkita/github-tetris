@@ -63,5 +63,16 @@ public class FixedShape implements RotatableGrid{
 	public Array<BlockDrawable> allBlocks() {
 		return blocks;
 	}
+	
+	@Override
+	public String toString(){
+		String points = "";		
+		for(Point point : getPoints()){
+			points += "," + point.toString();
+		}
+		points = points.replaceFirst(",", "");
+		return points;
+	}
+
 }
 

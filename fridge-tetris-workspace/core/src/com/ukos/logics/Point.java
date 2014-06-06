@@ -24,7 +24,7 @@ public class Point{
     }
     
     public float X() {
-        return (int)point.x;
+        return point.x;
     }
 
     public float Y() {
@@ -56,4 +56,11 @@ public class Point{
 		Vector2 aux = point.cpy();
 		return new Point(aux.add(x, y));
 	}
+
+	@Override
+	public String toString() {
+		return "[" + (int)point.x + ":" + (int)point.y + "]";
+	}
+	
+	
 }

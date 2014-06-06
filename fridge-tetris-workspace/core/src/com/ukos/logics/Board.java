@@ -34,8 +34,16 @@ public class Board implements Grid{
         
     }
     
+    /**
+     *  <b>Only for testing purposes!</b><br><br>
+     * Checks if the piece can move down and procedes with the movement.
+     * 
+     */
     public void tick() {
-        movePieceDown();                    
+    	if (hasFalling()){
+        	if (!moveIfNoConflict(falling.moveDown()))
+                stopFallingBlock();
+        }
     }
     
     public boolean hasFalling(){
@@ -274,5 +282,14 @@ public class Board implements Grid{
 		return falling;
 	}
 	
-   
+	@Override
+	public String toString(){
+		String points = "";		
+		for(BlockDrawable block : getBlocksToDraw()){
+			points += "," + block.getPoint().toString();
+		}
+		points = points.replaceFirst(",", "");
+		return points;
+	}
+	
 }
