@@ -1,34 +1,25 @@
-// Copyright (c) 2008-2012  Esko Luontola <www.orfjackal.net>
-// You may use and modify this source code freely for personal non-commercial use.
-// This source code may NOT be used as course material without prior written agreement.
-
 package com.ukos.fridgetetris.tests;
 
 import net.orfjackal.nestedjunit.NestedJUnit;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 
 import com.ukos.logics.Board;
 import com.ukos.logics.Tetromino;
 
 /**
- * @author Esko Luontola
+ * @author Ukos
  */
 //@Ignore("contains no test")
 @RunWith(NestedJUnit.class)
 public class FallingPiecesTest extends Assert {
 
-    // Step 4: Safe steps
-    // - Remove the @Ignore annotation from this class
-    // - See the README for how to proceed with this refactoring in safe steps
-    // - Next step: MovingAFallingPieceTest
-
-
-    private final Board board = new Board(6, 8);
+	private final Board board = new Board(8, 6);
 
 
     public class When_a_piece_is_dropped {
@@ -40,18 +31,13 @@ public class FallingPiecesTest extends Assert {
 
         @Test
         public void it_starts_from_top_middle() {
-            assertEquals("" +
-                    "....T...\n" +
-                    "...TTT..\n" +
-                    "........\n" +
-                    "........\n" +
-                    "........\n" +
-                    "........\n", board.toString());
+        	assertEquals("[4:6],[3:5],[4:5],[5:5]", board.toString());
         }
     }
 
 
 
+    @FixMethodOrder(MethodSorters.NAME_ASCENDING)
     public class When_a_piece_reaches_the_bottom {
 
         @Before
@@ -61,30 +47,21 @@ public class FallingPiecesTest extends Assert {
             board.tick();
             board.tick();
             board.tick();
+            board.tick();
+            assertEquals("[4:1],[3:0],[4:0],[5:0]", board.toString());
         }
-
+        
         @Test
         public void it_is_still_falling_on_the_last_row() {
-            assertEquals("" +
-                    "........\n" +
-                    "........\n" +
-                    "........\n" +
-                    "........\n" +
-                    "....T...\n" +
-                    "...TTT..\n", board.toString());
+        	assertTrue("Tendria que haber una pieza", board.hasFalling());
+        	assertEquals("[4:1],[3:0],[4:0],[5:0]", board.toString());
             assertTrue(board.hasFalling());
         }
 
         @Test
         public void it_stops_when_it_hits_the_bottom() {
             board.tick();
-            assertEquals("" +
-                    "........\n" +
-                    "........\n" +
-                    "........\n" +
-                    "........\n" +
-                    "....T...\n" +
-                    "...TTT..\n", board.toString());
+            assertEquals("[5:0],[4:0],[3:0],[4:1]", board.toString());
             assertFalse(board.hasFalling());
         }
     }
@@ -101,44 +78,34 @@ public class FallingPiecesTest extends Assert {
             board.tick();
             board.tick();
             board.tick();
-            assertEquals("" +
-                    "........\n" +
-                    "........\n" +
-                    "........\n" +
-                    "........\n" +
-                    "....T...\n" +
-                    "...TTT..\n", board.toString());
+            board.tick();
+            assertEquals("[5:0],[4:0],[3:0],[4:1]", board.toString());
             assertFalse(board.hasFalling());
 
             board.drop(Tetromino.T_SHAPE);
             board.tick();
             board.tick();
+            board.tick();
+            assertTrue(board.hasFalling());
         }
 
         @Test
         public void it_is_still_falling_right_above_the_other_piece() {
-            assertEquals("" +
-                    "........\n" +
-                    "........\n" +
-                    "....T...\n" +
-                    "...TTT..\n" +
-                    "....T...\n" +
-                    "...TTT..\n", board.toString());
-            assertTrue(board.hasFalling());
+        	assertEquals("" +
+        			"[5:0],[4:0],[3:0],[4:1]," +
+        			"[4:3],[3:2],[4:2],[5:2]" 
+        			, board.toString());
+            assertTrue("Should still be a falling piece", board.hasFalling());
         }
 
         @Test
         public void it_stops_when_it_hits_the_other_piece() {
             board.tick();
             assertEquals("" +
-                    "........\n" +
-                    "........\n" +
-                    "....T...\n" +
-                    "...TTT..\n" +
-                    "....T...\n" +
-                    "...TTT..\n", board.toString());
+            		"[5:2],[4:2],[3:2],[4:3]," + 
+        			"[5:0],[4:0],[3:0],[4:1]"
+        			, board.toString());
             assertFalse(board.hasFalling());
         }
     }
-
 }
