@@ -276,4 +276,12 @@ public class Board implements Grid{
 		return falling;
 	}
 	
+	public String toString(){
+		String points = "";		
+		for(BlockDrawable block : getBlocksToDraw()){			
+			points += "," + block.getPoint().toString();
+		}
+		points = points.replaceFirst(",", "");
+		return points;
+	}
 }
