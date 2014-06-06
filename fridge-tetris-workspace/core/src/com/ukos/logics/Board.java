@@ -56,8 +56,8 @@ public class Board implements Grid{
     private void copyToBoard(FallingPiece piece) {
     	tablero.reverse();
     	for (BlockDrawable block : piece.allBlocks()){
-    		block.setPunto(piece.toOuterPoint(block.getPoint()));
-			tablero.add(block);
+    		BlockDrawable aux = new BlockDrawable(piece.toOuterPoint(block.getPoint()), block.getStyle()); 
+			tablero.add(aux);
 		}
     	tablero.reverse();
     }

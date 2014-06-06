@@ -14,7 +14,7 @@ import com.ukos.logics.FixedShape;
 import com.ukos.logics.Point;
 
 /**
-* @author Esko Luontola
+* @author Ukos
 */
 @RunWith(NestedJUnit.class)
 public class FallingBlocksTest extends Assert {
