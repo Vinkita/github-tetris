@@ -14,8 +14,8 @@ import com.ukos.logics.FixedShape;
 import com.ukos.logics.Point;
 
 /**
- * @author Esko Luontola
- */
+* @author Esko Luontola
+*/
 @RunWith(NestedJUnit.class)
 public class FallingBlocksTest extends Assert {
 
@@ -24,13 +24,17 @@ public class FallingBlocksTest extends Assert {
     // - Next step: RotatingPiecesOfBlocksTest
 
     private final Board board = new Board(3, 3);
+    private FixedShape testFalling = new FixedShape(new Array<BlockDrawable>(
+new BlockDrawable[] {
+new BlockDrawable(new Point(0,0), "X")
+}));
 
 
     public class A_new_board {
 
         @Test
         public void is_empty() {
-            assertTrue(board.getBlocksToDraw().size == 0);
+            assertEquals(board.getBlocksToDraw().toString(), "[]");
         }
 
         @Test
@@ -44,10 +48,7 @@ public class FallingBlocksTest extends Assert {
 
         @Before
         public void dropBlock() {
-            board.drop(new FixedShape(new Array<BlockDrawable>(
-            							new BlockDrawable[] {
-        										new BlockDrawable(new Point(0,0), "X")
-            							})));
+            board.drop(testFalling);
         }
 
         @Test
@@ -58,43 +59,35 @@ public class FallingBlocksTest extends Assert {
 
         @Test
         public void it_starts_from_the_top_middle() {
-            assertEquals(board.getFallingPiece().toString(),"1,2");
+            assertEquals(board.toString(),"[1:2]");
         }
 
 
         @Test
         public void it_moves_down_one_row_per_tick() {
-            board.update(0);
-            assertEquals(board.getFallingPiece().toString(), "1,1");
+            board.tick();
+            assertEquals(board.toString(), "[1:1]");
         }
 
         @Test
         public void at_most_one_block_may_be_falling_at_a_time() {
-            	board.drop(new FixedShape(new Array<BlockDrawable>(
-							new BlockDrawable[] {
-									new BlockDrawable(new Point(0,0), "X")
-						})));
-            assertEquals(board.getFallingPiece().toString(),"1,2");
+         board.drop(testFalling);
+            assertEquals(board.toString(),"[1:2]");
         }
     }
-    /*
-
 
     public class When_a_block_reaches_the_bottom {
 
         @Before
         public void fallToLastRow() {
-            board.drop(new Block('X'));
+            board.drop(testFalling);
             board.tick();
             board.tick();
         }
 
         @Test
         public void it_is_still_falling_on_the_last_row() {
-            assertEquals("" +
-                    "...\n" +
-                    "...\n" +
-                    ".X.\n", board.toString());
+         assertEquals(board.toString(),"[1:0]");
             assertTrue("the player should still be able to move the block", board.hasFalling());
         }
 
@@ -102,11 +95,8 @@ public class FallingBlocksTest extends Assert {
         public void it_stops_when_it_hits_the_bottom() {
             board.tick();
             
-            assertEquals("" +
-                    "...\n" +
-                    "...\n" +
-                    ".X.\n", board.toString());
-            assertFalse("the block should stop moving", board.hasFalling());
+            assertEquals(board.toString(),"[1:0]");
+            assertFalse("The block should stop moving", board.hasFalling());
         }
     }
 
@@ -116,39 +106,33 @@ public class FallingBlocksTest extends Assert {
 
         @Before
         public void landOnAnother() {
-            board.drop(new Block('X'));
+            board.drop(testFalling);
             board.tick();
             board.tick();
-            board.toString();
             board.tick();
-            assertEquals("" +
-                    "...\n" +
-                    "...\n" +
-                    ".X.\n", board.toString());
-            assertFalse(board.hasFalling());
+            assertEquals(board.toString(),"[1:0]");
+            assertFalse("The block should stop moving", board.hasFalling());
 
-            board.drop(new Block('Y'));
+// board.drop(testFalling);
+            board.drop(new FixedShape(new Array<BlockDrawable>(
+new BlockDrawable[] {
+new BlockDrawable(new Point(0,0), "X")
+})));
             board.tick();
         }
 
         @Test
         public void it_is_still_falling_right_above_the_other_block() {
-            assertEquals("" +
-                    "...\n" +
-                    ".Y.\n" +
-                    ".X.\n", board.toString());
-            assertTrue("the player should still be able to avoid landing on the other block", board.hasFalling());
+         assertEquals("[1:0],[1:1]",board.toString());
+            assertTrue("The player should still be able to avoid landing on the other block", board.hasFalling());
         }
 
         @Test
         public void it_stops_when_it_hits_the_other_block() {
             board.tick();
-            assertEquals("" +
-                    "...\n" +
-                    ".Y.\n" +
-                    ".X.\n", board.toString());
-            assertFalse("the block should stop moving when it lands on the other block", board.hasFalling());
+     assertEquals("[1:1],[1:0]",board.toString());
+            assertFalse("The block should stop moving when it lands on the other block", board.hasFalling());
         }
     }
-*/
+
 }
