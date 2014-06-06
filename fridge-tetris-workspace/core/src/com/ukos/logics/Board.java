@@ -116,6 +116,20 @@ public class Board implements Grid{
         }
     }
     
+    /**
+
+     * <b> Only for testing purposes! </b><br><br>
+
+     *  Moves the falling piece to the left, if it can. 
+
+     */
+
+    public void testMovePieceToLeft() {
+        if (hasFalling()){
+        	moveIfNoConflict(falling.moveLeft());
+        }
+    }
+    
     public void movePieceToRight(){
         if (hasFalling()){
         	if(!moveTooFast()){
@@ -124,6 +138,16 @@ public class Board implements Grid{
             }
         }
     }
+    
+    /**
+    * <b> Only for testing purposes! </b><br><br>
+    * Moves the falling piece to the right, if it can.
+    */
+        public void testMovePieceToRight() {
+            if (hasFalling()){
+             moveIfNoConflict(falling.moveRight());
+            }
+        }
     
     public void movePieceDown(){
         if (hasFalling()){
