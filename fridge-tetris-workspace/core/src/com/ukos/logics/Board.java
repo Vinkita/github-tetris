@@ -68,7 +68,7 @@ public class Board implements Grid{
     }
     
     private void deleteRow(float row){
-        if(row > 0){
+        if(row >= 0){
         	for (Iterator<BlockDrawable> blocks = tablero.iterator(); blocks.hasNext();){
         		BlockDrawable block = blocks.next();
         		if (block.getPoint().Y() == row)
