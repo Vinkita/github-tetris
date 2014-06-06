@@ -59,20 +59,20 @@ public class FallingBlocksTest extends Assert {
 
         @Test
         public void it_starts_from_the_top_middle() {
-            assertEquals(board.toString(),"[1:2]");
+            assertEquals("[1:2]",board.toString());
         }
 
 
         @Test
         public void it_moves_down_one_row_per_tick() {
             board.tick();
-            assertEquals(board.toString(), "[1:1]");
+            assertEquals("[1:1]",board.toString());
         }
 
         @Test
         public void at_most_one_block_may_be_falling_at_a_time() {
         	board.drop(testFalling);
-            assertEquals(board.toString(),"[1:2]");
+            assertEquals("[1:2]",board.toString());
         }
     }
 
@@ -87,7 +87,7 @@ public class FallingBlocksTest extends Assert {
 
         @Test
         public void it_is_still_falling_on_the_last_row() {
-        	assertEquals(board.toString(),"[1:0]");
+        	assertEquals("[1:0]",board.toString());
             assertTrue("the player should still be able to move the block", board.hasFalling());
         }
 
@@ -95,7 +95,7 @@ public class FallingBlocksTest extends Assert {
         public void it_stops_when_it_hits_the_bottom() {
             board.tick();
             
-            assertEquals(board.toString(),"[1:0]");
+            assertEquals("[1:0]",board.toString());
             assertFalse("The block should stop moving", board.hasFalling());
         }
     }
@@ -110,14 +110,10 @@ public class FallingBlocksTest extends Assert {
             board.tick();
             board.tick();
             board.tick();
-            assertEquals(board.toString(),"[1:0]");
+            assertEquals("[1:0]",board.toString());
             assertFalse("The block should stop moving", board.hasFalling());
 
-//            board.drop(testFalling);
-            board.drop(new FixedShape(new Array<BlockDrawable>(
-											new BlockDrawable[] {
-													new BlockDrawable(new Point(0,0), "X")
-											})));
+            board.drop(testFalling);
             board.tick();
         }
 

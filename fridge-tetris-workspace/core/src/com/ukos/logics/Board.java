@@ -61,8 +61,8 @@ public class Board implements Grid{
     private void copyToBoard(FallingPiece piece) {
     	tablero.reverse();
     	for (BlockDrawable block : piece.allBlocks()){
-    		block.setPunto(piece.toOuterPoint(block.getPoint()));
-			tablero.add(block);
+    		BlockDrawable aux = new BlockDrawable(piece.toOuterPoint(block.getPoint()), block.getStyle());
+			tablero.add(aux);
 		}
     	tablero.reverse();
     }
@@ -121,6 +121,15 @@ public class Board implements Grid{
             }
         }
     }
+    /**
+     * <b> Only for testing purposes! </b><br><br>
+     *  Moves the falling piece to the left, if it can. 
+     */
+    public void testMovePieceToLeft() {
+        if (hasFalling()){
+        		moveIfNoConflict(falling.moveLeft());
+        }
+    }
     
     public void movePieceToRight(){
         if (hasFalling()){
@@ -128,6 +137,16 @@ public class Board implements Grid{
         		lastMove = TimeUtils.nanoTime();
         		moveIfNoConflict(falling.moveRight());
             }
+        }
+    }
+    
+    /**
+     * <b> Only for testing purposes! </b><br><br>
+     *  Moves the falling piece to the right, if it can. 
+     */
+    public void testMovePieceToRight() {
+        if (hasFalling()){
+        		moveIfNoConflict(falling.moveRight());
         }
     }
     

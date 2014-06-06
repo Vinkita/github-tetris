@@ -17,14 +17,7 @@ import com.ukos.logics.Tetromino;
 @RunWith(NestedJUnit.class)
 public class RotatingTetrominoesTest extends Assert {
 
-    // Step 3: The actual rotation algorithms
-    // - Remove the @Ignore annotation from this class
-    // - See README for how "Tetromino" is different from "Piece"
-    // - Next step: FallingPiecesTest
-
-
     private RotatablePiece shape;
-
 
     public class All_shape_instances {
 

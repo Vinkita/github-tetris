@@ -1,28 +1,21 @@
-// Copyright (c) 2008-2012  Esko Luontola <www.orfjackal.net>
-// You may use and modify this source code freely for personal non-commercial use.
-// This source code may NOT be used as course material without prior written agreement.
-
 package com.ukos.fridgetetris.tests;
 
 import net.orfjackal.nestedjunit.NestedJUnit;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.ukos.logics.Board;
 import com.ukos.logics.Tetromino;
 
-@Ignore("contains no test")
+/**
+ * @author Ukos
+ */
+//@Ignore("contains no test")
 @RunWith(NestedJUnit.class)
 public class MovingAFallingPieceTest extends Assert {
-
-    // Step 5: It's your turn now
-    // - Remove the @Ignore annotation from this class
-    // - The test names have been provided, you just need to fill in the test body
-    // - Next step: RotatingAFallingPieceTest
 
     // TODO: a falling piece can be moved left
     // TODO: a falling piece can be moved right
@@ -34,11 +27,8 @@ public class MovingAFallingPieceTest extends Assert {
     // TODO: it can not be moved right if another piece is in the way
     // TODO: it can not be moved down if another piece is in the way (will stop falling)
     // TODO: it can not be moved if there is no piece falling
-
-    // P.S. Take into consideration, that part of the piece's area may be empty cells.
-    // Only non-empty cells should take part in the collision checks.
     
-    private final Board board = new Board(6, 10);
+    private final Board board = new Board(8, 6);
     
     public class Pieces_can_be_moved {
 
@@ -49,50 +39,26 @@ public class MovingAFallingPieceTest extends Assert {
 
         @Test
         public void it_starts_from_top_middle() {
-            assertEquals("" +
-                    ".....T....\n" +
-                    "....TTT...\n" +
-                    "..........\n" +
-                    "..........\n" +
-                    "..........\n" +
-                    "..........\n", board.toString());
+            assertEquals("[4:6],[3:5],[4:5],[5:5]", board.toString());
         }
         
         
         @Test
         public void it_can_be_moved_left() {
             board.movePieceToLeft();
-            assertEquals("" +
-                    "....T.....\n" +
-                    "...TTT....\n" +
-                    "..........\n" +
-                    "..........\n" +
-                    "..........\n" +
-                    "..........\n", board.toString());
+            assertEquals("[3:6],[2:5],[3:5],[4:5]", board.toString());
         }
         
         @Test
         public void it_can_be_moved_right() {
             board.movePieceToRight();
-            assertEquals("" +
-                    "......T...\n" +
-                    ".....TTT..\n" +
-                    "..........\n" +
-                    "..........\n" +
-                    "..........\n" +
-                    "..........\n", board.toString());
+            assertEquals("[5:6],[4:5],[5:5],[6:5]", board.toString());
         }
         
         @Test
         public void it_can_be_moved_down(){
             board.movePieceDown();
-            assertEquals("" +
-                    "..........\n" +
-                    ".....T....\n" +
-                    "....TTT...\n" +                    
-                    "..........\n" +
-                    "..........\n" +
-                    "..........\n", board.toString());
+            assertEquals("[4:5],[3:4],[4:4],[5:4]", board.toString());
         }
     }
     
@@ -105,73 +71,37 @@ public class MovingAFallingPieceTest extends Assert {
         
         @Test
         public void it_can_not_be_moved_left_over_the_board(){
-            board.movePieceToLeft();
-            board.movePieceToLeft();
-            board.movePieceToLeft();
-            board.movePieceToLeft();
-            assertEquals("" +
-                    ".T........\n" +
-                    "TTT.......\n" +                    
-                    "..........\n" +
-                    "..........\n" +
-                    "..........\n" +
-                    "..........\n", board.toString());
+            board.testMovePieceToLeft();
+            board.testMovePieceToLeft();
+            board.testMovePieceToLeft();
+            assertEquals("[1:6],[0:5],[1:5],[2:5]", board.toString());
             
-            board.movePieceToLeft();
-            assertEquals("" +
-                    ".T........\n" +
-                    "TTT.......\n" +                    
-                    "..........\n" +
-                    "..........\n" +
-                    "..........\n" +
-                    "..........\n", board.toString());
+            board.testMovePieceToLeft();
+            assertEquals("[1:6],[0:5],[1:5],[2:5]", board.toString());
         }
         
         @Test
         public void it_can_not_be_moved_right_over_the_board(){
-            board.movePieceToRight();
-            board.movePieceToRight();
-            board.movePieceToRight();            
-            assertEquals("" +
-                    "........T.\n" +
-                    ".......TTT\n" +                    
-                    "..........\n" +
-                    "..........\n" +
-                    "..........\n" +
-                    "..........\n", board.toString());
+            board.testMovePieceToRight();
+            board.testMovePieceToRight();
+            board.testMovePieceToRight();            
+            assertEquals("[6:6],[5:5],[6:5],[7:5]", board.toString());
             
-            board.movePieceToRight();
-            assertEquals("" +
-                    "........T.\n" +
-                    ".......TTT\n" +                    
-                    "..........\n" +
-                    "..........\n" +
-                    "..........\n" +
-                    "..........\n", board.toString());
+            board.testMovePieceToRight();
+            assertEquals("[6:6],[5:5],[6:5],[7:5]", board.toString());
         }
         
         @Test
         public void it_can_not_be_moved_down_over_the_board(){
-            board.movePieceDown();
-            board.movePieceDown();
-            board.movePieceDown();
-            board.movePieceDown();
-            assertEquals("" +
-                    "..........\n" +
-                    "..........\n" +
-                    "..........\n" +
-                    "..........\n" +
-                    ".....T....\n" +
-                    "....TTT...\n" , board.toString());                    
+            board.tick();
+            board.tick();
+            board.tick();
+            board.tick();
+            board.tick();
+            assertEquals("[4:1],[3:0],[4:0],[5:0]", board.toString());
             
-            board.movePieceDown();
-            assertEquals("" +
-                    "..........\n" +
-                    "..........\n" +
-                    "..........\n" +
-                    "..........\n" +
-                    ".....T....\n" +
-                    "....TTT...\n" , board.toString());                    
+            board.tick();
+            assertEquals("[5:0],[4:0],[3:0],[4:1]", board.toString());
             assertFalse(board.hasFalling());
         }
     }
@@ -181,92 +111,67 @@ public class MovingAFallingPieceTest extends Assert {
         @Before
         public void dropPiece() {
             board.drop(Tetromino.O_SHAPE);
-            board.movePieceDown();
-            board.movePieceDown();
-            board.movePieceDown();
-            board.movePieceDown();
-            board.movePieceToLeft();
-            board.movePieceToLeft();
-            board.movePieceToLeft();
+            assertEquals("[4:6],[5:6],[4:5],[5:5]", board.toString());
             board.tick();
-            assertEquals("" +
-                    "..........\n" +
-                    "..........\n" +
-                    "..........\n" +
-                    "..........\n" +
-                    "..OO......\n" +
-                    "..OO......\n" , board.toString());
+            board.tick();
+            board.tick();
+            board.tick();
+            board.tick();
+            board.testMovePieceToLeft();
+            board.testMovePieceToLeft();
+            board.testMovePieceToLeft();
+            board.tick();
+            assertEquals("[2:0],[1:0],[2:1],[1:1]", board.toString());
             assertFalse(board.hasFalling());
             
             board.drop(Tetromino.O_SHAPE);
-            board.movePieceDown();
-            board.movePieceDown();
-            board.movePieceDown();
-            board.movePieceDown();
-            board.movePieceToRight();
-            board.movePieceToRight();
             board.tick();
-            assertEquals("" +
-                    "..........\n" +
-                    "..........\n" +
-                    "..........\n" +
-                    "..........\n" +
-                    "..OO...OO.\n" +
-                    "..OO...OO.\n" , board.toString());
+            board.tick();
+            board.tick();
+            board.tick();
+            board.tick();
+            board.testMovePieceToRight();
+            board.testMovePieceToRight();
+            board.tick();
+            assertEquals("[7:0],[6:0],[7:1],[6:1],[2:0],[1:0],[2:1],[1:1]", board.toString());
             assertFalse(board.hasFalling());
             
             board.drop(Tetromino.T_SHAPE);
-            board.movePieceDown();
-            board.movePieceDown();
-            assertEquals("" +
-                    "..........\n" +
-                    "..........\n" +
-                    ".....T....\n" +
-                    "....TTT...\n" +
-                    "..OO...OO.\n" +
-                    "..OO...OO.\n" , board.toString());
+            board.tick();
+            board.tick();
+            board.tick();
+            assertEquals("[7:0],[6:0],[7:1],[6:1],[2:0],[1:0],[2:1],[1:1],[4:3],[3:2],[4:2],[5:2]", board.toString());
             
         } 
         
         @Test
         public void it_can_not_be_moved_left_over_other_piece(){
-            board.movePieceDown();
-            board.movePieceToLeft();
-            assertEquals("" +
-                    "..........\n" +
-                    "..........\n" +
-                    "..........\n" +
-                    ".....T....\n" +
-                    "..OOTTTOO.\n" +
-                    "..OO...OO.\n" , board.toString());
-            assertTrue(board.hasFalling());            
+            board.tick();
+            board.testMovePieceToLeft();
+            assertEquals("[7:0],[6:0],[7:1],[6:1],[2:0],[1:0],[2:1],[1:1],[4:2],[3:1],[4:1],[5:1]", board.toString());
+            assertTrue(board.hasFalling());
         }
         
         @Test
         public void it_can_not_be_moved_right_over_other_piece(){
-            board.movePieceDown();
-            board.movePieceToRight();
-            assertEquals("" +
-                    "..........\n" +
-                    "..........\n" +
-                    "..........\n" +
-                    ".....T....\n" +
-                    "..OOTTTOO.\n" +
-                    "..OO...OO.\n" , board.toString());
+            board.tick();
+            board.testMovePieceToRight();
+            assertEquals("[7:0],[6:0],[7:1],[6:1],[2:0],[1:0],[2:1],[1:1],[4:2],[3:1],[4:1],[5:1]", board.toString());
             assertTrue(board.hasFalling());            
         }
         
         @Test
         public void it_can_not_be_moved_down_over_other_piece(){
-            board.movePieceToRight();
-            board.movePieceDown();
-            assertEquals("" +
-                    "..........\n" +
-                    "..........\n" +
-                    "......T...\n" +
-                    ".....TTT..\n" +
-                    "..OO...OO.\n" +
-                    "..OO...OO.\n" , board.toString());
+            board.testMovePieceToRight();
+            board.tick();
+//            assertEquals("" +
+//                    "........\n" +
+//                    "........\n" +
+//                    "....T...\n" +
+//                    "...TTT..\n" +
+//                    ".OO...OO\n" +
+//                    ".OO...OO\n" , board.toString());
+            assertEquals("[6:2],[5:2],[4:2],[5:3],[7:0],[6:0],[7:1],[6:1],[2:0],[1:0],[2:1],[1:1]", board.toString());
             assertFalse(board.hasFalling());            
         }
         
@@ -275,17 +180,12 @@ public class MovingAFallingPieceTest extends Assert {
             board.tick();
             board.tick();
             board.tick();
+            assertEquals("[5:0],[4:0],[3:0],[4:1],[7:0],[6:0],[7:1],[6:1],[2:0],[1:0],[2:1],[1:1]", board.toString());
             
-            board.movePieceDown();
-            board.movePieceToLeft();
-            board.movePieceToRight();
-            assertEquals("" +
-                    "..........\n" +
-                    "..........\n" +
-                    "..........\n" +
-                    "..........\n" +
-                    "..OO.T.OO.\n" +
-                    "..OOTTTOO.\n" , board.toString());
+            board.tick();
+            board.testMovePieceToLeft();
+            board.testMovePieceToRight();
+            assertEquals("[5:0],[4:0],[3:0],[4:1],[7:0],[6:0],[7:1],[6:1],[2:0],[1:0],[2:1],[1:1]", board.toString());
             assertFalse(board.hasFalling());            
         }
     }
