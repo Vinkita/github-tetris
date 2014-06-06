@@ -54,10 +54,6 @@ public class RotatingPiecesOfBlocksTest extends Assert {
         @Test
         public void can_be_rotated_right() {
             piece = piece.rotateRight();
-//            assertEquals("" +
-//                    "...\n" +
-//                    ".XX\n" +
-//                    "...\n", piece.toString());
             assertEquals("[1:0]," +
             		"[0:0]", piece.toString());
         }
@@ -69,50 +65,7 @@ public class RotatingPiecesOfBlocksTest extends Assert {
             		"[0:0]", piece.toString());
         }
     }
-
-   /* public class A_piece_of_4x4_blocks {
-
-        @Before
-        public void createPiece() {
-            piece = new Piece("" +
-                    ".XX.\n" +
-                    ".XX.\n" +
-                    "....\n" +
-                    "....\n");
-        }
-
-        @Test
-        public void consists_of_many_blocks() {
-            assertEquals("" +
-                    ".XX.\n" +
-                    ".XX.\n" +
-                    "....\n" +
-                    "....\n", piece.toString());
-        }
-
-        @Test
-        public void can_be_rotated_right() {
-            piece = piece.rotateRight();
-            assertEquals("" +
-                    "....\n" +
-                    "..XX\n" +
-                    "..XX\n" +
-                    "....\n", piece.toString());
-        }
-
-        @Test
-        public void can_be_rotated_left() {
-            piece = piece.rotateLeft();
-            assertEquals("" +
-                    "....\n" +
-                    "XX..\n" +
-                    "XX..\n" +
-                    "....\n", piece.toString());
-        }
-    } */
-
-
-
+    
     public class A_piece_of_5x5_blocks {
 
         @Before
@@ -126,12 +79,6 @@ public class RotatingPiecesOfBlocksTest extends Assert {
     					new BlockDrawable(new Point(0,1), "X"),
     					new BlockDrawable(new Point(0,0), "X")
     					});
-//        	piece = new FixedShape("" +
-//        			"..XXX\n" +
-//        			"..XX.\n" +
-//        			"..X..\n" +
-//        			".....\n" +
-//        			".....\n");
             piece = new FixedShape(blockArray);
         }
 
@@ -154,12 +101,6 @@ public class RotatingPiecesOfBlocksTest extends Assert {
         			"[1:-1]," +
         			"[1:0]," +
         			"[0:0]", piece.toString());
-//            assertEquals("" +
-//                    ".....\n" +
-//                    ".....\n" +
-//                    "..XXX\n" +
-//                    "...XX\n" +
-//                    "....X\n", piece.toString());
         }
 
         @Test
@@ -171,12 +112,6 @@ public class RotatingPiecesOfBlocksTest extends Assert {
         			"[-1:1]," +
         			"[-1:0]," +
         			"[0:0]", piece.toString());
-//            assertEquals("" +
-//                    "X....\n" +
-//                    "XX...\n" +
-//                    "XXX..\n" +
-//                    ".....\n" +
-//                    ".....\n", piece.toString());
         }
     }
 
