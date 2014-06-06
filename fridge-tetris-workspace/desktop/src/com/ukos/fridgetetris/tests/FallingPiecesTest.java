@@ -18,13 +18,7 @@ import com.ukos.logics.Tetromino;
 @RunWith(NestedJUnit.class)
 public class FallingPiecesTest extends Assert {
 
-    // Step 4: Safe steps
-    // - Remove the @Ignore annotation from this class
-    // - See the README for how to proceed with this refactoring in safe steps
-    // - Next step: MovingAFallingPieceTest
-
-
-    private final Board board = new Board(8, 6);
+	private final Board board = new Board(8, 6);
 
 
     public class When_a_piece_is_dropped {
@@ -36,16 +30,7 @@ public class FallingPiecesTest extends Assert {
 
         @Test
         public void it_starts_from_top_middle() {
-//        	System.out.println(Tetromino.T_SHAPE.toString());
         	assertEquals("[4:6],[3:5],[4:5],[5:5]", board.toString());
-//        	[0:1],[-1:0],[0:0],[1:0]
-//            assertEquals("" +
-//                    "...TTT..\n" +
-//                    "........\n" +
-//                    "........\n" +
-//                    "........\n" +
-//                    "........\n" +
-//                    "........\n", board.toString());
         }
     }
 
@@ -102,7 +87,7 @@ public class FallingPiecesTest extends Assert {
             board.tick();
             assertTrue(board.hasFalling());
         }
-//        @Ignore("contains no test")
+
         @Test
         public void it_is_still_falling_right_above_the_other_piece() {
         	assertEquals("" +
@@ -122,5 +107,4 @@ public class FallingPiecesTest extends Assert {
             assertFalse(board.hasFalling());
         }
     }
-
 }
