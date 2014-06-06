@@ -27,9 +27,6 @@ public class Board implements Grid{
     }
     
     public void drop(RotatableGrid piece) {
-//        if (hasFalling()) {
-//            throw new IllegalStateException("Already falling");
-//        }
     	if (!hasFalling()) {
 	        Point centro = new Point(width / 2, height-1);
 	        falling = new FallingPiece(piece).moveTo(centro);
@@ -38,7 +35,10 @@ public class Board implements Grid{
     }
     
     public void tick() {
-        movePieceDown();                    
+    	 if (hasFalling()){
+             if (!moveIfNoConflict(falling.moveDown()))
+            	 stopFallingBlock();
+    	 }
     }
     
     public boolean hasFalling(){
@@ -73,8 +73,7 @@ public class Board implements Grid{
         	}
         }
     }
-    
-    
+        
     private int checkLines(){
     	int contRows = 0;
     	
@@ -253,8 +252,9 @@ public class Board implements Grid{
 	}
 
 	public void update(float delta) {
-		if (timeForAutoFall()) {
+		if (!hasFalling())
 			drop(bolsita.pullOut());
+		if (timeForAutoFall()) {
 			lastMove = 0;
 			movePieceDown();
 		}		
@@ -271,12 +271,9 @@ public class Board implements Grid{
 	private boolean moveTooFast() {
 		return moveTooFast(moveRate);
 	}
-
 	
 	public FallingPiece getFallingPiece() {
 		return falling;
 	}
 	
-
-   
 }

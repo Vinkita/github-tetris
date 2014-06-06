@@ -47,7 +47,7 @@ public class RotatingPiecesOfBlocksTest extends Assert {
 
         @Test
         public void consists_of_many_blocks() {
-            assertEquals("[0:1], " +
+            assertEquals("[0:1]," +
             		"[0:0]", piece.toString());
         }
 
@@ -58,14 +58,14 @@ public class RotatingPiecesOfBlocksTest extends Assert {
 //                    "...\n" +
 //                    ".XX\n" +
 //                    "...\n", piece.toString());
-            assertEquals("[1:0], " +
+            assertEquals("[1:0]," +
             		"[0:0]", piece.toString());
         }
 
         @Test
         public void can_be_rotated_left() {
             piece = piece.rotateLeft();
-            assertEquals("[-1:0], " +
+            assertEquals("[-1:0]," +
             		"[0:0]", piece.toString());
         }
     }
@@ -137,22 +137,22 @@ public class RotatingPiecesOfBlocksTest extends Assert {
 
         @Test
         public void consists_of_many_blocks() {
-            assertEquals("[2:2], " +
-			"[1:2], " +
-			"[0:2], " +
-			"[1:1], " +
-			"[0:1], " +
+            assertEquals("[2:2]," +
+			"[1:2]," +
+			"[0:2]," +
+			"[1:1]," +
+			"[0:1]," +
 			"[0:0]", piece.toString());
         }
 
         @Test
         public void can_be_rotated_right() {
             piece = piece.rotateRight();
-            assertEquals("[2:-2], " +
-        			"[2:-1], " +
-        			"[2:0], " +
-        			"[1:-1], " +
-        			"[1:0], " +
+            assertEquals("[2:-2]," +
+        			"[2:-1]," +
+        			"[2:0]," +
+        			"[1:-1]," +
+        			"[1:0]," +
         			"[0:0]", piece.toString());
 //            assertEquals("" +
 //                    ".....\n" +
@@ -165,11 +165,11 @@ public class RotatingPiecesOfBlocksTest extends Assert {
         @Test
         public void can_be_rotated_left() {
             piece = piece.rotateLeft();
-            assertEquals("[-2:2], " +
-        			"[-2:1], " +
-        			"[-2:0], " +
-        			"[-1:1], " +
-        			"[-1:0], " +
+            assertEquals("[-2:2]," +
+        			"[-2:1]," +
+        			"[-2:0]," +
+        			"[-1:1]," +
+        			"[-1:0]," +
         			"[0:0]", piece.toString());
 //            assertEquals("" +
 //                    "X....\n" +

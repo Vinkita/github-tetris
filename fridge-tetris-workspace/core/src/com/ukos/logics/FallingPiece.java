@@ -32,27 +32,6 @@ public class FallingPiece{
         return coord.Y();
     }
     
-//    public int lastOccupiedRow(){
-//        int length = rows() - 1;
-//        int last = getY() + length;
-//        for(int r = length; r >=0; r--){
-//            if(emptyRow(r)){
-//                last--;
-//            }
-//            else
-//                return last;
-//        }
-//        return last;
-//    }
-    
-//    private boolean emptyRow(int row){
-//        for(int c = 0; c < cols(); c++){
-//            if(innerPiece.cellAt(new VectorPoint(row, c)) != EMPTY)
-//                return false;
-//        }
-//        return true;
-//    }
-    
     public FallingPiece moveTo(Point centro) {
         return new FallingPiece(centro, innerPiece);
     }
@@ -129,7 +108,12 @@ public class FallingPiece{
     }
 
     public String toString() {
-    	return String.valueOf(Math.round(coord.X())) + "," + String.valueOf(Math.round(coord.Y()));
+    	String points = "";		
+		for(Point point : allOuterPoints()){
+			points += "," + point.toString();
+		}
+		points = points.replaceFirst(",", "");
+		return points;
     }
     
     

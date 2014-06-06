@@ -69,9 +69,9 @@ public class FixedShape implements RotatableGrid{
 	public String toString(){
 		String points = "";		
 		for(Point point : getPoints()){
-			points += ", " + point.toString();
+			points += "," + point.toString();
 		}
-		points = points.replaceFirst(", ", "");
+		points = points.replaceFirst(",", "");
 		return points;
 	}
 
