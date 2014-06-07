@@ -104,6 +104,7 @@ public class RotatingAFallingPieceTest extends Assert {
 						}));
             board.drop(shape);
             board.tick();
+            System.out.println(board.toString());
             board.drop(PIEZA);
             board.tick();
             board.tick();
