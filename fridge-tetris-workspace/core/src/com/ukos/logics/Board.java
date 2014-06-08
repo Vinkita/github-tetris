@@ -18,6 +18,7 @@ public class Board implements Grid{
 	private long moveRate     = 100000000;
 	private long lastMove;
 	private ShuffleBag bolsita = new ShuffleBag();
+	private int removedRows = 0; //Only for testing purposes
 
     
     public Board(float width, float height) {
@@ -55,7 +56,8 @@ public class Board implements Grid{
         copyToBoard(falling);
         falling = null;
         
-        triggerListeners(checkLines());        
+        removedRows = checkLines();
+        triggerListeners(removedRows);
     }
      
     private void copyToBoard(FallingPiece piece) {
@@ -309,6 +311,14 @@ public class Board implements Grid{
 		}
 		points = points.replaceFirst(",", "");
 		return points;
+	}
+	
+	/**
+	* <b> Only for testing purposes! </b><br><br>
+	* Returns the number of rows removed after a piece drops
+	*/
+	public int getRemovedRows() {
+		return removedRows;
 	}
 	
 }

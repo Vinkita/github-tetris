@@ -1,77 +1,178 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.ukos.fridgetetris.tests;
 
 import net.orfjackal.nestedjunit.NestedJUnit;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.badlogic.gdx.utils.Array;
+import com.ukos.logics.BlockDrawable;
 import com.ukos.logics.Board;
 import com.ukos.logics.FixedShape;
+import com.ukos.logics.Point;
 import com.ukos.logics.ScoreCounter;
 
 /**
  *
- * @author Ukita
+ * @author Ukos
  */
-@Ignore("contains no test")
+//@Ignore("contains no test")
 @RunWith(NestedJUnit.class)
 public class CountingScoreTest extends Assert{
 
-//   TODO  removing full rows 
-//   TODO counting removed rows,
-//     (For counting the removed rows, you could launch an event (call a listener's method) when a row is removed )
-//   TODO counting score
-//   TODO choosing the next piece by random (using a shuffle bag).
-    
     private final int A_BUNCH = 12;
     
-    private Board board = new Board(8, 10);
+    private Board board = new Board(10, 8);
     private ScoreCounter counter;
     
-    private final FixedShape PIEZA_1 = new FixedShape("" +
-                                        "I");
-    
-    private final FixedShape PIEZA_2 = new FixedShape("" +
-                                    ".I.\n" +
-                                    ".I.\n" +
-                                    "...\n");
-    
-    private final FixedShape PIEZA_3 = new FixedShape("" +
-                                    ".I.\n" +
-                                    ".I.\n" +
-                                    ".I.\n");
-    
-    private final FixedShape PIEZA_4 = new FixedShape("" +
-                                    "..I..\n" +
-                                    "..I..\n" +
-                                    "..I..\n" +
-                                    "..I..\n" +
-                                    ".....\n");
-        
-    
-  
-    public class Counting_Scores{
+    private FixedShape TABL1 = new FixedShape(new Array<BlockDrawable>(
+			new BlockDrawable[] {
+					new BlockDrawable(new Point(-5,-7), "X"),
+					new BlockDrawable(new Point(-4,-7), "X"),
+					new BlockDrawable(new Point(-3,-7), "X"),
+					new BlockDrawable(new Point(-2,-7), "X"),
+					new BlockDrawable(new Point(-1,-7), "X"),
+					new BlockDrawable(new Point(1,-7), "X"),
+					new BlockDrawable(new Point(2,-7), "X"),
+					new BlockDrawable(new Point(3,-7), "X"),
+					new BlockDrawable(new Point(4,-7), "X"),
+
+					new BlockDrawable(new Point(-5,-6), "X"),
+					new BlockDrawable(new Point(-4,-6), "X"),
+					new BlockDrawable(new Point(-3,-6), "X"),
+					new BlockDrawable(new Point(-2,-6), "X"),
+					new BlockDrawable(new Point(-1,-6), "X"),
+					new BlockDrawable(new Point(1,-6), "X"),
+					new BlockDrawable(new Point(2,-6), "X"),
+					new BlockDrawable(new Point(3,-6), "X"),
+					new BlockDrawable(new Point(4,-6), "X"),
+
+					new BlockDrawable(new Point(-5,-5), "X"),
+					new BlockDrawable(new Point(-4,-5), "X"),
+					new BlockDrawable(new Point(-3,-5), "X"),
+					new BlockDrawable(new Point(-2,-5), "X"),
+					new BlockDrawable(new Point(-1,-5), "X"),
+					new BlockDrawable(new Point(1,-5), "X"),
+					new BlockDrawable(new Point(2,-5), "X"),
+					new BlockDrawable(new Point(3,-5), "X"),
+					new BlockDrawable(new Point(4,-5), "X"),
+
+					new BlockDrawable(new Point(-5,-4), "X"),
+					new BlockDrawable(new Point(-4,-4), "X"),
+					new BlockDrawable(new Point(-3,-4), "X"),
+					new BlockDrawable(new Point(-2,-4), "X"),
+					new BlockDrawable(new Point(-1,-4), "X"),
+					new BlockDrawable(new Point(1,-4), "X"),
+					new BlockDrawable(new Point(2,-4), "X"),
+					new BlockDrawable(new Point(3,-4), "X"),
+					new BlockDrawable(new Point(4,-4), "X"),
+
+					new BlockDrawable(new Point(-5,-3), "X"),
+					new BlockDrawable(new Point(-4,-3), "X"),
+					new BlockDrawable(new Point(-3,-3), "X"),
+					new BlockDrawable(new Point(-2,-3), "X"),
+					new BlockDrawable(new Point(-1,-3), "X"),
+					new BlockDrawable(new Point(1,-3), "X"),
+					new BlockDrawable(new Point(2,-3), "X"),
+					new BlockDrawable(new Point(3,-3), "X"),
+					new BlockDrawable(new Point(4,-3), "X"),
+				}));
+
+    private FixedShape TABL2 = new FixedShape(new Array<BlockDrawable>(
+    		new BlockDrawable[] {
+    				new BlockDrawable(new Point(-5,-7), "X"),
+    				new BlockDrawable(new Point(-4,-7), "X"),
+    				new BlockDrawable(new Point(-3,-7), "X"),
+    				new BlockDrawable(new Point(-1,-7), "X"),
+    				new BlockDrawable(new Point(1,-7), "X"),
+    				new BlockDrawable(new Point(2,-7), "X"),
+    				new BlockDrawable(new Point(3,-7), "X"),
+    				new BlockDrawable(new Point(4,-7), "X"),
+    				
+    				new BlockDrawable(new Point(-5,-6), "X"),
+    				new BlockDrawable(new Point(-4,-6), "X"),
+    				new BlockDrawable(new Point(-3,-6), "X"),
+    				new BlockDrawable(new Point(-2,-6), "X"),
+    				new BlockDrawable(new Point(-1,-6), "X"),
+    				new BlockDrawable(new Point(1,-6), "X"),
+    				new BlockDrawable(new Point(2,-6), "X"),
+    				new BlockDrawable(new Point(3,-6), "X"),
+    				new BlockDrawable(new Point(4,-6), "X"),
+    				
+    				new BlockDrawable(new Point(-5,-5), "X"),
+    				new BlockDrawable(new Point(-4,-5), "X"),
+    				new BlockDrawable(new Point(-2,-5), "X"),
+    				new BlockDrawable(new Point(-1,-5), "X"),
+    				new BlockDrawable(new Point(1,-5), "X"),
+    				new BlockDrawable(new Point(2,-5), "X"),
+    				new BlockDrawable(new Point(3,-5), "X"),
+    				new BlockDrawable(new Point(4,-5), "X"),
+    				
+    				new BlockDrawable(new Point(-5,-4), "X"),
+    				new BlockDrawable(new Point(-4,-4), "X"),
+    				new BlockDrawable(new Point(-3,-4), "X"),
+    				new BlockDrawable(new Point(-2,-4), "X"),
+    				new BlockDrawable(new Point(-1,-4), "X"),
+    				new BlockDrawable(new Point(1,-4), "X"),
+    				new BlockDrawable(new Point(2,-4), "X"),
+    				new BlockDrawable(new Point(3,-4), "X"),
+    				new BlockDrawable(new Point(4,-4), "X"),
+    				
+    				new BlockDrawable(new Point(-5,-3), "X"),
+    				new BlockDrawable(new Point(-4,-3), "X"),
+    				new BlockDrawable(new Point(-3,-3), "X"),
+    				new BlockDrawable(new Point(-2,-3), "X"),
+    				new BlockDrawable(new Point(-1,-3), "X"),
+    				new BlockDrawable(new Point(1,-3), "X"),
+    				new BlockDrawable(new Point(2,-3), "X"),
+    				new BlockDrawable(new Point(3,-3), "X"),
+    				new BlockDrawable(new Point(4,-3), "X"),
+}));
+
+	private final FixedShape PIEZA_1 = new FixedShape(new Array<BlockDrawable>(
+					new BlockDrawable[] {
+							new BlockDrawable(new Point(0,0), "I")
+						}));
+
+	private final FixedShape PIEZA_2 = new FixedShape(new Array<BlockDrawable>(
+					new BlockDrawable[] {
+							new BlockDrawable(new Point(0,0), "I"),
+							new BlockDrawable(new Point(0,-1), "I")
+						}));
+
+	private final FixedShape PIEZA_3 = new FixedShape(new Array<BlockDrawable>(
+					new BlockDrawable[] {
+							new BlockDrawable(new Point(0,0), "I"),
+							new BlockDrawable(new Point(0,-1), "I"),
+							new BlockDrawable(new Point(0,-2), "I")
+						}));
+
+	private final FixedShape PIEZA_4 = new FixedShape(new Array<BlockDrawable>(
+					new BlockDrawable[] {
+							new BlockDrawable(new Point(0,0), "I"),
+							new BlockDrawable(new Point(0,-1), "I"),
+							new BlockDrawable(new Point(0,-2), "I"),
+							new BlockDrawable(new Point(0,-3), "I")
+						}));
+
+	private final FixedShape PIEZA_H = new FixedShape(new Array<BlockDrawable>(
+	new BlockDrawable[] {
+	new BlockDrawable(new Point(-2,0), "I"),
+	new BlockDrawable(new Point(-1,0), "I"),
+	new BlockDrawable(new Point(0,0), "I"),
+	new BlockDrawable(new Point(1,0), "I"),
+	new BlockDrawable(new Point(2,0), "I")
+	}));
+
+	public class Counting_Scores{
         
         @Before
         public void setUp() {
-            board = new Board("" + 
-                    "..........\n" +
-                    "..........\n" +
-                    "..........\n" +
-                    "XXXXX.XXXX\n" +
-                    "XXXXX.XXXX\n" +
-                    "XXXXX.XXXX\n" +
-                    "XXXXX.XXXX\n" +
-                    "XXXXX.XXXX\n");
+            board.drop(TABL1);
+            board.tick();
+            
             counter = new ScoreCounter();
             board.addRowListener(counter);
             assertEquals("No Rows should be counted yet", 0, counter.getRemovedRows());
@@ -81,15 +182,14 @@ public class CountingScoreTest extends Assert{
         @Test
         public void points_for_single_row(){
             board.drop(PIEZA_1);
-            assertEquals("" + 
-                    ".....I....\n" +
-                    "..........\n" +
-                    "..........\n" +
-                    "XXXXX.XXXX\n" +
-                    "XXXXX.XXXX\n" +
-                    "XXXXX.XXXX\n" +
-                    "XXXXX.XXXX\n" +
-                    "XXXXX.XXXX\n", board.toString());
+            assertEquals("" +
+            		"[9:4],[8:4],[7:4],[6:4],[4:4],[3:4],[2:4],[1:4],[0:4]," +
+            		"[9:3],[8:3],[7:3],[6:3],[4:3],[3:3],[2:3],[1:3],[0:3]," +
+            		"[9:2],[8:2],[7:2],[6:2],[4:2],[3:2],[2:2],[1:2],[0:2]," +
+            		"[9:1],[8:1],[7:1],[6:1],[4:1],[3:1],[2:1],[1:1],[0:1]," +
+            		"[9:0],[8:0],[7:0],[6:0],[4:0],[3:0],[2:0],[1:0],[0:0]," +
+            		"[5:7]"
+            		, board.toString()); 
             for(int i = 0; i < A_BUNCH; i++){
                 board.tick();
             }
@@ -100,15 +200,14 @@ public class CountingScoreTest extends Assert{
         @Test
         public void points_for_TWO_rows(){
             board.drop(PIEZA_2);
-            assertEquals("" + 
-                    ".....I....\n" +
-                    ".....I....\n" +
-                    "..........\n" +
-                    "XXXXX.XXXX\n" +
-                    "XXXXX.XXXX\n" +
-                    "XXXXX.XXXX\n" +
-                    "XXXXX.XXXX\n" +
-                    "XXXXX.XXXX\n", board.toString());
+            assertEquals("" +
+            		"[9:4],[8:4],[7:4],[6:4],[4:4],[3:4],[2:4],[1:4],[0:4]," +
+            		"[9:3],[8:3],[7:3],[6:3],[4:3],[3:3],[2:3],[1:3],[0:3]," +
+            		"[9:2],[8:2],[7:2],[6:2],[4:2],[3:2],[2:2],[1:2],[0:2]," +
+            		"[9:1],[8:1],[7:1],[6:1],[4:1],[3:1],[2:1],[1:1],[0:1]," +
+            		"[9:0],[8:0],[7:0],[6:0],[4:0],[3:0],[2:0],[1:0],[0:0]," +
+            		"[5:7],[5:6]"
+            		, board.toString()); 
             for(int i = 0; i < A_BUNCH; i++){
                 board.tick();
             }
@@ -120,15 +219,14 @@ public class CountingScoreTest extends Assert{
         @Test
         public void points_for_THREE_rows(){
             board.drop(PIEZA_3);
-            assertEquals("" + 
-                    ".....I....\n" +
-                    ".....I....\n" +
-                    ".....I....\n" +
-                    "XXXXX.XXXX\n" +
-                    "XXXXX.XXXX\n" +
-                    "XXXXX.XXXX\n" +
-                    "XXXXX.XXXX\n" +
-                    "XXXXX.XXXX\n", board.toString());
+            assertEquals("" +
+            		"[9:4],[8:4],[7:4],[6:4],[4:4],[3:4],[2:4],[1:4],[0:4]," +
+            		"[9:3],[8:3],[7:3],[6:3],[4:3],[3:3],[2:3],[1:3],[0:3]," +
+            		"[9:2],[8:2],[7:2],[6:2],[4:2],[3:2],[2:2],[1:2],[0:2]," +
+            		"[9:1],[8:1],[7:1],[6:1],[4:1],[3:1],[2:1],[1:1],[0:1]," +
+            		"[9:0],[8:0],[7:0],[6:0],[4:0],[3:0],[2:0],[1:0],[0:0]," +
+            		"[5:7],[5:6],[5:5]"
+            		, board.toString()); 
             for(int i = 0; i < A_BUNCH; i++){
                 board.tick();
             }
@@ -140,15 +238,14 @@ public class CountingScoreTest extends Assert{
         @Test
         public void points_for_FOUR_rows(){
             board.drop(PIEZA_4);
-            assertEquals("" + 
-                    ".....I....\n" +
-                    ".....I....\n" +
-                    ".....I....\n" +
-                    "XXXXXIXXXX\n" +
-                    "XXXXX.XXXX\n" +
-                    "XXXXX.XXXX\n" +
-                    "XXXXX.XXXX\n" +
-                    "XXXXX.XXXX\n", board.toString());
+            assertEquals("" +
+            		"[9:4],[8:4],[7:4],[6:4],[4:4],[3:4],[2:4],[1:4],[0:4]," +
+            		"[9:3],[8:3],[7:3],[6:3],[4:3],[3:3],[2:3],[1:3],[0:3]," +
+            		"[9:2],[8:2],[7:2],[6:2],[4:2],[3:2],[2:2],[1:2],[0:2]," +
+            		"[9:1],[8:1],[7:1],[6:1],[4:1],[3:1],[2:1],[1:1],[0:1]," +
+            		"[9:0],[8:0],[7:0],[6:0],[4:0],[3:0],[2:0],[1:0],[0:0]," +
+            		"[5:7],[5:6],[5:5],[5:4]"
+            		, board.toString()); 
             for(int i = 0; i < A_BUNCH; i++){
                 board.tick();
             }
@@ -159,35 +256,28 @@ public class CountingScoreTest extends Assert{
         
         @Test
         public void points_for_ZERO_rows(){
-            board.drop(new FixedShape("" +
-                    "IIIII\n" +
-                    ".....\n" +
-                    ".....\n" +
-                    ".....\n" +
-                    ".....\n"));
+            board.drop(PIEZA_H);
             
-            assertEquals("" + 
-                    "...IIIII..\n" +
-                    "..........\n" +
-                    "..........\n" +
-                    "XXXXX.XXXX\n" +
-                    "XXXXX.XXXX\n" +
-                    "XXXXX.XXXX\n" +
-                    "XXXXX.XXXX\n" +
-                    "XXXXX.XXXX\n", board.toString());
+            assertEquals("" +
+            		"[9:4],[8:4],[7:4],[6:4],[4:4],[3:4],[2:4],[1:4],[0:4]," +
+            		"[9:3],[8:3],[7:3],[6:3],[4:3],[3:3],[2:3],[1:3],[0:3]," +
+            		"[9:2],[8:2],[7:2],[6:2],[4:2],[3:2],[2:2],[1:2],[0:2]," +
+            		"[9:1],[8:1],[7:1],[6:1],[4:1],[3:1],[2:1],[1:1],[0:1]," +
+            		"[9:0],[8:0],[7:0],[6:0],[4:0],[3:0],[2:0],[1:0],[0:0]," +
+            		"[3:7],[4:7],[5:7],[6:7],[7:7]"
+            		, board.toString()); 
             for(int i = 0; i < A_BUNCH; i++){
                 board.tick();
             }
             
-            assertEquals("" + 
-                    "..........\n" +
-                    "..........\n" +
-                    "...IIIII..\n" +
-                    "XXXXX.XXXX\n" +
-                    "XXXXX.XXXX\n" +
-                    "XXXXX.XXXX\n" +
-                    "XXXXX.XXXX\n" +
-                    "XXXXX.XXXX\n", board.toString());
+            assertEquals("" +
+            		"[7:5],[6:5],[5:5],[4:5],[3:5]," +
+            		"[9:4],[8:4],[7:4],[6:4],[4:4],[3:4],[2:4],[1:4],[0:4]," +
+            		"[9:3],[8:3],[7:3],[6:3],[4:3],[3:3],[2:3],[1:3],[0:3]," +
+            		"[9:2],[8:2],[7:2],[6:2],[4:2],[3:2],[2:2],[1:2],[0:2]," +
+            		"[9:1],[8:1],[7:1],[6:1],[4:1],[3:1],[2:1],[1:1],[0:1]," +
+            		"[9:0],[8:0],[7:0],[6:0],[4:0],[3:0],[2:0],[1:0],[0:0]" 
+            		, board.toString()); 
             assertEquals(0, counter.getRemovedRows());
             assertEquals(0, counter.getTotalScore());
         }
@@ -222,15 +312,9 @@ public class CountingScoreTest extends Assert{
         
         @Test
         public void points_for_IRREGULAR_rows(){
-            board = new Board("" + 
-                    "..........\n" +
-                    "..........\n" +
-                    "..........\n" +
-                    "XXXXX.XXXX\n" +
-                    "XXXXX.XXXX\n" +
-                    "XX.XX.XXXX\n" +
-                    "XXXXX.XXXX\n" +
-                    "XXX.X.XXXX\n");
+            board = new Board(10,8);
+            board.drop(TABL2);
+            board.tick();
             board.addRowListener(counter);
             
             board.drop(PIEZA_4);
