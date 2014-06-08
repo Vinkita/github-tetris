@@ -51,18 +51,8 @@ public class BoardRenderer {
 		batch.begin();
 		for (BlockDrawable block : tablero.getBlocksToDraw()) {
 			System.out.println(block.getStyle());
-			int pointX = (int) block.getPoint().X();
-			int pointY = (int) block.getPoint().Y();
-			Rectangle rect = gridRectangles[pointY][pointX];
-//			Rectangle rect = gridRectangles[(int) block.getPoint().Y()][(int) block.getPoint().X()];
-			Texture taux = textures.get(block.getStyle());
-			int x = (int) rect.x;
-			int y = (int) rect.y;
-			int width = (int) rect.width;
-			int height = (int) rect.height;
-			
-			batch.draw(taux, x, y, width, height);
-//			batch.draw(textures.get(block.getStyle()), rect.x, rect.y, rect.width, rect.height);
+			Rectangle rect = gridRectangles[(int) block.getPoint().Y()][(int) block.getPoint().X()];
+			batch.draw(textures.get(block.getStyle()), rect.x, rect.y, rect.width, rect.height);
 		}
 		batch.end();
 		
