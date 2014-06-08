@@ -229,7 +229,8 @@ public class Board implements Grid{
     }
 
     private boolean outsideBoard(Point p) {
-        return p.Y() < 0
+        return p.Y() < 0 ||
+        		p.Y() >= height
                 || p.X() < 0
                 || p.X() >= width;
     }
@@ -272,8 +273,11 @@ public class Board implements Grid{
 	public Array<BlockDrawable> getBlocksToDraw() {
 		Array<BlockDrawable> blocksToDraw = new Array<BlockDrawable>();
 		blocksToDraw.addAll(tablero);
-		if (hasFalling())
-			blocksToDraw.addAll(falling.allOuterBlocks());
+		if (hasFalling()){
+			for(BlockDrawable block : falling.allOuterBlocks())
+				if(!outsideBoard(block.getPoint()))
+					blocksToDraw.add(block);
+		}
 		return blocksToDraw;
 	}
 
