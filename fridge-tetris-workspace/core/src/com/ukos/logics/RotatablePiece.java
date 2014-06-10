@@ -12,10 +12,10 @@ public class RotatablePiece implements RotatableGrid{
     private Array<FixedShape> rotations = new Array<FixedShape>();
     private final int current;
     
-    public RotatablePiece(int maxRots, int curRotation, Array<BlockDrawable> shapeBlocks) {
+    public RotatablePiece(int maxRots, int curRotation, Array<BlockDrawable> shapeBlocks, String textureKey) {
         this(maxRots, curRotation);
         FixedShape piece = firstRotation(new FixedShape(shapeBlocks), curRotation);
-        this.rotations = fillRotations(piece, maxRots);
+        this.rotations = fillRotations(piece, maxRots, textureKey);
     }
     
     private RotatablePiece(int curRotation, Array<FixedShape> rotations) {
@@ -38,13 +38,18 @@ public class RotatablePiece implements RotatableGrid{
         return piece;
     }
     
-    private Array<FixedShape> fillRotations(FixedShape piece, int maxRots){
+    private Array<FixedShape> fillRotations(FixedShape piece, int maxRots, String textureKey){
         Array<FixedShape> arr = new Array<FixedShape>(maxRots);
-//        arr.set(0, piece);
         arr.add(piece);
         for(int i = 1; i < maxRots; i++){
-//            arr.set(i, arr.get(i-1).rotateRight());
-        	arr.add(arr.get(i-1).rotateRight());
+        	String[] textureNames = Tetromino.colors.get(textureKey+i);
+        	FixedShape fs = arr.get(i-1).rotateRight();
+        	Array<BlockDrawable> blocks = fs.allBlocks();
+        	for(int j = 0, z = blocks.size; j < z; j++){
+        		BlockDrawable block = blocks.get(j);
+        		block.setStyle(textureNames[j]);
+        	}
+        	arr.add(fs);
         }
         return arr;
     }

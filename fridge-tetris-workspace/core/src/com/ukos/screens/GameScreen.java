@@ -8,12 +8,15 @@ import com.badlogic.gdx.graphics.GL20;
 import com.ukos.fridgetetris.BoardRenderer;
 import com.ukos.fridgetetris.TetrominoControladora;
 import com.ukos.logics.Board;
+import com.ukos.logics.ScoreCounter;
 
 public class GameScreen implements Screen, InputProcessor {
 	
 	private Board tablero;
 	private BoardRenderer renderer;
 	private TetrominoControladora controladora;
+	
+	private ScoreCounter puntos;
 
 	@Override
 	public void render(float delta) {
@@ -34,6 +37,8 @@ public class GameScreen implements Screen, InputProcessor {
 	@Override
 	public void show() {
 		tablero = new Board(10, 20);
+		puntos = new ScoreCounter();
+		tablero.addRowListener(puntos);
 		renderer = new BoardRenderer(tablero);
 		controladora = new TetrominoControladora(tablero);
 		Gdx.input.setInputProcessor(this);

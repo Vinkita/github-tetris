@@ -59,9 +59,9 @@ public class BoardRenderer {
 	}
 	
 	private Rectangle[][] createGridRectangles() {
-		Rectangle[][] rects = new Rectangle[20][10];
+		Rectangle[][] rects = new Rectangle[22][10];
 		//Create 20 rows of 10 rectangles:
-		for (int row=0; row<20; row++) {
+		for (int row=0; row<22; row++) {
 			for (int col=0;col<10;col++) {
 				Rectangle rect = new Rectangle();
 				rect.width = 1;
