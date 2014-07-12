@@ -34,7 +34,7 @@ new BlockDrawable(new Point(0,0), "X")
 
         @Test
         public void is_empty() {
-            assertEquals(board.getBlocksToDraw().toString(), "[]");
+            assertEquals(board.getBoardBlocksToDraw().toString(), "[]");
         }
 
         @Test

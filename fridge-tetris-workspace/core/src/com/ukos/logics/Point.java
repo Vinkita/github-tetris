@@ -61,6 +61,13 @@ public class Point{
 	public String toString() {
 		return "[" + (int)point.x + ":" + (int)point.y + "]";
 	}
-	
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof Point)
+			if(((Point) obj).X() == this.X() && ((Point) obj).Y() == this.Y())
+				return true;
+		return false;
+	}
 	
 }

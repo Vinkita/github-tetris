@@ -12,8 +12,8 @@ import com.badlogic.gdx.utils.Array;
  */
 public class FallingPiece{
     
-    private final Point coord;
-    private final RotatableGrid innerPiece;
+    private  Point coord;
+    private RotatableGrid innerPiece;
     
     public FallingPiece(RotatableGrid innerPiece){
         this(new Point(0,0), innerPiece);
@@ -30,6 +30,14 @@ public class FallingPiece{
     
     public float getY(){
         return coord.Y();
+    }
+    
+    public Point getCoord(){
+    	return coord;
+    }
+    
+    public void setCoord(Point coord){
+    	this.coord = coord;
     }
     
     public FallingPiece moveTo(Point centro) {
@@ -115,6 +123,14 @@ public class FallingPiece{
 		points = points.replaceFirst(",", "");
 		return points;
     }
+
+	public RotatableGrid getInnerPiece() {
+		return innerPiece;
+	}
+
+	public void setInnerPiece(RotatableGrid innerPiece) {
+		this.innerPiece = innerPiece;
+	}
     
     
 }

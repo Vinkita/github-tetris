@@ -1,0 +1,81 @@
+
+menu.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+mainIce
+  rotate: false
+  xy: 0, 1
+  size: 480, 736
+  orig: 480, 736
+  offset: 0, 0
+  index: -1
+title
+  rotate: false
+  xy: 480, 516
+  size: 469, 221
+  orig: 469, 221
+  offset: 0, 0
+  index: -1
+blue.down
+  rotate: false
+  xy: 480, 465
+  size: 51, 51
+  split: 24, 24, 24, 24
+  orig: 51, 51
+  offset: 0, 0
+  index: -1
+blue.up
+  rotate: false
+  xy: 480, 414
+  size: 51, 51
+  split: 24, 24, 24, 24
+  orig: 51, 51
+  offset: 0, 0
+  index: -1
+green.down
+  rotate: false
+  xy: 531, 465
+  size: 51, 51
+  split: 24, 24, 24, 24
+  orig: 51, 51
+  offset: 0, 0
+  index: -1
+green.up
+  rotate: false
+  xy: 480, 363
+  size: 51, 51
+  split: 24, 24, 24, 24
+  orig: 51, 51
+  offset: 0, 0
+  index: -1
+pink.down
+  rotate: false
+  xy: 531, 414
+  size: 51, 51
+  split: 24, 24, 24, 24
+  orig: 51, 51
+  offset: 0, 0
+  index: -1
+pink.up
+  rotate: false
+  xy: 582, 465
+  size: 51, 51
+  split: 24, 24, 24, 24
+  orig: 51, 51
+  offset: 0, 0
+  index: -1
+black
+  rotate: false
+  xy: 0, 0
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
+black50
+  rotate: false
+  xy: 1, 0
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1

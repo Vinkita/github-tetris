@@ -9,8 +9,10 @@ import com.badlogic.gdx.utils.TimeUtils;
 public class Board implements Grid{
     
     private FallingPiece falling;
+    private FallingPiece ghost;
     private Array<BlockDrawable> tablero;
     private ArrayList<IRowListener> listeners = new ArrayList<IRowListener>();
+    private ArrayList<IStopBlockListener> blockListeners = new ArrayList<IStopBlockListener>();
     private float width;
     private float height;
     private long autoFallRate = 500000000;
@@ -19,6 +21,8 @@ public class Board implements Grid{
 	private long lastMove;
 	private ShuffleBag bolsita = new ShuffleBag();
 	private int removedRows = 0;
+	private boolean ghostActivated = false;
+	private boolean gameOver = false;
 
     
     public Board(float width, float height) {
@@ -27,17 +31,40 @@ public class Board implements Grid{
         this.height = height;
     }
     
+    public void reset(){
+    	tablero.clear();
+    	falling = null;
+    	gameOver = false;
+    }
+    
     public void drop(RotatableGrid piece) {
     	if (!hasFalling()) {
 	        Point centro = new Point(width / 2, height-1);
 	        falling = new FallingPiece(piece).moveTo(centro);
+	        if(conflictsWithBoard(falling)){
+	        	gameOver = true;
+	        	falling = null;
+	        } else{
+		        if(isGhostActivated())
+		        	generateGhost();
+	        }
+	        triggerBlockListeners();
     	}
         
     }
     
-    public void tick() {
+    private void generateGhost() {
+		try {
+			ghost = (FallingPiece)falling.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		while(moveIfNoConflict(ghost.moveDown(), ghost));		
+	}
+
+	public void tick() {
     	 if (hasFalling()){
-             if (!moveIfNoConflict(falling.moveDown()))
+             if (!moveIfNoConflict(falling.moveDown(), falling))
             	 stopFallingBlock();
     	 }
     }
@@ -46,16 +73,41 @@ public class Board implements Grid{
         return falling != null;
     }
 
-    private void stopFallingBlock() {
+    public boolean isGhostActivated() {
+		return ghostActivated;
+	}
+
+	public void setGhostActivated(boolean ghostActivated) {
+		this.ghostActivated = ghostActivated;
+	}
+	
+	public boolean isGameOver(){
+		return gameOver;
+	}
+
+	private void stopFallingBlock() {
         assert hasFalling();
         copyToBoard(falling);
-        falling = null;
-        
-        removedRows = checkLines();
-        triggerListeners(removedRows);        
+        if (isAboveLimit(falling)){
+        	gameOver = true;
+        	triggerBlockListeners();
+        } else {        	
+	        falling = null;
+	        
+	        removedRows = checkLines();
+	        triggerListeners(removedRows);        
+        }
     }
-     
-    private void copyToBoard(FallingPiece piece) {
+	
+	private boolean isAboveLimit(FallingPiece piece){
+		for (Point p : piece.allOuterPoints()) {
+            if (p.Y() >= height) 
+                return true;
+        }
+		return false;
+	}
+
+	private void copyToBoard(FallingPiece piece) {
     	tablero.reverse();
     	for (BlockDrawable block : piece.allBlocks()){
     		BlockDrawable aux = new BlockDrawable(piece.toOuterPoint(block.getPoint()), block.getStyle()); 
@@ -105,15 +157,27 @@ public class Board implements Grid{
         }
     }
     
+    private void triggerBlockListeners() {
+    	for(IStopBlockListener listener : blockListeners){
+    		listener.onStoppedBlock();
+    	}
+    }
+    
     public void addRowListener(IRowListener listener){
         listeners.add(listener);
+    }
+    
+    public void addBlockListener(IStopBlockListener listener){
+    	blockListeners.add(listener);
     }
     
     public void movePieceToLeft() {
         if (hasFalling()){
         	if(!moveTooFast()){
         		lastMove = TimeUtils.nanoTime();
-        		moveIfNoConflict(falling.moveLeft());
+        		moveIfNoConflict(falling.moveLeft(), falling);
+        		if(isGhostActivated())
+        			generateGhost();
             }
         }
     }
@@ -128,7 +192,9 @@ public class Board implements Grid{
 
     public void testMovePieceToLeft() {
         if (hasFalling()){
-        	moveIfNoConflict(falling.moveLeft());
+        	moveIfNoConflict(falling.moveLeft(), falling);
+        	if(isGhostActivated())
+    			generateGhost();
         }
     }
     
@@ -136,7 +202,9 @@ public class Board implements Grid{
         if (hasFalling()){
         	if(!moveTooFast()){
         		lastMove = TimeUtils.nanoTime();
-        		moveIfNoConflict(falling.moveRight());
+        		moveIfNoConflict(falling.moveRight(), falling);
+        		if(isGhostActivated())
+        			generateGhost();
             }
         }
     }
@@ -147,7 +215,9 @@ public class Board implements Grid{
     */
         public void testMovePieceToRight() {
             if (hasFalling()){
-             moveIfNoConflict(falling.moveRight());
+             moveIfNoConflict(falling.moveRight(), falling);
+             if(isGhostActivated())
+     			generateGhost();
             }
         }
     
@@ -160,14 +230,16 @@ public class Board implements Grid{
         	if(timeForAutoFall()){
         		lastAutoFall = TimeUtils.nanoTime();
         		
-        	}if (!moveIfNoConflict(falling.moveDown()))
+        	}if (!moveIfNoConflict(falling.moveDown(), falling))
                 stopFallingBlock();
         }
     }
     
-    public boolean moveIfNoConflict(FallingPiece test){
+    public boolean moveIfNoConflict(FallingPiece test, FallingPiece realPiece){
         if (!conflictsWithBoard(test)){
-            falling = test;
+//        	realPiece = test;
+            realPiece.setCoord(test.getCoord());
+            realPiece.setInnerPiece(test.getInnerPiece());
             return true;
         }
         return false;
@@ -185,7 +257,8 @@ public class Board implements Grid{
         boolean kicked = false;
         for (int i = 0; i < iterations && kicked == false; i++){
             test = test.moveRight();
-            kicked = moveIfNoConflict(test);
+            //TODO cambiar falling por parametro en kick
+            kicked = moveIfNoConflict(test, falling);
         }
         return kicked;
     }
@@ -194,7 +267,8 @@ public class Board implements Grid{
         boolean kicked = false;
         for(int i = 0; i < iterations && kicked == false; i++){
             test = test.moveLeft();
-            kicked = moveIfNoConflict(test);
+            //TODO cambiar falling por parametro en kick
+            kicked = moveIfNoConflict(test, falling);
         }
         return kicked;
     }
@@ -202,16 +276,20 @@ public class Board implements Grid{
     public void rotatePieceRight(){
         if (hasFalling()){
             FallingPiece test =falling.rotateRight();
-            if (!moveIfNoConflict(test))
+            if (!moveIfNoConflict(test, falling))
                 Kick(test);
+            if(isGhostActivated())
+    			generateGhost();
         }
     }
     
     public void rotatePieceLeft(){
         if (hasFalling()){
             FallingPiece test = falling.rotateLeft();
-            if (!moveIfNoConflict(test))
+            if (!moveIfNoConflict(test, falling))
                 Kick(test);
+            if(isGhostActivated())
+    			generateGhost();
         }
     }
     
@@ -269,22 +347,52 @@ public class Board implements Grid{
         return EMPTY;
     }
 
-	public Array<BlockDrawable> getBlocksToDraw() {
+	public Array<BlockDrawable> getBoardBlocksToDraw() {
 		Array<BlockDrawable> blocksToDraw = new Array<BlockDrawable>();
 		blocksToDraw.addAll(tablero);
-		if (hasFalling())
-			blocksToDraw.addAll(falling.allOuterBlocks());
+//		if (hasFalling())
+//			blocksToDraw.addAll(falling.allOuterBlocks());
+//		if(isGhostActivated()){
+//			blocksToDraw.addAll(getGhostBlocksToDraw());
+//		}
 		
 		return blocksToDraw;
 	}
+	
+	public Array<BlockDrawable> getFallingBlocksToDraw() {
+		if (hasFalling())
+			return falling.allOuterBlocks();
+		return new Array<BlockDrawable>();
+	}
+	
+	
+	public Array<BlockDrawable> getGhostBlocksToDraw() {
+		Array<BlockDrawable> blocksToDraw = new Array<BlockDrawable>();		
+		if(hasFalling()){
+//			for(BlockDrawable block : ghost.allOuterBlocks())
+//				if (!collidesWithPiece(block.getPoint(), falling))
+//					blocksToDraw.add(block);
+			return ghost.allOuterBlocks();
+		}		
+		return blocksToDraw;
+	}
+	
+	private boolean collidesWithPiece(Point punto, FallingPiece piece){
+		for	(Point aux : piece.allOuterPoints())
+			if (punto.equals(aux))
+				return true;		
+		return false;
+	}
 
 	public void update(float delta) {
-		if (!hasFalling())
-			drop(bolsita.pullOut());
-		if (timeForAutoFall()) {
-			lastMove = 0;
-			movePieceDown();
-		}		
+		if(!gameOver){
+			if (!hasFalling())
+				drop(bolsita.pullOut());
+			if (timeForAutoFall()) {
+				lastMove = 0;
+				movePieceDown();
+			}		
+		}
 	}
 
 	private boolean timeForAutoFall() {
@@ -305,8 +413,13 @@ public class Board implements Grid{
 	
 	public String toString(){
 		String points = "";		
-		for(BlockDrawable block : getBlocksToDraw()){			
+		for(BlockDrawable block : getBoardBlocksToDraw()){			
 			points += "," + block.getPoint().toString();
+		}
+		if(isGhostActivated()){
+			for(BlockDrawable block : getGhostBlocksToDraw()){			
+				points += "," + block.getPoint().toString();
+			}
 		}
 		points = points.replaceFirst(",", "");
 		return points;
@@ -319,4 +432,20 @@ public class Board implements Grid{
 	public int getRemovedRows() {
 		return removedRows;
 	}
+	
+	public Array<RotatablePiece> getPreviewPieces(int cant){
+		return bolsita.preview(cant);
+	}
+
+
+//	public String getGhostString(){
+//		String points = "";		
+//		if(ghost != null){
+//			for(BlockDrawable block : ghost.allOuterBlocks()){			
+//				points += "," + block.getPoint().toString();
+//			}
+//			points = points.replaceFirst(",", "");
+//		}
+//		return points;
+//	}
 }

@@ -15,12 +15,19 @@ import com.badlogic.gdx.utils.Array;
 public class FixedShape implements RotatableGrid{
 
     private final Array<BlockDrawable> blocks;
+    private final String textureKey;
+
+    public FixedShape(Array<BlockDrawable> blocks, String textureKey) {
+    	this.blocks = blocks;
+    	this.textureKey = textureKey;
+    }
 
     public FixedShape(Array<BlockDrawable> blocks) {
     	this.blocks = blocks;
-    }
+    	textureKey = blocks.first().getStyle().substring(0, 0);
+	}
 
-    public String cellAt(Point point) {
+	public String cellAt(Point point) {
     	String style = EMPTY;
     	for (BlockDrawable block : blocks) {
     		if (block.getPoint().X() == point.X() && block.getPoint().Y() == point.Y())
@@ -37,7 +44,7 @@ public class FixedShape implements RotatableGrid{
     		float y = -block.getPoint().X();
     		newBlocks.add(new BlockDrawable(new Point(x,y), block.getStyle()));
 		}
-    	return new FixedShape(newBlocks);
+    	return new FixedShape(newBlocks, new String(textureKey));
     }
 
     @Override
@@ -48,7 +55,7 @@ public class FixedShape implements RotatableGrid{
     		float y = block.getPoint().X();
     		newBlocks.add(new BlockDrawable(new Point(x,y), block.getStyle()));
 		}
-    	return new FixedShape(newBlocks);
+    	return new FixedShape(newBlocks, new String(textureKey));
     }
 
 	@Override
@@ -73,6 +80,10 @@ public class FixedShape implements RotatableGrid{
 		}
 		points = points.replaceFirst(",", "");
 		return points;
+	}
+
+	public String getTextureKey() {
+		return textureKey;
 	}
 
 }

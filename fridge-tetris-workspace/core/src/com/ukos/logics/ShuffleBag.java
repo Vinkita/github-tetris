@@ -6,9 +6,12 @@
 
 package com.ukos.logics;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.badlogic.gdx.utils.Array;
 
 /**
  *
@@ -24,11 +27,7 @@ public class ShuffleBag{
     
     public ShuffleBag(){
         fillUnshuffled();
-        try {
-            refillShuffled();
-        } catch (CloneNotSupportedException ex) {
-            Logger.getLogger(ShuffleBag.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        refillShuffled();
     }
     
     private void fillUnshuffled(){
@@ -42,7 +41,7 @@ public class ShuffleBag{
         UnShuffledBag.add(6, Tetromino.L_SHAPE);
     }
     
-    private void refillShuffled() throws CloneNotSupportedException {
+    private void refillShuffled() {
         @SuppressWarnings("unchecked")
 		ArrayList<RotatablePiece> auxMap = (ArrayList<RotatablePiece>)UnShuffledBag.clone();
         
@@ -71,16 +70,21 @@ public class ShuffleBag{
         
         RotatablePiece pulledTetro = ShuffledBag.remove(0);
         if(ShuffledBag.isEmpty()){
-            try {
-                refillShuffled();
-            } catch (CloneNotSupportedException ex) {
-                Logger.getLogger(ShuffleBag.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            refillShuffled();
         }
         return pulledTetro;
     }
     
     public RotatablePiece preview(){
         return ShuffledBag.get(0);
+    }
+    
+    public Array<RotatablePiece> preview(int cant){
+    	Array<RotatablePiece> arr = new Array<RotatablePiece>();
+    	if(ShuffledBag.size() < cant)
+    		refillShuffled();
+    	for(int i = 0; i < cant; i ++)
+    		arr.add(ShuffledBag.get(i));
+    	return arr;
     }
 }

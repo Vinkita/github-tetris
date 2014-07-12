@@ -32,7 +32,7 @@ public class Tetromino {
 				String key = type + i;
 				String[] values = new String[4]; 
 				for(int j = 1; j <= 4; j++) {
-					values[j-1] = key + j + ".png";
+					values[j-1] = key + j;
 				}
 				colors.put(key, values);
 			}
@@ -52,52 +52,52 @@ public class Tetromino {
     
     public static final RotatablePiece T_SHAPE = new RotatablePiece(4, 0, new Array<BlockDrawable>(
     																		new BlockDrawable[] {
-					    														new BlockDrawable(new Point(0,1), "T01.png"),
-					    														new BlockDrawable(new Point(-1,0), "T02.png"),
-					    														new BlockDrawable(new Point(0,0), "T03.png"),
-					    														new BlockDrawable(new Point(1,0), "T04.png")
+					    														new BlockDrawable(new Point(0,1), "T01"),
+					    														new BlockDrawable(new Point(-1,0), "T02"),
+					    														new BlockDrawable(new Point(0,0), "T03"),
+					    														new BlockDrawable(new Point(1,0), "T04")
     																		}), "T");
     public static final RotatablePiece I_SHAPE = new RotatablePiece(4, 0, new Array<BlockDrawable>(
 																			new BlockDrawable[] {
-																					new BlockDrawable(new Point(-2,0), "I01.png"),
-																					new BlockDrawable(new Point(-1,0), "I02.png"),
-																					new BlockDrawable(new Point(0,0), "I03.png"),
-																					new BlockDrawable(new Point(1,0), "I04.png"),
+																					new BlockDrawable(new Point(-2,0), "I01"),
+																					new BlockDrawable(new Point(-1,0), "I02"),
+																					new BlockDrawable(new Point(0,0), "I03"),
+																					new BlockDrawable(new Point(1,0), "I04"),
 																				}), "I");
     public static final RotatablePiece O_SHAPE = new RotatablePiece(1, 0, new Array<BlockDrawable>(
 																			new BlockDrawable[] {
-																					new BlockDrawable(new Point(0,1), "O01.png"),
-																					new BlockDrawable(new Point(1,1), "O02.png"),
-																					new BlockDrawable(new Point(0,0), "O03.png"),
-																					new BlockDrawable(new Point(1,0), "O04.png"),
+																					new BlockDrawable(new Point(0,1), "O01"),
+																					new BlockDrawable(new Point(1,1), "O02"),
+																					new BlockDrawable(new Point(0,0), "O03"),
+																					new BlockDrawable(new Point(1,0), "O04"),
 																				}), "O");
     public static final RotatablePiece S_SHAPE = new RotatablePiece(4, 0, new Array<BlockDrawable>(
 																			new BlockDrawable[] {
-																					new BlockDrawable(new Point(0,0), "S01.png"),
-																					new BlockDrawable(new Point(1,0), "S02.png"),
-																					new BlockDrawable(new Point(-1,-1), "S03.png"),
-																					new BlockDrawable(new Point(0,-1), "S04.png"),
+																					new BlockDrawable(new Point(0,0), "S01"),
+																					new BlockDrawable(new Point(1,0), "S02"),
+																					new BlockDrawable(new Point(-1,-1), "S03"),
+																					new BlockDrawable(new Point(0,-1), "S04"),
 																				}), "S");
     public static final RotatablePiece Z_SHAPE = new RotatablePiece(4, 0, new Array<BlockDrawable>(
 																			new BlockDrawable[] {
-																					new BlockDrawable(new Point(-1,0), "Z01.png"),
-																					new BlockDrawable(new Point(0,0), "Z02.png"),
-																					new BlockDrawable(new Point(0,-1), "Z03.png"),
-																					new BlockDrawable(new Point(1,-1), "Z04.png"),
+																					new BlockDrawable(new Point(-1,0), "Z01"),
+																					new BlockDrawable(new Point(0,0), "Z02"),
+																					new BlockDrawable(new Point(0,-1), "Z03"),
+																					new BlockDrawable(new Point(1,-1), "Z04"),
 																				}), "Z");
     public static final RotatablePiece L_SHAPE = new RotatablePiece(4, 0, new Array<BlockDrawable>(
 																			new BlockDrawable[] {
-																					new BlockDrawable(new Point(1,1), "L01.png"),
-																					new BlockDrawable(new Point(-1,0), "L02.png"),
-																					new BlockDrawable(new Point(0,0), "L03.png"),
-																					new BlockDrawable(new Point(1,0), "L04.png"),
+																					new BlockDrawable(new Point(1,1), "L01"),
+																					new BlockDrawable(new Point(-1,0), "L02"),
+																					new BlockDrawable(new Point(0,0), "L03"),
+																					new BlockDrawable(new Point(1,0), "L04"),
 																				}), "L");
     public static final RotatablePiece J_SHAPE = new RotatablePiece(4, 0, new Array<BlockDrawable>(
 																			new BlockDrawable[] {
-																					new BlockDrawable(new Point(-1,1), "J01.png"),
-																					new BlockDrawable(new Point(-1,0), "J02.png"),
-																					new BlockDrawable(new Point(0,0), "J03.png"),
-																					new BlockDrawable(new Point(1,0), "J04.png"),
+																					new BlockDrawable(new Point(-1,1), "J01"),
+																					new BlockDrawable(new Point(-1,0), "J02"),
+																					new BlockDrawable(new Point(0,0), "J03"),
+																					new BlockDrawable(new Point(1,0), "J04"),
 																				}), "J");
     private Tetromino(){
     }

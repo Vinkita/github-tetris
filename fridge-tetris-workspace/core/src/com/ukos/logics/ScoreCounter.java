@@ -41,4 +41,9 @@ public class ScoreCounter implements IRowListener{
     public int getRemovedRows() {
         return removedRows;
     }
+    
+    public void reset(){
+    	totalScore = 0;
+        removedRows = 0;
+    }
 }

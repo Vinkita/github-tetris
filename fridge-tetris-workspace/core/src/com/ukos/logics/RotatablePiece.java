@@ -14,7 +14,7 @@ public class RotatablePiece implements RotatableGrid{
     
     public RotatablePiece(int maxRots, int curRotation, Array<BlockDrawable> shapeBlocks, String textureKey) {
         this(maxRots, curRotation);
-        FixedShape piece = firstRotation(new FixedShape(shapeBlocks), curRotation);
+        FixedShape piece = firstRotation(new FixedShape(shapeBlocks, textureKey), curRotation);
         this.rotations = fillRotations(piece, maxRots, textureKey);
     }
     
@@ -94,5 +94,9 @@ public class RotatablePiece implements RotatableGrid{
 	@Override
 	public Array<BlockDrawable> allBlocks() {
 		return getCurrentShape().allBlocks();
+	}
+
+	public String getTextureKey() {
+		return getCurrentShape().getTextureKey();
 	}
 }
