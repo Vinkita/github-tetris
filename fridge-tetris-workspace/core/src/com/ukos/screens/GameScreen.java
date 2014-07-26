@@ -29,8 +29,6 @@ public class GameScreen implements Screen, InputProcessor, Observer, IStopBlockL
 	
 	private ScoreCounter puntos;
 	
-	public static boolean pauseLock = false; 
-	private boolean paused = false;
 	private enum State {
 		RUNNING, PAUSED, OVER
 	}

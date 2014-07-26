@@ -47,28 +47,28 @@ I2
   index: -1  
 I21
   rotate: false
-  xy: 0, 612
+  xy: 459, 612
   size: 153, 153
   orig: 153, 153
   offset: 0, 0
   index: -1
 I22
   rotate: false
-  xy: 153, 612
+  xy: 306, 612
   size: 153, 153
   orig: 153, 153
   offset: 0, 0
   index: -1
 I23
   rotate: false
-  xy: 306, 612
+  xy: 153, 612
   size: 153, 153
   orig: 153, 153
   offset: 0, 0
   index: -1
 I24
   rotate: false
-  xy: 459, 612
+  xy: 0, 612
   size: 153, 153
   orig: 153, 153
   offset: 0, 0
