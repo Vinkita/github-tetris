@@ -59,6 +59,7 @@ public abstract class TransluscentMenuScreen extends Observable{
 		black = new Image(skin, "black");
 		black.setColor(0, 0, 0, 0);
 		black.setFillParent(true);
+		black.setVisible(false);
 		stage.addActor(black);
 		setStrings();
 		

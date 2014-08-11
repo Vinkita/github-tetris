@@ -12,9 +12,9 @@ import com.badlogic.gdx.utils.Array;
  *
  * @author Ukita
  */
-public class FixedShape implements RotatableGrid{
+public class FixedShape implements RotatableGrid, Cloneable{
 
-    private final Array<BlockDrawable> blocks;
+    private Array<BlockDrawable> blocks;
     private final String textureKey;
 
     public FixedShape(Array<BlockDrawable> blocks, String textureKey) {
@@ -84,6 +84,15 @@ public class FixedShape implements RotatableGrid{
 
 	public String getTextureKey() {
 		return textureKey;
+	}
+	
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		FixedShape aux = (FixedShape)super.clone();
+		aux.blocks = new Array<BlockDrawable>();
+		for(BlockDrawable block : blocks)
+			aux.blocks.add((BlockDrawable) block.clone());
+		return aux;
 	}
 
 }

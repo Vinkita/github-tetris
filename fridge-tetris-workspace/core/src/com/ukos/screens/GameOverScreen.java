@@ -31,6 +31,7 @@ public class GameOverScreen extends TransluscentMenuScreen {
 	@Override
 	public void fadeOut() {
 		Timeline.createSequence().beginSequence()
+		.push(Tween.set(black, ActorAccessor.VISIBILITY).target(1))
 		.push(Tween.to(black, ActorAccessor.ALPHA, .25f).target(1))
 		.push(Tween.set(table, ActorAccessor.ALPHA).target(0))
 		.push(Tween.to(black, ActorAccessor.ALPHA, .25f).target(0))

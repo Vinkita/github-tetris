@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.TimeUtils;
 
 public class Board implements Grid{
@@ -23,12 +24,17 @@ public class Board implements Grid{
 	private int removedRows = 0;
 	private boolean ghostActivated = false;
 	private boolean gameOver = false;
+	
+	//Experimental
+	private ArrayMap<Integer, String[]> deletedRowsInfo = new ArrayMap<Integer, String[]>();
 
     
     public Board(float width, float height) {
         tablero = new Array<BlockDrawable>();
         this.width = width;
         this.height = height;
+        deletedRowsInfo.ordered = true;
+        reset();
     }
     
     public void reset(){
@@ -60,6 +66,8 @@ public class Board implements Grid{
 			e.printStackTrace();
 		}
 		while(moveIfNoConflict(ghost.moveDown(), ghost));		
+		for (BlockDrawable block : ghost.allBlocks())
+			block.setGhost(true);
 	}
 
 	public void tick() {
@@ -120,8 +128,10 @@ public class Board implements Grid{
         if(row >= 0){
         	for (Iterator<BlockDrawable> blocks = tablero.iterator(); blocks.hasNext();){
         		BlockDrawable block = blocks.next();
-        		if (block.getPoint().Y() == row)
+        		if (block.getPoint().Y() == row){
+        			deletedRowsInfo.get((int)row)[(int)block.getPoint().X()] = block.getStyle();
         			blocks.remove();
+        		}
         		else if (block.getPoint().Y() > row)
         			block.setPunto(block.getPoint().moveDown());
         	}
@@ -133,6 +143,7 @@ public class Board implements Grid{
     	
     	for (float y = height; y >= 0 && contRows < 4; y--) {
     		if (isFullRow(y)) {
+    			deletedRowsInfo.insert(deletedRowsInfo.size, Integer.valueOf((int)y), new String[10]);
     			contRows++;
     			deleteRow(y);
     		}
@@ -347,6 +358,18 @@ public class Board implements Grid{
         return EMPTY;
     }
 
+    public Array<BlockDrawable> getAllBlocksToDraw() {
+    	Array<BlockDrawable> blocksToDraw = new Array<BlockDrawable>();
+		blocksToDraw.addAll(tablero);
+		if(isGhostActivated()){
+			blocksToDraw.addAll(getGhostBlocksToDraw());
+		}
+		if (hasFalling())
+			blocksToDraw.addAll(falling.allOuterBlocks());
+		
+		return blocksToDraw;
+    }
+    
 	public Array<BlockDrawable> getBoardBlocksToDraw() {
 		Array<BlockDrawable> blocksToDraw = new Array<BlockDrawable>();
 		blocksToDraw.addAll(tablero);
@@ -431,6 +454,10 @@ public class Board implements Grid{
 	    */
 	public int getRemovedRows() {
 		return removedRows;
+	}
+	
+	public ArrayMap<Integer, String[]> getDeletedRows() {
+		return deletedRowsInfo;
 	}
 	
 	public Array<RotatablePiece> getPreviewPieces(int cant){

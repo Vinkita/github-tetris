@@ -12,6 +12,9 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.input.GestureDetector.GestureListener;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.ukos.fridgetetris.BoardRenderer;
 import com.ukos.fridgetetris.TetrominoControladora;
@@ -19,7 +22,7 @@ import com.ukos.logics.Board;
 import com.ukos.logics.IStopBlockListener;
 import com.ukos.logics.ScoreCounter;
 
-public class GameScreen implements Screen, InputProcessor, Observer, IStopBlockListener {
+public class GameScreen implements Screen, InputProcessor, GestureListener, Observer, IStopBlockListener {
 	
 	private Board tablero;
 	private BoardRenderer renderer;
@@ -28,6 +31,9 @@ public class GameScreen implements Screen, InputProcessor, Observer, IStopBlockL
 	private TransluscentMenuScreen over;
 	
 	private ScoreCounter puntos;
+	
+//	TEMPORARIO ENCONTRAR MEJOR FORMA POR DIOS
+	private int ppm = 40;
 	
 	private enum State {
 		RUNNING, PAUSED, OVER
@@ -83,7 +89,8 @@ public class GameScreen implements Screen, InputProcessor, Observer, IStopBlockL
 		over.addObserver(this);
 		over.setTween(tweenManager);
 		
-		Gdx.input.setInputProcessor(new InputMultiplexer(this, pause.getStage()));
+		Gdx.input.setInputProcessor(new InputMultiplexer(this, new GestureDetector(this), pause.getStage()));
+		state = State.RUNNING;
 	}
 
 	@Override
@@ -156,13 +163,20 @@ public class GameScreen implements Screen, InputProcessor, Observer, IStopBlockL
 	
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
+		if(state == State.RUNNING)
+		{
+			controladora.touchDown(screenX, Gdx.graphics.getHeight() - screenY, ppm);
+			return false;
+		}
 		return false;
 	}
 	
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
+		if(state == State.RUNNING) {
+			controladora.downReleased();
+			return false;
+		}
 		return false;
 	}
 	
@@ -228,6 +242,61 @@ public class GameScreen implements Screen, InputProcessor, Observer, IStopBlockL
 			state = State.OVER;
 			over.fadeIn();			
 		}
+	}
+
+	@Override
+	public boolean touchDown(float x, float y, int pointer, int button) {
+//		controladora.touchDown(x, y, ppm);
+		return false;
+	}
+
+	@Override
+	public boolean tap(float x, float y, int count, int button) {
+		if(state == State.RUNNING) {				
+			controladora.tap();
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean longPress(float x, float y) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean fling(float velocityX, float velocityY, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean pan(float x, float y, float deltaX, float deltaY) {
+		if(state == State.RUNNING){
+			controladora.pan(deltaX, ppm);
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean panStop(float x, float y, int pointer, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean zoom(float initialDistance, float distance) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2,
+			Vector2 pointer1, Vector2 pointer2) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 

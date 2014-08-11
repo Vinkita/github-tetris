@@ -99,4 +99,13 @@ public class RotatablePiece implements RotatableGrid{
 	public String getTextureKey() {
 		return getCurrentShape().getTextureKey();
 	}
+	
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		RotatablePiece aux = (RotatablePiece) super.clone();
+		aux.rotations = new Array<FixedShape>();
+		for (FixedShape shape : rotations)
+			aux.rotations.add((FixedShape) shape.clone());
+		return aux;
+	}
 }

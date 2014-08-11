@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.Array;
  *
  * @author Ukita
  */
-public interface RotatableGrid extends Grid{
+public interface RotatableGrid extends Grid {
     
     RotatableGrid rotateRight();
     
@@ -21,4 +21,7 @@ public interface RotatableGrid extends Grid{
     Array<Point> getPoints();
     
     Array<BlockDrawable> allBlocks();
+
+	Object clone() throws CloneNotSupportedException;
+
 }

@@ -10,7 +10,7 @@ package com.ukos.logics;
  *
  * @author Ukita
  */
-public interface Grid{
+public interface Grid extends Cloneable{
 	
 	public static String EMPTY = ".";
     

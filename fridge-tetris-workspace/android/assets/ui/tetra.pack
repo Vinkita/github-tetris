@@ -1003,3 +1003,15 @@ Z34
   orig: 153, 153
   offset: 0, 0
   index: -1
+
+fridge.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Fridge
+  rotate: false
+  xy: 0, 0
+  size: 480, 880
+  orig: 480, 880
+  offset: 0, 0
+  index: -1

@@ -8,6 +8,9 @@ import com.ukos.logics.Board;
 public class TetrominoControladora {
 	
 	private Board tablero;
+	private int horizIters = 0;
+	private float horizPrevPos = 0;
+	private float horizCurPos = 0;
 	
 	public TetrominoControladora(Board tablero) {
 		this.tablero = tablero;
@@ -49,6 +52,26 @@ public class TetrominoControladora {
 	public void upReleased() {
 		keys.put(Keys.UP, false);
 	}
+	
+	public void tap(){
+		upPressed();
+	}
+	
+	public void pan(float deltaX, int ppm) {
+		horizPrevPos = horizCurPos;
+		horizCurPos += deltaX;				
+//		horizIters = (int) Math.floor(horizCurPos / ppm);
+		horizIters = (int) Math.copySign(Math.floor(Math.abs(horizCurPos) / ppm), horizCurPos);
+		if(horizIters != 0){
+			for (int i = 0; i < horizIters; i++)
+				tablero.movePieceToRight();
+			for (int i = 0; i > horizIters; i--)
+				tablero.movePieceToLeft();
+			horizCurPos = (horizCurPos % horizIters);
+			horizIters = 0;
+		}
+		
+	}
 
 	/** The main update method. It recalculates the actual inputs. **/
 	public void update(float delta) {
@@ -72,5 +95,12 @@ public class TetrominoControladora {
 			upReleased();
 		}
 	}
+	public void touchDown(float x, float y, int ppm) {
+		if(y / ppm <=  2){
+			downPressed();
+		}
+		
+	}
+	
 
 }

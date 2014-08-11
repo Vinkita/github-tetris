@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.Array;
  *
  * @author MarianoMDQ
  */
-public class FallingPiece{
+public class FallingPiece implements Cloneable{
     
     private  Point coord;
     private RotatableGrid innerPiece;
@@ -88,7 +88,7 @@ public class FallingPiece{
     public Array<BlockDrawable> allOuterBlocks(){
     	Array<BlockDrawable> allBlocks = new Array<BlockDrawable>();
     	for (BlockDrawable block : innerPiece.allBlocks())
-    		allBlocks.add(new BlockDrawable(toOuterPoint(block.getPoint()), block.getStyle()));
+    		allBlocks.add(new BlockDrawable(toOuterPoint(block.getPoint()), block.getStyle(), block.isGhost()));
     	return allBlocks;
     }
     
@@ -112,7 +112,7 @@ public class FallingPiece{
     
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        return new FallingPiece(new Point(coord.X(), coord.Y()), innerPiece);
+        return new FallingPiece(new Point(coord.X(), coord.Y()), (RotatableGrid)innerPiece.clone());
     }
 
     public String toString() {

@@ -45,5 +45,10 @@ public class Block implements RotatableGrid{
 	public Array<BlockDrawable> allBlocks() {
 		return new Array<BlockDrawable>(new BlockDrawable[] { new BlockDrawable(new Point(0,0), style)});
 	}
+	
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
     
 }
