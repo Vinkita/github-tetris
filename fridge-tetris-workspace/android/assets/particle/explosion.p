@@ -2,16 +2,16 @@ Bloques
 - Delay -
 active: false
 - Duration - 
-lowMin: 400.0
-lowMax: 400.0
+lowMin: 600.0
+lowMax: 600.0
 - Count - 
 min: 3
 max: 3
 - Emission - 
-lowMin: 2.0
-lowMax: 2.0
-highMin: 6.0
-highMax: 6.0
+lowMin: 4.0
+lowMax: 4.0
+highMin: 12.0
+highMax: 12.0
 relative: false
 scalingCount: 2
 scaling0: 0.47058824
@@ -22,8 +22,8 @@ timeline1: 1.0
 - Life - 
 lowMin: 0.0
 lowMax: 0.0
-highMin: 400.0
-highMax: 400.0
+highMin: 600.0
+highMax: 600.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
@@ -60,8 +60,8 @@ timeline0: 0.0
 - Scale - 
 lowMin: 0.0
 lowMax: 0.0
-highMin: 0.25
-highMax: 0.5
+highMin: 0.2
+highMax: 0.8
 relative: false
 scalingCount: 1
 scaling0: 1.0
@@ -71,11 +71,11 @@ timeline0: 0.0
 active: true
 lowMin: 0.0
 lowMax: 0.0
-highMin: 25.0
-highMax: 25.0
+highMin: 50.0
+highMax: 50.0
 relative: false
 scalingCount: 2
-scaling0: 0.39215687
+scaling0: 0.5294118
 scaling1: 1.0
 timelineCount: 2
 timeline0: 0.0
@@ -84,8 +84,8 @@ timeline1: 1.0
 active: true
 lowMin: 0.0
 lowMax: 0.0
-highMin: 60.0
-highMax: 120.0
+highMin: 70.0
+highMax: 110.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
@@ -95,8 +95,8 @@ timeline0: 0.0
 active: true
 lowMin: 0.0
 lowMax: 0.0
-highMin: 400.0
-highMax: 400.0
+highMin: 700.0
+highMax: 700.0
 relative: false
 scalingCount: 2
 scaling0: 0.0
@@ -110,8 +110,8 @@ active: false
 active: true
 lowMin: 0.0
 lowMax: 0.0
-highMin: -50.0
-highMax: -50.0
+highMin: -110.0
+highMax: -110.0
 relative: false
 scalingCount: 3
 scaling0: 0.0
@@ -151,4 +151,4 @@ aligned: false
 additive: false
 behind: false
 - Image Path -
-C:\Users\Usuario\Documents\GitHub\github-tetris\fridge-tetris-workspace\android\assets\data\tetrominos\S33.png
+E:\UKITA\Documents\GitHub\github-tetris\fridge-tetris-workspace\android\assets\particle\default.png
