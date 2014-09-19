@@ -93,7 +93,7 @@ public abstract class TransluscentMenuScreen extends Observable{
 		table = new Table(skin);
 		table.setFillParent(true);
 		table.setBackground(background);
-		table.add(new Label(headerText, skin)).spaceBottom(100).row();
+		table.add(new Label(headerText, skin, "tetris")).spaceBottom(100).row();
 		table.add(buttonBack).spaceBottom(15).row();
 		table.add(buttonMenu).spaceBottom(15).uniformX().row();
 		table.add(buttonExit);

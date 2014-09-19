@@ -14,6 +14,8 @@ public class ScoreCounter implements IRowListener{
     
     private int totalScore = 0;
     private int removedRows = 0;
+    private int lastScore = 0;
+    private int level;
     
     public static final int POINTS_1_ROW = 40;
     public static final int POINTS_2_ROWS = 100;
@@ -27,11 +29,21 @@ public class ScoreCounter implements IRowListener{
                                             POINTS_3_ROWS,
                                             POINTS_4_ROWS };
     
+    public ScoreCounter(int initialLevel){
+    	level = initialLevel;
+    }
+    
+    public int getLastScore(){
+    	return lastScore;
+    }    
 
     @Override
-    public void onRowsRemoved(int rows) {
+    public void onRowsRemoved(int rows, int boardLevel) {
+    	if(level < boardLevel)
+    		level = boardLevel;
         removedRows += rows;
-        totalScore += scoreSys[rows];
+        lastScore = scoreSys[rows] * (level + 1);
+        totalScore += lastScore;
     }
 
     public int getTotalScore() {
@@ -45,5 +57,6 @@ public class ScoreCounter implements IRowListener{
     public void reset(){
     	totalScore = 0;
         removedRows = 0;
+        lastScore = 0;
     }
 }

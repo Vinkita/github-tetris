@@ -6,11 +6,14 @@ import com.ukos.logics.Point;
 import com.ukos.logics.RotatableGrid;
 
 /**
- *
- * @author MarianoMDQ
+ * Crea una RotatableGrid de 1x1 bloque 
+ * @author Ukos
  */
 public class Block implements RotatableGrid{
     
+    /**
+     * El codigo de estilo del bloque
+     */
     private final String style;
     
     public Block(String style) {

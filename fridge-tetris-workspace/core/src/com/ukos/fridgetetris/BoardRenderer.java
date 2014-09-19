@@ -2,133 +2,192 @@ package com.ukos.fridgetetris;
 
 import java.util.Iterator;
 
+import aurelienribon.tweenengine.BaseTween;
+import aurelienribon.tweenengine.Timeline;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
+import aurelienribon.tweenengine.TweenManager;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
+import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.esotericsoftware.tablelayout.Cell;
 import com.ukos.logics.BlockDrawable;
 import com.ukos.logics.Board;
 import com.ukos.logics.IStopBlockListener;
-import com.ukos.logics.RotatablePiece;
+import com.ukos.logics.Point;
 import com.ukos.logics.ScoreCounter;
 import com.ukos.logics.Tetromino;
 import com.ukos.logics.Tetromino.shape;
+import com.ukos.tween.BmFontAccessor;
 
 public class BoardRenderer implements IStopBlockListener{
 
 	private OrthographicCamera camera;
+	private OrthographicCamera cameraGUI;
 	private SpriteBatch batch;
-//	private ArrayMap<String, Texture> textures;
 	private Board tablero;
-	
+	private ScoreCounter puntos;	
+	TweenManager tweenManager;
 	
 	//TEXTURAS
 	private TextureAtlas atlas;
-	private Skin skin;
 	private ArrayMap<String, TextureRegion> texRegions;
-	private ArrayMap<String, Image> prevRegions;
-	private Array<Cell<Actor>> cellPrevs;
+	private ArrayMap<String, TextureRegion> prevRegions;	
+	private Array<BlockDrawable> previewList;	
 	private TextureRegion heladera;
-	private int ppm = 32;
+	private Texture rayas;
 	
-	private ScoreCounter puntos;
-	private String scoreText;
+	//FUENTES
+	private BitmapFont labelFont; 
+	private BitmapFont numberFont; 
+	private BitmapFont scoreCenterFont; 
+	private String levelLabel;
+	private String levelString;
+	private String scoreLabel;
 	private String scoreString;
-	private Label PointsLabel;
-	private Label ScoreLabel;
-	private Table table;
-	private Table tableSide;
-	private Stage stage;
-	private int prevCant = 1;
-	private Vector2 offset = new Vector2(1, 1);
+	private int score;	
+	private int scoreVisual;	
+	private int prevCant;
 	
-//	private Array<Sprite> prev = new Array<Sprite>();
-	
-	private int screenWidth = 12;
-	private int screenHeight = 22;
+	//DIMENSIONES PANTALLA Y UBICACION ELEMENTOS
+	private int boardWidth;
+	private int boardHeight;
+	private int PIXELS_PER_METER;
+	private float viewportWidth;
+	private float viewportHeight;
+	private float scoreXPosition;
+	private float scoreYPosition;
+	private Vector2 boardOffset;
+	private Vector2 previewOffset;
 	
 //ParticleEffect
 	private ParticleEffect particle;
 	private ParticleEffectPool pool;
 	private Array<PooledEffect> effects;
 	private ExplosionChecker explosionChecker = new ExplosionChecker();
+	private Timeline boing;
 	
 	public BoardRenderer(Board tablero, ScoreCounter puntos) {
-	//ParticleEffect
-			particle = new ParticleEffect();
-			particle.load(Gdx.files.internal("particle/explosion.p"), Gdx.files.internal("data/tetrominos"));
-			pool = new ParticleEffectPool(particle, 0, 16);
-			effects = new Array<PooledEffect>();
-		
-		camera = new OrthographicCamera();
-		//The base unit for screen dimensions is equal to one tetromino unit
-		//The playfield is 10 wide x 20 high.
-		//The playfield is centered on the screen with 1 unit blank all around.
-		//So, final camera perspective is is 12 wide x 20 high
-		camera.setToOrtho(false, screenWidth, screenHeight);
-		
-		batch = new SpriteBatch();
 		this.tablero = tablero;
 		this.puntos = puntos;
+		init();
+	}
+	
+	public void init(){
+		boardWidth = (int) (tablero.getWidth() + 2);
+		boardHeight = (int) (tablero.getHeight() + 2);
+		boardOffset = new Vector2(1, 1);
+		previewOffset = new Vector2(boardWidth, boardHeight / 2);
+		prevCant = GamePreferences.instance.previews;		
+		initParticles();		
+		initCameras();
 		
+		batch = new SpriteBatch();			
 		atlas = new TextureAtlas("ui/tetra.pack");		
 		setupPieceTextures();
 		setupPreviewTextures();
+		setupPreviewList();
+		initFonts();		
+		initTween();
+	}
+	
+	public void reset(){
+		score = scoreVisual = 0;
+		updateScore();
+	}
+	
+	private void initParticles(){
+		//ParticleEffect
+		particle = new ParticleEffect();
+		particle.load(Gdx.files.internal("particle/explosion.p"), Gdx.files.internal("particle"));
+		pool = new ParticleEffectPool(particle, 0, 16);
+		effects = new Array<PooledEffect>();
+	}
+
+	private void initCameras(){
+		calculateViewPortDimensions();
+		camera = new OrthographicCamera();
+		cameraGUI = new OrthographicCamera();
+		camera.setToOrtho(false, viewportWidth, viewportHeight);
+		cameraGUI.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+	}
+	
+	private void initFonts(){
+		numberFont = new BitmapFont(Gdx.files.internal("fonts/Opificio_15.fnt"), true);
+		numberFont.setColor(Color.BLACK);
+		numberFont.setScale(1f);
+		numberFont.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);				
+		labelFont = new BitmapFont(Gdx.files.internal("fonts/Opificio_15.fnt"), true);
+		labelFont.setColor(Color.OLIVE);
+		labelFont.setScale(1.5f);
+		labelFont.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);				
+		scoreCenterFont = new BitmapFont(Gdx.files.internal("fonts/Opificio_64.fnt"), true);
+		scoreCenterFont.setColor(Color.BLACK);
+		scoreCenterFont.setColor(Color.BLACK.r, Color.BLACK.g, Color.BLACK.b, 0);
+		scoreCenterFont.setScale(1f);
+		scoreCenterFont.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);				
+		scoreLabel = "SCORE";
+		levelLabel = "LEVEL";
+		scoreVisual = score = 0;
+		levelString = "" + tablero.getLevel();
+	}
+	
+	private void initTween(){
+		tweenManager = new TweenManager();
+		Tween.registerAccessor(BitmapFont.class, new BmFontAccessor());
+		boing = Timeline.createParallel().beginParallel()
+				.push(Tween.to(scoreCenterFont, BmFontAccessor.SCALE, .5f).target(2).repeatYoyo(1, 0))
+				.push(Tween.to(scoreCenterFont, BmFontAccessor.COLOR, .5f).target(0, 0, 1).repeatYoyo(1, 0))
+				.push(Tween.to(scoreCenterFont, BmFontAccessor.ALPHA, .5f).target(1).repeatYoyo(1, 0).setCallback(new TweenCallback() {					
+					@Override
+					public void onEvent(int type, BaseTween<?> source) {
+						boing.pause();						
+					}
+				}))				
+				.repeat(-1, 0)
+				.end()
+				.start(tweenManager);
+		boing.pause();
+//				tweenManager.update(Gdx.graphics.getDeltaTime());
+	}
+	
+	private void calculateViewPortDimensions() {
+		int screenWidth = Gdx.graphics.getWidth();
+		int screenHeight = Gdx.graphics.getHeight();
+		float targetRatio = boardHeight / (boardWidth + 1);
+		float screenRatio = screenHeight / screenWidth;
 		
-		cellPrevs = new Array<Cell<Actor>>();
+		if(screenRatio > targetRatio){
+			viewportWidth = (boardWidth + 1);
+			PIXELS_PER_METER = (int) (screenWidth / viewportWidth);
+			viewportHeight = screenHeight / PIXELS_PER_METER;
+		} else {
+			viewportHeight = boardHeight;
+			PIXELS_PER_METER = (int) (screenHeight / viewportHeight);					
+			viewportWidth = (screenWidth / PIXELS_PER_METER)+.5f;
+		} 	
 		
-		stage = new Stage();
-		skin = new Skin(Gdx.files.internal("ui/menuSkin.json"), new TextureAtlas("ui/atlas.pack"));
-		scoreText = "SCORE";
-		ScoreLabel = new Label(scoreText, skin);	
-		PointsLabel = new Label("0", skin);	
-		ScoreLabel.setFontScale(.2f);
-		PointsLabel.setFontScale(.5f);
-		ScoreLabel.setColor(Color.BLACK);
-		PointsLabel.setColor(Color.BLACK);
-		
-//		TAble Setup
-		tableSide = new Table(skin);
-		tableSide.add(ScoreLabel).row();
-		tableSide.add(PointsLabel).right();
-		setupPreview(tableSide);
-		
-		table = new Table(skin);
-		table.setFillParent(true);
-		table.debug();
-		
-		table.setBounds(0, 0, stage.getWidth(), stage.getHeight());
-		table.add().expand(12, 22).maxSize(12f, 22f);
-		table.add(tableSide);
-		stage.addActor(table);
-		
-//		skinMenu = new Skin(Gdx.files.internal("ui/mainMenuSkin.json"), new TextureAtlas("ui/menu.pack"));
-//		pausa  = new PauseScreen(stage, skinMenu);
+		scoreXPosition = (boardWidth)*PIXELS_PER_METER;
+		scoreYPosition = (boardHeight/10)*PIXELS_PER_METER;
 	}
 
 	public void render(float delta) {
-		Table.drawDebug(stage);
 		camera.update();
       
 		//render by ortho camera coordinates:
@@ -136,27 +195,11 @@ public class BoardRenderer implements IStopBlockListener{
 		
 		//Draw current grid:
 		batch.begin();
-		batch.draw(heladera, 0, 0, 12, 22);
-//		for (BlockDrawable block : tablero.getBoardBlocksToDraw()) {
-//			drawBlock(block);
-//		}
-//		if(tablero.isGhostActivated()){			
-//			batch.setColor(1.0f,1.0f,1.0f,0.5f);
-//			for (BlockDrawable block : tablero.getGhostBlocksToDraw()) {
-//				drawBlock(block);				
-////				ghostSprite.setTexture(textures.get(block.getStyle()));
-////				ghostSprite.setSize(rect.width, rect.height);
-////				ghostSprite.setPosition(rect.x, rect.y);
-////				ghostSprite.setColor(1.0f, 1.0f, 1.0f, 0.5f);
-////				ghostSprite.draw(batch);
-//			}
-//			batch.setColor(Color.WHITE);
-//		}
-//		for(BlockDrawable block : tablero.getFallingBlocksToDraw()){
-//			drawBlock(block);
-//		}
+		batch.draw(rayas, 0, 0, viewportWidth, viewportHeight);
+		batch.draw(heladera, 0, 0, boardWidth, boardHeight);		
 		for (BlockDrawable block : tablero.getAllBlocksToDraw())
-			block.draw(batch, texRegions.get(block.getStyle()), offset );
+			block.draw(batch, texRegions.get(block.getStyle()), boardOffset );
+
 		
 		explosionChecker.checkRowExplosion();
 		
@@ -171,21 +214,18 @@ public class BoardRenderer implements IStopBlockListener{
 //				}
 		}
 
+		renderPreview();
+		renderScore(delta);
+		tweenManager.update(delta);
+		renderBoing();
 		batch.end();
 		
-		stage.act(delta);
-		stage.draw();
 	}
-	
-//	private void drawBlock(BlockDrawable block){
-//		Rectangle rect = gridRectangles[(int) block.getPoint().Y()][(int) block.getPoint().X()];
-//		batch.draw(texRegions.get(block.getStyle()), rect.x, rect.y, rect.width, rect.height);
-//	}	
 
 	public void resize(int width, int height) {
-		stage.setViewport(new ExtendViewport(width, height));
-		stage.getViewport().update(width, height, true);
-		table.invalidateHierarchy();
+		calculateViewPortDimensions();
+		camera.setToOrtho(false, viewportWidth, viewportHeight);
+		cameraGUI.setToOrtho(true, width, height);
 	}
 	
 	private void setupPieceTextures(){
@@ -197,59 +237,101 @@ public class BoardRenderer implements IStopBlockListener{
 			}
 		}						
 		heladera = atlas.findRegion("Fridge");
+		rayas = new Texture(Gdx.files.internal("ui/rayas.png")); 
 	}
 	
 	private void setupPreviewTextures(){
-		prevRegions = new ArrayMap<String, Image>();
+		prevRegions = new ArrayMap<String, TextureRegion>();
+		String type;
 		for(shape forma : shape.values()) {
-			String type = forma.name();
-			Image aux = new Image(atlas.findRegion(type));
-//			if(aux.getImageWidth() % 3 == 0){
-//				aux.setWidth(.5f * 3);;
-//			} else if (aux.getImageWidth() % 4 == 0) {
-//				aux.setWidth(.5f * 4);
-//			} else {
-//				aux.setWidth(.5f * 2);
-//			}
-//			aux.setScaling(Scaling.fillX);
-			prevRegions.put(type, aux);
+			type = forma.name();
+			prevRegions.put(type, atlas.findRegion(type));			
 		}
 	}
 	
-	private void setupPreview(Table table){
-		for(int i = 0; i < prevCant; i ++){
-			table.row();
-			Cell<Actor> aux = table.add();
-			aux.size(4 * ppm * .5f, 2 * ppm * .5f);
-			cellPrevs.add(aux);		
+	private void setupPreviewList(){
+		previewList = new Array<BlockDrawable>();
+		float pad = 0;
+		for(int i = 0, j = prevCant; i < j; i++){
+			previewList.add(new BlockDrawable(new Point(0, 0 - i - pad), ""));
+			pad += .25f;
 		}
 	}
 	
-	private void preview(){
-		RotatablePiece paux = tablero.getPreviewPieces(1).get(0);
-		String key = paux.getTextureKey();
-		(cellPrevs.first()).setWidget(prevRegions.get(key));
+	private void updatePreview(){
+		String key;
+		float w , h;	
+		for (int i = 0; i < prevCant; i++){
+			key = tablero.getPreviewPieces(prevCant).get(i).getTextureKey();
+			if(key != "I"){
+				h = 1;
+				if(key != "O"){
+					w = 1.5f;
+				} else {
+					w = 1;
+				}
+			} else{
+				h = .5f;
+				w = 2;
+			}
+			BlockDrawable blaux = previewList.get(i);
+			blaux.setSize(w, h);
+			blaux.setStyle(key);
+		}
+	}
+	
+	private void renderPreview(){
+		for (BlockDrawable blaux : previewList){
+			blaux.draw(batch, prevRegions.get(blaux.getStyle()), previewOffset);
+		}
 	}
 	
 	private void updateScore(){
 		scoreString = "";
-		for(char aux : String.valueOf(puntos.getTotalScore()).toCharArray()){
+		for(char aux : String.valueOf(scoreVisual).toCharArray()){
 			scoreString += aux + "\n";
 		}
-		ScoreLabel.setText(scoreText);
-		PointsLabel.setText(scoreString);
+		score = puntos.getTotalScore();
+		levelString = "" + (tablero.getLevel()+1);
 	}
 
-	@Override
-	public void onStoppedBlock() {
-		updateScore();
-		preview();		
-	}
-
-	public Stage getStage(){
-		return stage;
+	private void renderScore(float delta) {
+		batch.setProjectionMatrix(cameraGUI.combined);
+		if(scoreVisual < score){
+			scoreVisual = (int) Math.min(score, scoreVisual + 250 * (tablero.getLevel()+1) * delta);
+			updateScore();
+		} 
+//		else if (scoreVisual > score){
+//			scoreVisual = score;
+//		}
+//		BitmapFontCache cache = numberFont.getCache();
+//		cache.setWrappedText("" + levelLabel + "\r\n" + levelString 
+//							+ "\r\n\r\n" + scoreLabel + "\r\n" + scoreString,
+//							scoreXPosition, scoreYPosition, 
+//							(viewportWidth-boardWidth)*PIXELS_PER_METER, HAlignment.LEFT);
+//		cache.setColors(Color.OLIVE, 0, levelLabel.toCharArray().length);
+//		cache.setColors(Color.OLIVE, levelLabel.toCharArray().length + 1 , levelLabel.toCharArray().length + 1 + scoreLabel.toCharArray().length);
+//		cache.draw(batch);
+		numberFont.drawWrapped(batch, "" + levelLabel + "\r\n" + levelString 
+				+ "\r\n\r\n" + scoreLabel + "\r\n" + scoreString,
+				scoreXPosition, scoreYPosition, (viewportWidth-boardWidth)*PIXELS_PER_METER);
 	}
 	
+	@Override
+	public void onStoppedBlock() {
+		updateScore();	
+		updatePreview();
+		boing.resume();
+	}
+	
+	void renderBoing(){
+		if(puntos.getLastScore() != 0){
+			float centerX = PIXELS_PER_METER * boardWidth / 2;
+			float centerY = PIXELS_PER_METER * boardHeight / 2;
+			scoreCenterFont.drawMultiLine(batch, String.valueOf(puntos.getLastScore()), 
+					centerX, centerY - (scoreCenterFont.getXHeight()/2), 1, HAlignment.CENTER);			
+		}		
+	}
 	
 private class ExplosionChecker {
 		
@@ -287,6 +369,27 @@ private class ExplosionChecker {
 				lastExplode=TimeUtils.nanoTime();
 			}
 		}
+	}
+
+	public void dispose() {
+		
+		batch.dispose();	
+		
+		atlas.dispose();
+		rayas.dispose();;
+		
+		labelFont.dispose(); 
+		numberFont.dispose(); 
+		scoreCenterFont.dispose(); 
+		
+		particle.dispose();
+		for(PooledEffect auxEffect : effects)
+			auxEffect.dispose();
+		
+	}
+
+	public int getPPM() {
+		return PIXELS_PER_METER;
 	} 
 	
 

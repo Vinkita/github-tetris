@@ -3,10 +3,21 @@ package com.ukos.logics;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.TimeUtils;
 
+/**
+ * Clase que contiene la logica del juego,
+ * dimensiones del tablero
+ * velocidad inicial de las piezas
+ * nivel
+ * 
+ * TODO editar javadoc
+ * @author Ukos
+ *
+ */
 public class Board implements Grid{
     
     private FallingPiece falling;
@@ -22,8 +33,10 @@ public class Board implements Grid{
 	private long lastMove;
 	private ShuffleBag bolsita = new ShuffleBag();
 	private int removedRows = 0;
+	private int totalRows = 0;
 	private boolean ghostActivated = false;
 	private boolean gameOver = false;
+	private int level = 0;
 	
 	//Experimental
 	private ArrayMap<Integer, String[]> deletedRowsInfo = new ArrayMap<Integer, String[]>();
@@ -104,8 +117,18 @@ public class Board implements Grid{
 	        
 	        removedRows = checkLines();
 	        triggerListeners(removedRows);        
+	        totalRows += removedRows;
+	        checkLevel();
         }
     }
+	
+	private void checkLevel(){
+		int aux = (int) Math.floor(totalRows / 10);
+		if(aux > level){
+			level = aux;
+			LevelHelper.setLevelSpeed(aux, this);
+		}
+	}
 	
 	private boolean isAboveLimit(FallingPiece piece){
 		for (Point p : piece.allOuterPoints()) {
@@ -164,7 +187,7 @@ public class Board implements Grid{
     
     private void triggerListeners(int removedRows) {
         for(IRowListener listener : listeners){
-            listener.onRowsRemoved(removedRows);
+            listener.onRowsRemoved(removedRows, level);
         }
     }
     
@@ -436,13 +459,8 @@ public class Board implements Grid{
 	
 	public String toString(){
 		String points = "";		
-		for(BlockDrawable block : getBoardBlocksToDraw()){			
+		for(BlockDrawable block : getAllBlocksToDraw()){			
 			points += "," + block.getPoint().toString();
-		}
-		if(isGhostActivated()){
-			for(BlockDrawable block : getGhostBlocksToDraw()){			
-				points += "," + block.getPoint().toString();
-			}
 		}
 		points = points.replaceFirst(",", "");
 		return points;
@@ -462,6 +480,26 @@ public class Board implements Grid{
 	
 	public Array<RotatablePiece> getPreviewPieces(int cant){
 		return bolsita.preview(cant);
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	protected long getAutoFallRate() {
+		return autoFallRate;
+	}
+
+	protected void setAutoFallRate(long autoFallRate) {
+		this.autoFallRate = autoFallRate;
+	}
+
+	protected long getMoveRate() {
+		return moveRate;
+	}
+
+	protected void setMoveRate(long moveRate) {
+		this.moveRate = moveRate;
 	}
 
 

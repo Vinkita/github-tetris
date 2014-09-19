@@ -72,6 +72,11 @@ public class BlockDrawable implements Cloneable{
 		aux.setPunto(new Point(point.X(), point.Y()));
 		return aux;
 	}
+
+	public void setSize(float w, float h) {
+		 width = w;
+		 height = h;		
+	}
 	
 	
 

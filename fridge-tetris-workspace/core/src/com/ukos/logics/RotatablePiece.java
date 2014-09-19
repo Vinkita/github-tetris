@@ -76,7 +76,9 @@ public class RotatablePiece implements RotatableGrid{
     
     @Override
     public boolean equals(Object o){
-        return this.toString().equals(o.toString());
+    	if(o != null)
+    		return this.toString().equals(o.toString());
+    	return false;
     }
     
     private FixedShape getCurrentShape(){

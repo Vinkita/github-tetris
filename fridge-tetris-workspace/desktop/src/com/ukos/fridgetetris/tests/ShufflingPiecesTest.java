@@ -49,6 +49,42 @@ public class ShufflingPiecesTest extends Assert{
         }
         
         @Test
+        public void no_more_than_4_snake_pieces_in_a_row(){
+        	int snakes = 0;
+        	RotatablePiece tetro;
+        	for(int j = 1; j < 8; j++){
+        		for (int i = 0; i<100000; i++){
+        			bolsita.preview(j);
+        			tetro = bolsita.pullOut();
+        			if (tetro.equals(Tetromino.S_SHAPE) || tetro.equals(Tetromino.Z_SHAPE))
+        				snakes++;
+        			else
+        				snakes = 0;
+        			assertFalse(snakes > 4);
+        		}        		
+        	}
+        }
+        
+        @Test
+        public void no_more_than_2_same_type_pieces_in_a_row(){
+        	int same = 0;
+        	RotatablePiece previous = null;
+        	RotatablePiece tetro = null;
+        	for(int j = 1; j < 8; j++){
+        		for (int i = 0; i<100000; i++){
+        			bolsita.preview(j);
+        			previous = tetro;
+        			tetro = bolsita.pullOut();
+        			if (tetro.equals(previous))
+        				same++;
+        			else
+        				same = 0;
+        			assertFalse(same > 2);
+        		}        		
+        	}
+        }
+        
+        @Test
         public void can_preview_next_piece(){
             assertTrue(bolsita.preview() != null);
         }

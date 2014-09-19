@@ -174,7 +174,7 @@ public class CountingScoreTest extends Assert{
             board.drop(TABL1);
             board.tick();
             
-            counter = new ScoreCounter();
+            counter = new ScoreCounter(board.getLevel());
             board.addRowListener(counter);
             assertEquals("No Rows should be counted yet", 0, counter.getRemovedRows());
             assertEquals("Score should be zero", 0, counter.getTotalScore());

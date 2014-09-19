@@ -10,13 +10,21 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.ukos.fridgetetris.AudioManager;
 import com.ukos.fridgetetris.BoardRenderer;
+import com.ukos.fridgetetris.GamePreferences;
+import com.ukos.fridgetetris.HighScores;
+import com.ukos.fridgetetris.ScoreService;
 import com.ukos.fridgetetris.TetrominoControladora;
 import com.ukos.logics.Board;
 import com.ukos.logics.IStopBlockListener;
@@ -29,11 +37,13 @@ public class GameScreen implements Screen, InputProcessor, GestureListener, Obse
 	private TetrominoControladora controladora;
 	private TransluscentMenuScreen pause;
 	private TransluscentMenuScreen over;
+	private HighScoreLayer highScores;
+	private Music musica;
 	
 	private ScoreCounter puntos;
 	
 //	TEMPORARIO ENCONTRAR MEJOR FORMA POR DIOS
-	private int ppm = 40;
+	private int PPM = 40;
 	
 	private enum State {
 		RUNNING, PAUSED, OVER
@@ -42,11 +52,21 @@ public class GameScreen implements Screen, InputProcessor, GestureListener, Obse
 	static State state = State.RUNNING;
 	
 	TweenManager tweenManager = new TweenManager();
+	private Stage stage;
+	
+	public GameScreen(){
+		this(new HighScoreLayer(new Skin(Gdx.files.internal("ui/mainMenuSkin.json"), new TextureAtlas("ui/menu.pack"))));
+	}
+	public GameScreen(HighScoreLayer hs){
+		this.highScores = hs;
+//		highScores.setSkin(skin);
+	}
 
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0.1f, 0.1f, 0.3f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		Table.drawDebug(stage);
 		switch(state){
 			case PAUSED:
 			case OVER:
@@ -58,20 +78,24 @@ public class GameScreen implements Screen, InputProcessor, GestureListener, Obse
 		}
 		renderer.render(delta);
 		tweenManager.update(delta);
-
+		stage.act(delta);
+		stage.draw();
 	}
 
 	@Override
 	public void resize(int width, int height) {
+		stage.setViewport(new ExtendViewport(width, height));
+		stage.getViewport().update(width, height, true);
 		renderer.resize(width, height);
+		PPM = renderer.getPPM();
 
 	}
 
 	@Override
 	public void show() {
 		tablero = new Board(10, 20);
-		tablero.setGhostActivated(true);
-		puntos = new ScoreCounter();
+		tablero.setGhostActivated(GamePreferences.instance.ghost);
+		puntos = new ScoreCounter(tablero.getLevel());
 		tablero.addRowListener(puntos);
 		tablero.addBlockListener(this);
 		
@@ -81,13 +105,19 @@ public class GameScreen implements Screen, InputProcessor, GestureListener, Obse
 		
 		Skin menuSkin = new Skin(Gdx.files.internal("ui/mainMenuSkin.json"), new TextureAtlas("ui/menu.pack"));
 		
-		pause = new PauseScreen(renderer.getStage(), menuSkin);
+		stage = new Stage();
+		pause = new PauseScreen(stage, menuSkin);
 		pause.addObserver(this);
 		pause.setTween(tweenManager);
 		
-		over = new GameOverScreen(renderer.getStage(), menuSkin);
+		over = new GameOverScreen(stage, menuSkin);
 		over.addObserver(this);
 		over.setTween(tweenManager);
+		
+		stage.addActor(highScores);
+		
+		musica = Gdx.audio.newMusic(Gdx.files.internal("music/bicycle.mp3"));
+		AudioManager.instance.play(musica);
 		
 		Gdx.input.setInputProcessor(new InputMultiplexer(this, new GestureDetector(this), pause.getStage()));
 		state = State.RUNNING;
@@ -113,8 +143,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener, Obse
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-
+		 stage.dispose();
+		 musica.dispose();
+		 renderer.dispose();
 	}
 	
 	
@@ -128,7 +159,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener, Obse
 			controladora.downPressed();
 		if (keycode == Keys.UP)
 			controladora.upPressed();
-		if (keycode == Keys.ESCAPE)
+		if (keycode == Keys.ESCAPE || keycode == Keys.BACK)
 			switch(state){
 				case RUNNING:
 					doPause();
@@ -165,8 +196,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener, Obse
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		if(state == State.RUNNING)
 		{
-			controladora.touchDown(screenX, Gdx.graphics.getHeight() - screenY, ppm);
-			return false;
+			return controladora.touchDown(screenX, Gdx.graphics.getHeight() - screenY, PPM);
+//			return true;
 		}
 		return false;
 	}
@@ -200,11 +231,13 @@ public class GameScreen implements Screen, InputProcessor, GestureListener, Obse
 	
 	public void doPause(){
 		state = State.PAUSED;
+		AudioManager.instance.pause(musica);
 		pause.fadeIn();
 	}
 	
 	public void doUnPause(){
 		pause.fadeOut();
+		AudioManager.instance.play(musica);
 	}
 	
 	public static void startRunning(){
@@ -233,6 +266,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener, Obse
 	private void resetLevel() {
 		tablero.reset();
 		puntos.reset();		
+		renderer.reset();
 		over.fadeOut();
 	}
 
@@ -241,6 +275,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener, Obse
 		if(tablero.isGameOver()) {
 			state = State.OVER;
 			over.fadeIn();			
+			HighScores auxScores = ScoreService.retrieveScores();
+			if(puntos.getTotalScore() >= auxScores.lowestScore()){
+				highScores.fadein(puntos.getTotalScore());				
+			}
 		}
 	}
 
@@ -274,7 +312,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener, Obse
 	@Override
 	public boolean pan(float x, float y, float deltaX, float deltaY) {
 		if(state == State.RUNNING){
-			controladora.pan(deltaX, ppm);
+			controladora.pan(deltaX, PPM);
 			return true;
 		}
 		return false;
@@ -297,6 +335,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener, Obse
 			Vector2 pointer1, Vector2 pointer2) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public void setHighScoreLayer(HighScoreLayer layerHighScore) {
+		highScores = layerHighScore;		
 	}
 
 

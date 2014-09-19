@@ -9,12 +9,18 @@ package com.ukos.logics;
 import com.badlogic.gdx.utils.Array;
 
 /**
- *
- * @author Ukita
+ * Un Array de BlockDrawables que constituyen una forma
+ * @author Ukos
  */
 public class FixedShape implements RotatableGrid, Cloneable{
 
+    /**
+     * Los bloques que constituyen la forma
+     */
     private Array<BlockDrawable> blocks;
+    /**
+     * Código de textura
+     */
     private final String textureKey;
 
     public FixedShape(Array<BlockDrawable> blocks, String textureKey) {
@@ -27,6 +33,7 @@ public class FixedShape implements RotatableGrid, Cloneable{
     	textureKey = blocks.first().getStyle().substring(0, 0);
 	}
 
+    @Override
 	public String cellAt(Point point) {
     	String style = EMPTY;
     	for (BlockDrawable block : blocks) {
@@ -82,6 +89,9 @@ public class FixedShape implements RotatableGrid, Cloneable{
 		return points;
 	}
 
+	/**
+	 * @return el código de textura
+	 */
 	public String getTextureKey() {
 		return textureKey;
 	}

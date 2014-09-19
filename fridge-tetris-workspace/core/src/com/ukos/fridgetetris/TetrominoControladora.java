@@ -95,10 +95,12 @@ public class TetrominoControladora {
 			upReleased();
 		}
 	}
-	public void touchDown(float x, float y, int ppm) {
+	public boolean touchDown(float x, float y, int ppm) {
 		if(y / ppm <=  2){
 			downPressed();
+			return true;
 		}
+		return false;
 		
 	}
 	

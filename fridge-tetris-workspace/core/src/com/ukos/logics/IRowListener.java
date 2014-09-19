@@ -11,5 +11,5 @@ package com.ukos.logics;
  * @author Ukita
  */
 public interface IRowListener {
-    void onRowsRemoved(int rows);
+	void onRowsRemoved(int rows, int boardLevel);
 }
