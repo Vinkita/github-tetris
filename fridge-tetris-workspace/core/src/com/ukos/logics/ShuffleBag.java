@@ -27,6 +27,9 @@ public class ShuffleBag {
 	 */
 	private ArrayList<RotatablePiece> ShuffledBag = new ArrayList<RotatablePiece>();
 
+	/**
+	 * Crea una nueva ShuffleBag
+	 */
 	public ShuffleBag() {
 		fillUnshuffled();
 		refillShuffled();

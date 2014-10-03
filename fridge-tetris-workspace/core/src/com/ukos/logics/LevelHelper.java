@@ -1,16 +1,31 @@
 package com.ukos.logics;
 
+/**
+ * Se encarga de determinar la velocidad de cada nivel del juego
+ * @author Ukos
+ *
+ */
 public class LevelHelper {
 //	private int level;
 //	private long lv1autoFallRate = 1000000000;
 //	private long lv1moveRate     = 200000000;
 
+	/**
+	 * Setea la velocidad de caida de las piezas según el nivel actual
+	 * @param level  el nivel actual del juego
+	 * @param board  el Board donde se desarrolla el juego
+	 */
 	public static void setLevelSpeed(int level, Board board){		
 		long af = rateToNanoSeconds(afRateInFrames(level));
 		board.setAutoFallRate(af);
 		board.setMoveRate(af/5);
 	}
 	
+	/**
+	 * Calcula la velocidad de caida, en frames,  de las piezas segun el nivel 
+	 * @param level  el nivel actual
+	 * @return  la velocidad en frames (1 metro cada "X" frames)
+	 */
 	private static double afRateInFrames(int level){
 		double m;
 		double b;
@@ -34,10 +49,18 @@ public class LevelHelper {
 		return (m * level) + b;
 	}
 	
+	/**
+	 * Convierte la velocidad en frames a la tasa de caida en nanosegundos
+	 * @param frames  velocidad en frames
+	 * @return  nanosegundos que debe tardar la pieza en caer un metro
+	 */
 	private static long rateToNanoSeconds(double frames){
 		return (long) (frames / 30 * 1000000000);
 	}
 	
+	/**
+	 * Utilizada para verificar que las velocidades de cada nivel sean correctas
+	 */
 	public static void test(){
 		for (int i = 0; i < 31; i++){
 			double af = afRateInFrames(i);

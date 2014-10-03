@@ -4,20 +4,39 @@ package com.ukos.logics;
 import com.badlogic.gdx.utils.Array;
 
 /**
- *
+ * Contiene un Array de FixedShape utilizado para simular rotaciones
  * @author Ukita
  */
 public class RotatablePiece implements RotatableGrid{
 
+    /**
+     * Contiene instancias de FixedShape que representan las rotaciones de this
+     */
     private Array<FixedShape> rotations = new Array<FixedShape>();
+    /**
+     * El indice de la rotacion
+     */
     private final int current;
     
+    /**
+     * Crea una RotatablePiece a partir de un Array de BlockDrawable
+     * 
+     * @param maxRots  el numero máximo de rotaciones que puede realizar la pieza
+     * @param curRotation  el indice de la rotacion actual
+     * @param shapeBlocks los BlockDrawable que conformaran la primer pieza 
+     * @param textureKey el codigo de textura 
+     */
     public RotatablePiece(int maxRots, int curRotation, Array<BlockDrawable> shapeBlocks, String textureKey) {
         this(maxRots, curRotation);
         FixedShape piece = firstRotation(new FixedShape(shapeBlocks, textureKey), curRotation);
         this.rotations = fillRotations(piece, maxRots, textureKey);
     }
     
+    /**
+     * Crea una RotatablePiece a partir de un Array de FixedShape, con la rotacion actual especificada
+     * @param curRotation  el indice de la rotacion actual
+     * @param rotations  el arreglo de FixedShape
+     */
     private RotatablePiece(int curRotation, Array<FixedShape> rotations) {
         this(rotations.size, curRotation);
         this.rotations = rotations;
@@ -38,6 +57,13 @@ public class RotatablePiece implements RotatableGrid{
         return piece;
     }
     
+    /**
+     * Crea un Array y lo llena con rotaciones de una FixedShape
+     * @param piece  la FixedShape inicial
+     * @param maxRots  el numero de rotciones que contendra el arreglo
+     * @param textureKey el codigo de textura inicial, a partir del cual se asignaran los codigos de cada bloque individual
+     * @return un Array que representa las rotaciones de la RotatablePiece
+     */
     private Array<FixedShape> fillRotations(FixedShape piece, int maxRots, String textureKey){
         Array<FixedShape> arr = new Array<FixedShape>(maxRots);
         arr.add(piece);
@@ -98,6 +124,9 @@ public class RotatablePiece implements RotatableGrid{
 		return getCurrentShape().allBlocks();
 	}
 
+	/**
+	 * @return  el código de textura de la pieza actual
+	 */
 	public String getTextureKey() {
 		return getCurrentShape().getTextureKey();
 	}

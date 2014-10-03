@@ -8,25 +8,56 @@ import com.badlogic.gdx.math.Vector2;
 
 public class BlockDrawable implements Cloneable{
 	
+	/**
+	 * Punto que representa la ubicacion de este BlockDrawable
+	 */
 	private Point point;
 	//El objetivo de style es contener el string que indica que textura se debe cargar
+	/**
+	 * Éste String indica qué textura se debera cargar 
+	 * TODO hate
+	 */
 	private String style;
+	/**
+	 * Si esta variable es true, el bloque será dibujado con semitranparencia
+	 */
 	private boolean ghost;
+	/**
+	 * El ancho del bloque
+	 */
 	private float width;
+	/**
+	 * La altura del bloque
+	 */
 	private float height;
 	
-	public BlockDrawable(Point point, String style) {
-		init(point, style);
-	}
-
+	/**
+	 * Crea un nuevo BlockDrawable a con la posicion, el estilo, y el estado "ghost" especificados
+	 * @param point  la posicion
+	 * @param style  el codigo de estilo
+	 * @param ghost  si el bloque debe ser dibujado como "fantasma" o no
+	 */
 	public BlockDrawable(Point point, String style, boolean ghost) {
 		init(point, style, ghost);
 	}
 	
-	private void init(Point point, String style){
-		init(point, style, false);
+	/**
+	 * Crea un nuevo BlockDrawable a con la posicion y el estilo especificados. El valor de ghost se setea false por defecto
+	 * @param point  la posicion
+	 * @param style  el codigo de estilo
+	 */
+	public BlockDrawable(Point point, String style) {
+//		init(point, style);
+		this(point, style, false);
 	}
+	
+//	private void init(Point point, String style){
+//		init(point, style, false);
+//	}
 
+	/**
+	 * Es llamada por el costructor para inicializar el BLockDrawable
+	 */
 	private void init(Point point, String style, boolean ghost){
 		this.point = point;
 		this.style = style;
@@ -34,10 +65,16 @@ public class BlockDrawable implements Cloneable{
 		this.ghost = ghost;
 	}
 	
+	/**
+	 * @return  Si el bloque es "fantasma" o no
+	 */
 	public boolean isGhost(){
 		return ghost;
 	}
 
+	/**
+	 * @param ghost el nuevo valor de la variable ghost
+	 */
 	public void setGhost(boolean ghost){
 		this.ghost = ghost;
 	}
@@ -58,6 +95,12 @@ public class BlockDrawable implements Cloneable{
 		this.style = style;
 	}
 	
+	/**
+	 * Dibuja un bloque
+	 * @param batch  el objeto Batch 
+	 * @param texture  la textura correspondiente al bloque
+	 * @param offset  la posicion relativa dentro de la pantalla
+	 */
 	public void draw(Batch batch, TextureRegion texture, Vector2 offset){
 		if(ghost)
 			batch.setColor(.3f, .3f, .3f, .3f);
@@ -73,6 +116,11 @@ public class BlockDrawable implements Cloneable{
 		return aux;
 	}
 
+	/**
+	 * Cambia el tamaño del bloque
+	 * @param w  el nuevo ancho
+	 * @param h  la nueva altura
+	 */
 	public void setSize(float w, float h) {
 		 width = w;
 		 height = h;		

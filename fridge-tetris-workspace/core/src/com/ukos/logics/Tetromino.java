@@ -11,17 +11,25 @@ import java.util.LinkedHashMap;
 import com.badlogic.gdx.utils.Array;
 
 /**
- *
- * @author Ukita
+ * Se encarga de instanciar las RotatablePiece correspondientes a las 7 formas posibles de un Tetromino.
+ * @author Ukos
  */
 public class Tetromino {
 	
 	// Nuevas configuraciones para Tetris Libgdx
 	
+	/**
+	 * Contiene los nombres de los 7 Tetrominos
+	 */
 	public static enum shape {T,I,O,S,Z,L,J};
 	
+	/**
+	 * Contiene una serie de arreglos que a su vez contienen los 
+	 * codigos de textura de cada rotacion de los Tetrominos
+	 */
 	public static LinkedHashMap<String, String[]> colors;
 	
+	// Bloque de inicializacion estática que se encarga de generar loc codigos de textura e insertarlos en colors
 	static{
 		
 		colors = new LinkedHashMap<String, String[]>();
@@ -48,15 +56,22 @@ public class Tetromino {
 	}	
 	
 	
-	// Fin
+	// Fin nuevas configuraciones
     
+    /**
+     * Tetromino "T"
+     */
     public static final RotatablePiece T_SHAPE = new RotatablePiece(4, 0, new Array<BlockDrawable>(
     																		new BlockDrawable[] {
 					    														new BlockDrawable(new Point(0,1), "T01"),
 					    														new BlockDrawable(new Point(-1,0), "T02"),
 					    														new BlockDrawable(new Point(0,0), "T03"),
 					    														new BlockDrawable(new Point(1,0), "T04")
+    
     																		}), "T");
+    /**
+     * Tetromino "I"
+     */
     public static final RotatablePiece I_SHAPE = new RotatablePiece(4, 0, new Array<BlockDrawable>(
 																			new BlockDrawable[] {
 																					new BlockDrawable(new Point(-2,0), "I01"),
@@ -64,6 +79,9 @@ public class Tetromino {
 																					new BlockDrawable(new Point(0,0), "I03"),
 																					new BlockDrawable(new Point(1,0), "I04"),
 																				}), "I");
+    /**
+     * Tetromino "O"
+     */
     public static final RotatablePiece O_SHAPE = new RotatablePiece(1, 0, new Array<BlockDrawable>(
 																			new BlockDrawable[] {
 																					new BlockDrawable(new Point(0,1), "O01"),
@@ -71,6 +89,9 @@ public class Tetromino {
 																					new BlockDrawable(new Point(0,0), "O03"),
 																					new BlockDrawable(new Point(1,0), "O04"),
 																				}), "O");
+    /**
+     * Tetromino "S"
+     */
     public static final RotatablePiece S_SHAPE = new RotatablePiece(4, 0, new Array<BlockDrawable>(
 																			new BlockDrawable[] {
 																					new BlockDrawable(new Point(0,0), "S01"),
@@ -78,6 +99,9 @@ public class Tetromino {
 																					new BlockDrawable(new Point(-1,-1), "S03"),
 																					new BlockDrawable(new Point(0,-1), "S04"),
 																				}), "S");
+    /**
+     * Tetromino "Z"
+     */
     public static final RotatablePiece Z_SHAPE = new RotatablePiece(4, 0, new Array<BlockDrawable>(
 																			new BlockDrawable[] {
 																					new BlockDrawable(new Point(-1,0), "Z01"),
@@ -85,6 +109,9 @@ public class Tetromino {
 																					new BlockDrawable(new Point(0,-1), "Z03"),
 																					new BlockDrawable(new Point(1,-1), "Z04"),
 																				}), "Z");
+    /**
+     * Tetromino "L"
+     */
     public static final RotatablePiece L_SHAPE = new RotatablePiece(4, 0, new Array<BlockDrawable>(
 																			new BlockDrawable[] {
 																					new BlockDrawable(new Point(1,1), "L01"),
@@ -92,6 +119,9 @@ public class Tetromino {
 																					new BlockDrawable(new Point(0,0), "L03"),
 																					new BlockDrawable(new Point(1,0), "L04"),
 																				}), "L");
+    /**
+     * Tetromino "J"
+     */
     public static final RotatablePiece J_SHAPE = new RotatablePiece(4, 0, new Array<BlockDrawable>(
 																			new BlockDrawable[] {
 																					new BlockDrawable(new Point(-1,1), "J01"),

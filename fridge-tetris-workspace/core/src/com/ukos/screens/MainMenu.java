@@ -179,8 +179,8 @@ public class MainMenu implements Screen {
 		buttonScores.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-//				showScores();
-				layerHighScore.fadein(10000);
+				showScores();
+//				layerHighScore.fadein(10000);
 			}
 		});
 		buttonScores.pad(buttonPad);

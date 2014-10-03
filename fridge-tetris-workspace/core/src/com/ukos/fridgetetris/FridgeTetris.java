@@ -15,6 +15,7 @@ public class FridgeTetris extends Game {
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		Tween.setCombinedAttributesLimit(5);
 		GamePreferences.instance.load();
+		Gdx.input.setCatchBackKey(true);
 		setScreen(new MainMenu());
 	}
 
