@@ -3,6 +3,7 @@ package com.ukos.fridgetetris;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.badlogic.gdx.math.Vector2;
 import com.ukos.logics.Board;
 
 public class TetrominoControladora {
@@ -72,7 +73,33 @@ public class TetrominoControladora {
 		}
 		
 	}
-
+	
+//	public void pan2(float x, Vector2 offset, int ppm) {
+//		horizPrevPos = horizCurPos;
+//		horizCurPos = (int) (x/ppm) + offset.x;
+//		if(horizCurPos < 0)
+//			horizCurPos = 0;
+//		else if(horizCurPos > tablero.getWidth())
+//			horizCurPos = tablero.getWidth();
+//		if(horizCurPos > tablero.getFallingPiece().getX()){			
+//			while(horizCurPos > tablero.getFallingPiece().getX()){
+//				tablero.movePieceToRight();
+////				horizPrevPos++;
+//			}
+//		} else if (horizCurPos < tablero.getFallingPiece().getX()){
+//			while(horizCurPos < tablero.getFallingPiece().getX()){
+//				tablero.movePieceToLeft();
+////				horizPrevPos--;
+//			}			
+//		}		
+//	}
+//
+	
+	public void pan3(float x, Vector2 offset, int ppm){
+		int pos = (int) (x/ppm + offset.x);
+		tablero.slideToPoint(pos);
+	}
+	
 	/** The main update method. It recalculates the actual inputs. **/
 	public void update(float delta) {
 		processInput();

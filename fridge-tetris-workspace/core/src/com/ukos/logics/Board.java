@@ -394,6 +394,31 @@ public class Board implements Grid{
         }
     }
     
+    public void slideToPoint(int posX){
+    	if (hasFalling()){
+    		int iters = (int) (posX - falling.getX());
+    		if(iters > 0){
+    			while(moveIfNoConflict(falling.moveRight(), falling) && iters > 0){
+    				iters--;
+    				lastMove = TimeUtils.nanoTime();
+    				while (moveTooFast()){
+    					int i = 1;
+    					System.out.println("Teenage Mutant Ninja Turtles! " + i);
+    					i++;
+    				}
+    			}
+    		} else if(iters < 0){
+    			while(moveIfNoConflict(falling.moveLeft(), falling) && iters < 0){
+    				iters++;    			
+    				lastMove = TimeUtils.nanoTime();
+    				while (moveTooFast());    				
+    			}
+    		}
+    		if(isGhostActivated())
+    			generateGhost();
+        }
+    }
+    
     /**
      * Si la pieza test no conflictua con el tablero, la pieza realPiece es movida y/o rotada 
      * a la posicion de la pieza test.
@@ -672,6 +697,7 @@ public class Board implements Grid{
 	 * @return 
 	 */
 	private boolean moveTooFast() {
+		System.out.println("I'm the rat king!");
 		return moveTooFast(moveRate);
 	}
 	

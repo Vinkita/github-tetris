@@ -392,5 +392,9 @@ private class ExplosionChecker {
 		return PIXELS_PER_METER;
 	} 
 	
+	public Vector2 getOffset(){
+		return new Vector2(boardOffset);
+	}
+	
 
 }

@@ -30,13 +30,18 @@ import com.ukos.fridgetetris.AudioManager;
 import com.ukos.fridgetetris.GamePreferences;
 import com.ukos.tween.ActorAccessor;
 
+/**
+ * El Menu Principal. 
+ * <br>Esta compuesto de diversas capas, cada una agrupando distintas secciones del menu.
+ * TODO
+ * @author Ukos
+ */
 public class MainMenu implements Screen {
 	
 	private Stage stage;
 	private Skin skin;
 	private Stack stack;
 	private Image heading; 
-	private Image imgBackground; 
 	private Table layerBackground;
 	private Table layerMenu;
 	private Table layerSettings;
@@ -95,9 +100,7 @@ public class MainMenu implements Screen {
 		layerBackground = buildBackgroundLayer();
 		layerMenu = buildMenuLayer();
 		layerSettings = buildSettingsLayer();
-		layerHighScore = new HighScoreLayer(skin);
-		layerHighScore.setPreviousLayer(layerMenu);
-		layerHighScore.debug();
+//		layerHighScore.debug();
 //		layerHighScore.background(skin.getDrawable("black"));//borrar estas dos lineas
 //		layerHighScore.setColor(layerHighScore.getColor().r, layerHighScore.getColor().g, layerHighScore.getColor().b, .5f);
 //		layerHighScore.setVisible(true);
@@ -109,7 +112,11 @@ public class MainMenu implements Screen {
 		stack.add(layerBackground);
 		stack.add(layerMenu);
 		stack.add(layerSettings);
-		stack.add(layerHighScore);
+		if(GamePreferences.instance.highscores){			
+			layerHighScore = new HighScoreLayer(skin);
+			layerHighScore.setPreviousLayer(layerMenu);
+			stack.add(layerHighScore);
+		}
 //		layerSettings.setX(Gdx.graphics.getWidth());
 		showMenu();
 		
@@ -138,6 +145,10 @@ public class MainMenu implements Screen {
 		skin.dispose();
 	}
 	
+	/**
+	 * Se encarga de la creacion de la capa "background".
+	 * TODO @return
+	 */
 	private Table buildBackgroundLayer(){
 		Table auxBG = new Table(skin);
 		auxBG.setFillParent(true);
@@ -147,6 +158,15 @@ public class MainMenu implements Screen {
 		return auxBG;
 	}
 	
+	/**
+	 * Se encarga de la creacion de la capa "Menu".
+	 * <br>
+	 * <li>Instancia la imagen de cabecera.
+	 * <li>Instancia los botones y setea sus propiedades graficas. 
+	 * <li>TODO Crea los listeners de cada boton.  
+	 * <li>TODO Ubica los componentes del menu en sus lugares.
+	 * @return  la capa "Menu".
+	 */
 	private Table buildMenuLayer(){
 		Table auxMenu = new Table(skin);
 		auxMenu.setFillParent(true);		
@@ -175,17 +195,18 @@ public class MainMenu implements Screen {
 		});
 		buttonSettings.pad(buttonPad);
 		
-		buttonScores = new TextButton("HIGH SCORES", skin, "orange");
-		buttonScores.addListener(new ClickListener(){
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				showScores();
-//				layerHighScore.fadein(10000);
-			}
-		});
-		buttonScores.pad(buttonPad);
-		
-		
+		if(GamePreferences.instance.highscores){
+			buttonScores = new TextButton("HIGH SCORES", skin, "orange");
+			buttonScores.addListener(new ClickListener(){
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					showScores();
+	//				layerHighScore.fadein(10000);
+				}
+			});
+			buttonScores.pad(buttonPad);
+		}
+				
 		buttonExit = new TextButton("EXIT", skin, "blue");
 		buttonExit.addListener(new ClickListener(){
 			@Override
@@ -205,14 +226,19 @@ public class MainMenu implements Screen {
 		});
 		buttonExit.pad(buttonPad);
 		
-		buttonPlay.debug();
-		float buttonWidth = buttonScores.getWidth();
+		float buttonWidth;
+		if(GamePreferences.instance.highscores)
+			buttonWidth = buttonScores.getWidth();
+		else
+			buttonWidth = buttonSettings.getWidth();
 		
 //		arming table
 		auxMenu.add(heading).spaceBottom(100).row();
 		auxMenu.add(buttonPlay).width(buttonWidth).spaceBottom(15).row();
 		auxMenu.add(buttonSettings).width(buttonWidth).spaceBottom(15).row();
-		auxMenu.add(buttonScores).width(buttonWidth).spaceBottom(15).row();
+		if(GamePreferences.instance.highscores){
+			auxMenu.add(buttonScores).width(buttonWidth).spaceBottom(15).row();
+		}
 		auxMenu.add(buttonExit).width(buttonWidth);
 //		stage.addActor(auxMenu);
 		
@@ -220,6 +246,15 @@ public class MainMenu implements Screen {
 		return auxMenu;
 	}
 	
+	/**
+	 * Se encarga de la creacion de la capa "Preferencias".
+	 * <br>
+	 * <li>TODO argh!!!!!!!!
+	 * <li>Instancia los botones y setea sus propiedades graficas. 
+	 * <li>TODO Crea los listeners de cada boton.  
+	 * <li>TODO Ubica los componentes de la capa en sus lugares.
+	 * @return  la capa "Preferencias".
+	 */
 	private Table buildSettingsLayer(){
 		Table auxSett = new Table(skin);
 		auxSett.setFillParent(true);		
@@ -269,6 +304,11 @@ public class MainMenu implements Screen {
 		return auxSett;	
 	}
 	
+	/**
+	 * Setea los valores correspondientes a cada indicador de la capa Preferencias, 
+	 * según los valores guardados en la instancia de <code>GamePreferences.
+	 * @see GamePreferences
+	 */
 	private void loadSettings(){
 		GamePreferences prefs = GamePreferences.instance;
 		chkGhost.setChecked(prefs.ghost);
@@ -277,6 +317,10 @@ public class MainMenu implements Screen {
 		sldMusic.setValue(prefs.musicVolume);
 	}
 	
+	/**
+	 * Setea y guarda los valores de la instancia de <code>GamePreferences, 
+	 * segun los valores de los indicadores de la capa Preferencias. 
+	 */
 	private void saveSettings(){
 		GamePreferences prefs = GamePreferences.instance;
 		prefs.ghost = chkGhost.isChecked();
@@ -286,12 +330,17 @@ public class MainMenu implements Screen {
 		prefs.save();
 	}
 	
+	/**
+	 * Se encarga de hacer una transicion entre la pantalla vacia 
+	 * (solo se muestra la capa background) y el menu principal.
+	 */
 	private void showMenu(){
 //		creating animations
 		tweenManager = new TweenManager();
 		Tween.registerAccessor(Actor.class, new ActorAccessor());
 		
 //		heading and buttons fade-in
+		if(GamePreferences.instance.highscores){			
 		Timeline.createSequence().beginSequence()
 			.push(Tween.set(buttonPlay, ActorAccessor.ALPHA).target(0))
 			.push(Tween.set(buttonSettings, ActorAccessor.ALPHA).target(0))
@@ -303,6 +352,18 @@ public class MainMenu implements Screen {
 			.push(Tween.to(buttonScores, ActorAccessor.ALPHA, .25f).target(1))
 			.push(Tween.to(buttonExit, ActorAccessor.ALPHA, .25f).target(1))
 			.end().start(tweenManager);
+		} else {			
+			Timeline.createSequence().beginSequence()
+			.push(Tween.set(buttonPlay, ActorAccessor.ALPHA).target(0))
+			.push(Tween.set(buttonSettings, ActorAccessor.ALPHA).target(0))
+			.push(Tween.set(buttonScores, ActorAccessor.ALPHA).target(0))
+			.push(Tween.set(buttonExit, ActorAccessor.ALPHA).target(0))
+			.push(Tween.from(heading, ActorAccessor.ALPHA, .25f).target(0))
+			.push(Tween.to(buttonPlay, ActorAccessor.ALPHA, .25f).target(1))
+			.push(Tween.to(buttonSettings, ActorAccessor.ALPHA, .25f).target(1))
+			.push(Tween.to(buttonExit, ActorAccessor.ALPHA, .25f).target(1))
+			.end().start(tweenManager);
+		}
 
 		//	table fade-in
 		Tween.from(layerMenu, ActorAccessor.ALPHA, .5f).target(0).start(tweenManager);
@@ -312,6 +373,10 @@ public class MainMenu implements Screen {
 	}
 	
 	
+	/**
+	 * Se encarga de hacer una transicion entre el menu principal y el menu de Preferencias.
+	 * <br>Este metodo es llamado cuando el boton "Settings" del menu principal es pulsado. 
+	 */
 	private void showSettings(){
 		loadSettings();
 		Timeline.createSequence().beginSequence()
@@ -328,6 +393,11 @@ public class MainMenu implements Screen {
 		tweenManager.update(Gdx.graphics.getDeltaTime());
 	}
 	
+	/**
+	 * Se encarga de hacer una transicion entre el menu de preferencias y el menu de principal.
+	 * <br>Este metodo es llamado cuando los botones "Save" o "Cancel" del menu de preferencias 
+	 * son pulsados. 
+	 */
 	private void hideSettings(){
 		Timeline.createSequence().beginSequence()
 //		.push(Tween.set(layerMenu, ActorAccessor.X).target(layerMenu.getWidth()))
@@ -344,6 +414,10 @@ public class MainMenu implements Screen {
 		tweenManager.update(Gdx.graphics.getDeltaTime());
 	}
 	
+	/**
+	 * Se encarga de hacer una transicion entre el menu principal y la pantalla de puntuaciones.
+	 * <br>Este metodo es llamado cuando el boton "High Scores" del menu principal es pulsado. 
+	 */
 	private void showScores(){
 		Timeline.createSequence().beginSequence()
 		.push(Tween.set(layerHighScore, ActorAccessor.X).target(-layerHighScore.getWidth()))
@@ -359,20 +433,20 @@ public class MainMenu implements Screen {
 		tweenManager.update(Gdx.graphics.getDeltaTime());
 	}
 	
-	private void hideScores(){
-		Timeline.createSequence().beginSequence()
+//	private void hideScores(){
+//		Timeline.createSequence().beginSequence()
+////		.push(Tween.set(layerMenu, ActorAccessor.X).target(layerMenu.getWidth()))
 //		.push(Tween.set(layerMenu, ActorAccessor.X).target(layerMenu.getWidth()))
-		.push(Tween.set(layerMenu, ActorAccessor.X).target(layerMenu.getWidth()))
-		.push(Tween.set(layerMenu, ActorAccessor.VISIBILITY).target(1))
-		.push(
-			Timeline.createParallel().beginParallel()
-			.push(Tween.to(layerHighScore, ActorAccessor.X, .8f).target(-layerHighScore.getWidth()))
-			.push(Tween.to(layerMenu, ActorAccessor.X, .8f).target(0))
-			.end()
-		)		
-		.push(Tween.set(layerHighScore, ActorAccessor.VISIBILITY).target(0))
-		.end().start(tweenManager);
-		tweenManager.update(Gdx.graphics.getDeltaTime());
-	}
+//		.push(Tween.set(layerMenu, ActorAccessor.VISIBILITY).target(1))
+//		.push(
+//			Timeline.createParallel().beginParallel()
+//			.push(Tween.to(layerHighScore, ActorAccessor.X, .8f).target(-layerHighScore.getWidth()))
+//			.push(Tween.to(layerMenu, ActorAccessor.X, .8f).target(0))
+//			.end()
+//		)		
+//		.push(Tween.set(layerHighScore, ActorAccessor.VISIBILITY).target(0))
+//		.end().start(tweenManager);
+//		tweenManager.update(Gdx.graphics.getDeltaTime());
+//	}
 
 }

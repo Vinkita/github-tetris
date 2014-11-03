@@ -8,61 +8,126 @@ import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.TweenManager;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.esotericsoftware.tablelayout.Cell;
-import com.sun.xml.internal.messaging.saaj.packaging.mime.util.ASCIIUtility;
 import com.ukos.fridgetetris.HighScores;
 import com.ukos.fridgetetris.HighScores.HighScore;
 import com.ukos.fridgetetris.ScoreService;
 import com.ukos.tween.ActorAccessor;
 
-public class HighScoreLayer extends Table {
+/**
+ * Menu de HighScores (Puntuaciones mas altas).
+ * <br> Este menu esta pensado para ser agregado como elemento a otro menu o pantalla.
+ * TODO
+ * @author Ukos
+ */
+public class HighScoreLayer extends Stack {
 	TweenManager tweenManager;
+	/**
+	 * Contiene las puntuaciones mas altas y los nombres de los jugadores que las obtuvieron.
+	 */
 	HighScores scores;
+	/**
+	 * Determina la apariencia de la {@code HighScoreLayer}. 
+	 */
 	Skin skin;
+	/**
+	 * La puntuacion obtenida por el jugador al final del juego.
+	 */
 	int newScore;
 	
+	/**
+	 * La capa de fondo, contiene la imagen de fondo de this.
+	 */
+	Table backgroundLayer;
+	/**
+	 * La capa de puntuaciones, utilizada para mostrar las puntuaciones mas altas en forma de lista. 
+	 */
 	Table scoresLayer;
-	
+	/**
+	 * La capa de botones. Contiene los botones utilizados para ocultar this.
+	 */
 	Table buttonsLayer;
+	/**
+	 * La capa "Dialog". Permite al jugador introducir su nombre para luego guardar su puntuacion.
+	 */
+	Table dialogLayer;
+	
+	/**
+	 * Contendrá, segun corresponda, al boton <code>backButton</code> o al boton <code>fadeOutButton</code>
+	 * @see #backButton 
+	 * @see #fadeOutButton
+	 */
 	Cell<TextButton> buttonCell = null;
+	/**
+	 * Al ser clickeado, llamará al metodo <code>fadeOut()</code>
+	 * @see # fadeOut()
+	 */
 	TextButton backButton;
+	/**
+	 * Al ser clickeado, llamará al metodo <code>slideLayer()</code>
+	 * @see # slideLayer()
+	 */
 	TextButton fadeOutButton;
 	
-	Table dialogLayer;
+	/**
+	 * Etiqueta "nombre".
+	 */
 	Label lblName;
+	/**
+	 * Aqui se introduce el nombre del jugador al terminar la partida.
+	 */
 	TextField txtName;
+	/**
+	 * Al ser clickeado, agregara la nueva puntuacion al objeto <code>scores</code>.
+	 * <br>Tambien lamara al metodo <code>rebuildScores()</code> para actializar la capa "Scores"
+	 * @see #rebuildScores(Table) 
+	 */
 	TextButton okButton;
-	protected Table previousLayer;
+	/**
+	 * El {@code Actor} que ocupaba la pantalla antes que esta {@code HighScoreLayer}.
+	 */
+	protected Actor previousLayer;
 	
+	/**
+	 * Crea una nueva {@code HighScoreLayer} la cual inicialmente no es visible.
+	 */
 	public HighScoreLayer(Skin skin) {
 		scores = ScoreService.retrieveScores();
 		this.skin = skin;
 		this.setFillParent(true);	
-		this.bottom().left();
+//		this.bottom().left();
 //		this.setBackground(skin.getDrawable("black50"));
 		tweenManager = new TweenManager();
 		setupButtons();
 		
-		scoresLayer = new Table();
-		buttonsLayer = new Table();
+//		scoresLayer = new Table();
+//		buttonsLayer = new Table();
 //		tabla.setBackground(skin.getDrawable("black50"));
+		backgroundLayer = buildBackgroundLayer();
 		scoresLayer = rebuildScores(scoresLayer);
 		buttonsLayer = buildButtonsLayer();
+		dialogLayer = setupDialog();
+		
+		this.add(backgroundLayer);
 		this.add(scoresLayer);
 		this.add(buttonsLayer);
-		dialogLayer = setupBox();
 		this.add(dialogLayer);
 		this.setVisible(false);
 	}
 	
+	/**
+	 * Instancia los botones y agrega los listeners correspondientes a cada uno.
+	 */
 	private void setupButtons(){
 		// botones pantalla
 		fadeOutButton = new TextButton("Ok", skin, "orange");
@@ -95,6 +160,22 @@ public class HighScoreLayer extends Table {
 		});
 	}
 
+	/**
+	 * Construye la capa "Background".
+	 * @return la capa "Background".
+	 */	
+	private Table buildBackgroundLayer(){
+		Table taux = new Table();
+		taux.setFillParent(true);
+		taux.setBackground(skin.getDrawable("mainIce"));
+		taux.setVisible(false);
+		return taux;
+	}
+	
+	/**
+	 * Construye la capa "Buttons", en la cual se ubican los botones 
+	 * @return la capa "Buttons".
+	 */
 	private Table buildButtonsLayer(){
 		Table btable = new Table();
 		btable.setFillParent(true);
@@ -103,10 +184,19 @@ public class HighScoreLayer extends Table {
 		return btable;
 	}
 	
+	/**
+	 * Construye (o reconstruye, segun el caso) la capa "Scores".
+	 * @param taux
+	 * @return La capa "Scores".
+	 */
 	private Table rebuildScores(Table taux) {
-		taux.debug();
-		taux.clear();
-		taux.setFillParent(true);
+		if(taux != null){
+			taux.clear();			
+		} else {
+			taux = new Table();
+			taux.setFillParent(true);
+			taux.debug();
+		}
 		int i = 1;
 		for (HighScore hs : scores.getList()){
 			taux.add(new Label(i + ". " + hs.name, skin));
@@ -120,7 +210,11 @@ public class HighScoreLayer extends Table {
 		return taux;
 	}
 	
-	private Table setupBox() {
+	/**
+	 * Crea la capa "Dialog".
+	 * @return la capa "Dialog".
+	 */
+	private Table setupDialog() {
 		Table taux = new Table();
 		lblName = new Label("Name: ", skin);
 		txtName = new TextField("", skin);
@@ -133,13 +227,33 @@ public class HighScoreLayer extends Table {
 		return taux;
 	}
 
-	public void fadein(int score) {
+	/**
+	 * Muestra esta {@code HighScoreLayer}, haciendola visible gradualmente.
+	 */
+	public void fadein() {
 		buttonCell.setWidget(fadeOutButton);
 //		fadeOutButton.setVisible(true);
 //		okButton.setVisible(false);
+		backgroundLayer.setVisible(true);
+		Timeline.createSequence().beginSequence()
+		.push(Tween.set(this, ActorAccessor.ALPHA).target(0))		
+		.push(Tween.set(this, ActorAccessor.VISIBILITY).target(1))
+		.push(Tween.to(this, ActorAccessor.ALPHA, .5f).target(1))
+		.end().start(tweenManager);
+	}
+	
+	/**
+	 * Muestra esta {@code HighScoreLayer}, haciendola visible gradualmente.
+	 * <br>Adicionalmente, muestra la capa "Dialog" para que el jugador 
+	 * introduzca su nombre y su puntuacion sea guardada.
+	 * @param score  la puntuacion del jugador.
+	 */
+	public void fadein(int score) {
 		newScore = score;
 		txtName.setText("");
-		this.setBackground(skin.getDrawable("mainIce"));
+		dialogLayer.setVisible(true);
+		dialogLayer.getColor().a = 1;
+		fadein();
 		Timeline.createSequence().beginSequence()
 		.push(Tween.set(this, ActorAccessor.ALPHA).target(0))		
 		.push(Tween.set(this, ActorAccessor.VISIBILITY).target(1))
@@ -149,10 +263,12 @@ public class HighScoreLayer extends Table {
 		.end().start(tweenManager);
 	}
 	
+	/**
+	 * Esconde esta {@code HighScoreLayer}, desvaneciendola gradualmente.  
+	 */
 	public void fadeOut() {
 //		okButton.setVisible(true);
 //		fadeOutButton.setVisible(false);
-		final HighScoreLayer aux = this;
 		Timeline.createSequence().beginSequence()
 		.push(Tween.to(this, ActorAccessor.ALPHA, .5f).target(0))
 		.push(Tween.set(dialogLayer, ActorAccessor.VISIBILITY).target(0))
@@ -160,16 +276,20 @@ public class HighScoreLayer extends Table {
 		.end().setCallback(new TweenCallback() {
 			
 			@Override
-			public void onEvent(int type, BaseTween<?> source) {
-				aux.setBackground((Drawable)null);				
+			public void onEvent(int type, BaseTween<?> source) {	
+				backgroundLayer.setVisible(false);
 				buttonCell.setWidget(backButton);
 			}
 		}).start(tweenManager);		
 	}
 	
-	public void slideLayer(Table prevLayer){
+	/**
+	 * Desliza esta {@code HighScoreLayer} hacia la izquierda, hacia fuera de la pantalla, 
+	 * mientras que al mismo tiempo mueve a <code>prevLayer</code> desde la derecha de la pantalla para ocupar su lugar. 
+	 * @param prevLayer ocupara el lugar de esta {@code HighScoreLayer} en la pantalla.
+	 */
+	public void slideLayer(Actor prevLayer){
 		Timeline.createSequence().beginSequence()
-//		.push(Tween.set(layerMenu, ActorAccessor.X).target(layerMenu.getWidth()))
 		.push(Tween.set(prevLayer, ActorAccessor.X).target(prevLayer.getWidth()))
 		.push(Tween.set(prevLayer, ActorAccessor.VISIBILITY).target(1))
 		.push(
@@ -183,6 +303,12 @@ public class HighScoreLayer extends Table {
 		tweenManager.update(Gdx.graphics.getDeltaTime());
 	}
 
+	/**
+	 * Setea la capa previa a esta, es decir, 
+	 * la capa que sera mostrada al invocar al metodo <code>slideLayer()</code>.
+	 * @param prevLayer
+	 * @see slideLayer()
+	 */
 	public void setPreviousLayer(Table prevLayer) {
 		 this.previousLayer = prevLayer;
 		

@@ -15,6 +15,7 @@ public class GamePreferences {
 	public boolean music;
 	public float soundVolume;
 	public float musicVolume;
+	public boolean highscores;
 	
 	private Preferences prefs;
 
@@ -33,6 +34,7 @@ public class GamePreferences {
 		music = prefs.getBoolean("music", true);
 		soundVolume = MathUtils.clamp(prefs.getFloat("soundVolume", 1), 0, 1);
 		musicVolume = MathUtils.clamp(prefs.getFloat("musicVolume", 1), 0, 1);
+		highscores = prefs.getBoolean("highscores", true);
 	}
 	
 	public void save(){
@@ -42,6 +44,7 @@ public class GamePreferences {
 		prefs.putBoolean("music", music);
 		prefs.putFloat("soundVolume", soundVolume);
 		prefs.putFloat("musicVolume", musicVolume);
+		prefs.putBoolean("highscores", highscores);
 		prefs.flush();
 	}
 }

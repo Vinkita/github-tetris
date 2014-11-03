@@ -7,7 +7,7 @@ package com.ukos.logics;
  */
 public interface IStopBlockListener {
 	/**
-	 * Este metodo es llamado cuando se remueven se detiene una pieza en un objeto <tt>Board</tt>.
+	 * Este metodo es llamado cuando se detiene una pieza en un objeto <tt>Board</tt>.
 	 */
 	void onStoppedBlock();
 }

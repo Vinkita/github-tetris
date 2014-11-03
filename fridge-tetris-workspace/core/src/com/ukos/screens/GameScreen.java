@@ -7,6 +7,7 @@ import aurelienribon.tweenengine.TweenManager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
@@ -30,51 +31,77 @@ import com.ukos.logics.Board;
 import com.ukos.logics.IStopBlockListener;
 import com.ukos.logics.ScoreCounter;
 
-public class GameScreen implements Screen, InputProcessor, GestureListener, Observer, IStopBlockListener {
-	
+public class GameScreen implements Screen, InputProcessor, GestureListener,
+		Observer, IStopBlockListener {
+
+	/**
+	 * En el tablero se desarrola el juego.
+	 * TODO feo
+	 */
 	private Board tablero;
-	private BoardRenderer renderer;
+	/**
+	 * Se encarga de renderizar la pantalla. 
+	 */
+	private BoardRenderer renderer;	
 	private TetrominoControladora controladora;
 	private TransluscentMenuScreen pause;
 	private TransluscentMenuScreen over;
 	private HighScoreLayer highScores;
+	private Stage stage;
+	private ScoreCounter puntos;
 	private Music musica;
 	
-	private ScoreCounter puntos;
-	
-//	TEMPORARIO ENCONTRAR MEJOR FORMA POR DIOS
-	private int PPM = 40;
-	
+	TweenManager tweenManager = new TweenManager();
+	private int PPM;
+	private Vector2 offset;
+
 	private enum State {
 		RUNNING, PAUSED, OVER
 	}
-	
+
 	static State state = State.RUNNING;
-	
-	TweenManager tweenManager = new TweenManager();
-	private Stage stage;
-	
-	public GameScreen(){
-		this(new HighScoreLayer(new Skin(Gdx.files.internal("ui/mainMenuSkin.json"), new TextureAtlas("ui/menu.pack"))));
-	}
-	public GameScreen(HighScoreLayer hs){
-		this.highScores = hs;
-//		highScores.setSkin(skin);
+
+	/**
+	 * Crea una nueva {@code GameScreen}.
+	 */
+	public GameScreen() {
+		if(GamePreferences.instance.highscores)
+			this.highScores = new HighScoreLayer(new Skin(Gdx.files.internal("ui/mainMenuSkin.json"), 
+												 new TextureAtlas("ui/menu.pack")));
 	}
 
+//	/**
+//	 * Crea una nueva {@code GameScreen}.
+//	 * 
+//	 * @param hs la capa "HighScores" de esta pantalla.
+//	 */
+//	public GameScreen(HighScoreLayer hs) {
+//		this.highScores = hs;
+//		// highScores.setSkin(skin);
+//	}
+
+	/**
+	 * Renderiza la pantalla. Además si el estado del juego es RUNNING, actualiza<br>
+	 * el estado del tablero y la controladora llamando a sus metodos update().
+	 * 
+	 * @see com.badlogic.gdx.Screen#render(float)
+	 * @see BoardRenderer#render(float)
+	 * @see Board#update(float)
+	 * @see TetrominoControladora#update(float)
+	 */
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0.1f, 0.1f, 0.3f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		Table.drawDebug(stage);
-		switch(state){
-			case PAUSED:
-			case OVER:
-				break;
-			case RUNNING:
-				tablero.update(delta);
-				controladora.update(delta);
-				break;
+		switch (state) {
+		case PAUSED:
+		case OVER:
+			break;
+		case RUNNING:
+			tablero.update(delta);
+			controladora.update(delta);
+			break;
 		}
 		renderer.render(delta);
 		tweenManager.update(delta);
@@ -82,6 +109,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener, Obse
 		stage.draw();
 	}
 
+	/**
+	 * Llamado cuando la pantalla cambia de tamaño. TODO
+	 * 
+	 * @see com.badlogic.gdx.Screen#resize(int, int)
+	 */
 	@Override
 	public void resize(int width, int height) {
 		stage.setViewport(new ExtendViewport(width, height));
@@ -91,6 +123,18 @@ public class GameScreen implements Screen, InputProcessor, GestureListener, Obse
 
 	}
 
+	/**
+	 * Llamado cuando esta {@code GameScreen} se vuelve la pantalla del juego. <br>
+	 * Aqui se instancian: 
+	 *<li>el tablero. 
+	 *<li>el contador de puntuacion. 
+	 *<li>la controladora. 
+	 *<li>el renderizador del tablero. 
+	 *<li>las pantallas de pausa y de fin del juego. 
+	 *<li>TODO fix javadoc
+	 * 
+	 * @see com.badlogic.gdx.Screen#show()
+	 */
 	@Override
 	public void show() {
 		tablero = new Board(10, 20);
@@ -98,57 +142,84 @@ public class GameScreen implements Screen, InputProcessor, GestureListener, Obse
 		puntos = new ScoreCounter(tablero.getLevel());
 		tablero.addRowListener(puntos);
 		tablero.addBlockListener(this);
-		
+
 		renderer = new BoardRenderer(tablero, puntos);
 		tablero.addBlockListener(renderer);
 		controladora = new TetrominoControladora(tablero);
+
+		Skin menuSkin = new Skin(Gdx.files.internal("ui/mainMenuSkin.json"),
+				new TextureAtlas("ui/menu.pack"));
 		
-		Skin menuSkin = new Skin(Gdx.files.internal("ui/mainMenuSkin.json"), new TextureAtlas("ui/menu.pack"));
-		
+		offset = renderer.getOffset();
+
 		stage = new Stage();
 		pause = new PauseScreen(stage, menuSkin);
 		pause.addObserver(this);
 		pause.setTween(tweenManager);
-		
+
 		over = new GameOverScreen(stage, menuSkin);
 		over.addObserver(this);
 		over.setTween(tweenManager);
-		
-		stage.addActor(highScores);
-		
+
+		if(GamePreferences.instance.highscores)
+			stage.addActor(highScores);
+
 		musica = Gdx.audio.newMusic(Gdx.files.internal("music/bicycle.mp3"));
-		AudioManager.instance.play(musica);
-		
-		Gdx.input.setInputProcessor(new InputMultiplexer(this, new GestureDetector(this), pause.getStage()));
-		state = State.RUNNING;
+
+		Gdx.input.setInputProcessor(new InputMultiplexer(this,
+				new GestureDetector(this), pause.getStage()));
+		resume();
 	}
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
-
+		dispose();
 	}
 
+	/**
+	 * Pausa el juego y la musica. También muestra la pantalla de pausa.
+	 * @see com.badlogic.gdx.Screen#pause()
+	 */
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
-
+		state = State.PAUSED;
+		AudioManager.instance.pause(musica);
+		pause.fadeIn();
 	}
 
+	/** 
+	 * Reanuda el juego y la musica.
+	 * @see com.badlogic.gdx.Screen#resume()
+	 */
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
-
+		state = State.RUNNING;
+		AudioManager.instance.play(musica);
 	}
 
+	/**
+	 * Libera todos los recursos de esta {@code GameScreen}.
+	 * @see com.badlogic.gdx.Screen#dispose()
+	 */
 	@Override
 	public void dispose() {
-		 stage.dispose();
-		 musica.dispose();
-		 renderer.dispose();
+		stage.dispose();
+		musica.dispose();
+		renderer.dispose();
 	}
-	
-	
+
+	/**
+	 * Cuando se presiona una tecla, realiza una de las siguientes acciones:
+	 * <li>Llama al metodo correspondiente de la controladora.
+	 * <li>Pausa el juego llamando al metodo {@link #pause()}.
+	 * <li>Esconde la pantalla de pausa llamando a su metodo {@link PauseScreen#fadeOut() fadeout()}.
+	 * <li>Cambia esta pantalla por una nueva pantalla {@link MainMenu}.
+	 * @see TetrominoControladora#leftPressed()
+	 * @see TetrominoControladora#rightPressed()
+	 * @see TetrominoControladora#downPressed()
+	 * @see TetrominoControladora#upPressed()
+	 * @see com.badlogic.gdx.InputProcessor#keyDown(int)
+	 */
 	@Override
 	public boolean keyDown(int keycode) {
 		if (keycode == Keys.LEFT)
@@ -160,19 +231,30 @@ public class GameScreen implements Screen, InputProcessor, GestureListener, Obse
 		if (keycode == Keys.UP)
 			controladora.upPressed();
 		if (keycode == Keys.ESCAPE || keycode == Keys.BACK)
-			switch(state){
-				case RUNNING:
-					doPause();
-					break;
-				case PAUSED:
-					doUnPause();
-					break;
-				default:
-					break;
+			switch (state) {
+			case RUNNING:
+				pause();
+				break;
+			case PAUSED:
+				pause.fadeOut();
+				break;
+			case OVER:
+				((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenu());
+				break;
+			default:
+				break;
 			}
 		return true;
 	}
-	
+
+	/**
+	 * Cuando se suelta una tecla, llama al metodo correspondiente de la controladora.
+	 * @see TetrominoControladora#leftReleased()
+	 * @see TetrominoControladora#rightReleased()
+	 * @see TetrominoControladora#downReleased()
+	 * @see TetrominoControladora#upReleased()
+	 * @see com.badlogic.gdx.InputProcessor#keyUp(int)
+	 */
 	@Override
 	public boolean keyUp(int keycode) {
 		if (keycode == Keys.LEFT)
@@ -185,112 +267,126 @@ public class GameScreen implements Screen, InputProcessor, GestureListener, Obse
 			controladora.upReleased();
 		return true;
 	}
-	
+
 	@Override
 	public boolean keyTyped(char character) {
-		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
+	/**
+	 * Cuando la pantalla es tocada o un boton del mouse es oprimido, llama al metodo 
+	 *{@link TetrominoControladora#touchDown(float, float, int)}. 
+	 * @see com.badlogic.gdx.InputProcessor#touchDown(int, int, int, int)
+	 */
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		if(state == State.RUNNING)
-		{
-			return controladora.touchDown(screenX, Gdx.graphics.getHeight() - screenY, PPM);
-//			return true;
+		if (state == State.RUNNING) {
+			return controladora.touchDown(screenX, Gdx.graphics.getHeight()
+					- screenY, PPM);
+			// return true;
 		}
 		return false;
 	}
-	
+
+	/** 
+	 * Cuando se suelta una tecla o un boton del mouse, llama al metodo 
+	 * {@link TetrominoControladora#downReleased()}.
+	 * @see com.badlogic.gdx.InputProcessor#touchUp(int, int, int, int)
+	 */
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		if(state == State.RUNNING) {
+		if (state == State.RUNNING) {
 			controladora.downReleased();
 			return false;
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		// TODO Auto-generated method stub
 		return false;
-	}
-	
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	
-	@Override
-	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	
-	public void doPause(){
-		state = State.PAUSED;
-		AudioManager.instance.pause(musica);
-		pause.fadeIn();
-	}
-	
-	public void doUnPause(){
-		pause.fadeOut();
-		AudioManager.instance.play(musica);
-	}
-	
-	public static void startRunning(){
-		state = State.RUNNING;		
 	}
 
 	@Override
+	public boolean mouseMoved(int screenX, int screenY) {
+		return false;
+	}
+
+	@Override
+	public boolean scrolled(int amount) {
+		return false;
+	}
+
+	/**
+	 * TODO falta
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+	@Override
 	public void update(Observable obs, Object obj) {
-		if(obs instanceof TransluscentMenuScreen)
-			switch (((TransluscentMenuScreen)obs).lastEvent){
-				case NONE:
-					break;
-				case BACK_CLICK:
-					doUnPause();
-					break;
-				case FADE_OUT_PAUSE:
-				case FADE_OUT_OVER:
-					startRunning();
-					break;
-				case RESET_CLICK:
-					resetLevel();
-					break;
+		if (obs instanceof TransluscentMenuScreen)
+			switch (((TransluscentMenuScreen) obs).lastEvent) {
+			case NONE:
+				break;
+			case BACK_CLICK:
+				pause.fadeOut();
+				break;
+			case FADE_OUT_PAUSE:
+			case FADE_OUT_OVER:
+				resume();
+				break;
+			case RESET_CLICK:
+				resetLevel();
+				break;
 			}
 	}
 
+	/**
+	 * Resetea al tablero, al contador de puntos y a la renderizadora, reiniciando asi al juego en curso.
+	 * TODO esta feo.
+	 */
 	private void resetLevel() {
 		tablero.reset();
-		puntos.reset();		
+		puntos.reset();
 		renderer.reset();
 		over.fadeOut();
 	}
 
+	/**
+	 * Chequea el estado del tablero para saber si ha terminado el juego.
+	 * Si el juego ha terminado entonces:
+	 * <li>Cambia el estado del juego a OVER.
+	 * <li>Muestra la pantalla "GameOver"
+	 * <li>Si la puntuacion del jugador se encuentra entre las mejores muestra la pantalla "HighScores"
+	 * @see GameOverScreen#fadeIn()
+	 * @see HighScoreLayer#fadein(int) 
+	 * @see com.ukos.logics.IStopBlockListener#onStoppedBlock()
+	 */
 	@Override
 	public void onStoppedBlock() {
-		if(tablero.isGameOver()) {
+		if (tablero.isGameOver()) {
 			state = State.OVER;
-			over.fadeIn();			
-			HighScores auxScores = ScoreService.retrieveScores();
-			if(puntos.getTotalScore() >= auxScores.lowestScore()){
-				highScores.fadein(puntos.getTotalScore());				
+			over.fadeIn();
+			if(GamePreferences.instance.highscores){				
+				HighScores auxScores = ScoreService.retrieveScores();
+				if (puntos.getTotalScore() >= auxScores.lowestScore()) {
+					highScores.fadein(puntos.getTotalScore());
+				}
 			}
 		}
 	}
 
 	@Override
 	public boolean touchDown(float x, float y, int pointer, int button) {
-//		controladora.touchDown(x, y, ppm);
 		return false;
 	}
 
+	/**
+	 * Al tapear la pantalla se llama al metodo {@link TetrominoControladora#tap() tap()} de la controladora
+	 * @see com.badlogic.gdx.input.GestureDetector.GestureListener#tap(float, float, int, int)
+	 */
 	@Override
 	public boolean tap(float x, float y, int count, int button) {
-		if(state == State.RUNNING) {				
+		if (state == State.RUNNING) {
 			controladora.tap();
 			return true;
 		}
@@ -299,19 +395,21 @@ public class GameScreen implements Screen, InputProcessor, GestureListener, Obse
 
 	@Override
 	public boolean longPress(float x, float y) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean fling(float velocityX, float velocityY, int button) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
+	/**
+	 * Al deslizar el cursor sobre la pantalla se llama al metodo {@link TetrominoControladora#pan(float, int) pan()} de la controladora
+	 * @see com.badlogic.gdx.input.GestureDetector.GestureListener#pan(float, float, float, float)
+	 */
 	@Override
 	public boolean pan(float x, float y, float deltaX, float deltaY) {
-		if(state == State.RUNNING){
+		if (state == State.RUNNING) {
 			controladora.pan(deltaX, PPM);
 			return true;
 		}
@@ -320,26 +418,22 @@ public class GameScreen implements Screen, InputProcessor, GestureListener, Obse
 
 	@Override
 	public boolean panStop(float x, float y, int pointer, int button) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean zoom(float initialDistance, float distance) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2,
 			Vector2 pointer1, Vector2 pointer2) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
-	public void setHighScoreLayer(HighScoreLayer layerHighScore) {
-		highScores = layerHighScore;		
-	}
-
+//	public void setHighScoreLayer(HighScoreLayer layerHighScore) {
+//		highScores = layerHighScore;
+//	}
 
 }
