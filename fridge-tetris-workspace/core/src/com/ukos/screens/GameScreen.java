@@ -5,9 +5,9 @@ import java.util.Observer;
 
 import aurelienribon.tweenengine.TweenManager;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
@@ -26,29 +26,62 @@ import com.ukos.fridgetetris.BoardRenderer;
 import com.ukos.fridgetetris.GamePreferences;
 import com.ukos.fridgetetris.HighScores;
 import com.ukos.fridgetetris.ScoreService;
-import com.ukos.fridgetetris.TetrominoControladora;
+import com.ukos.fridgetetris.TetrominoController;
 import com.ukos.logics.Board;
 import com.ukos.logics.IStopBlockListener;
+import com.ukos.logics.Point;
 import com.ukos.logics.ScoreCounter;
 
+/**
+ * Contiene y coordina los elementos necesarios para ejecutar el juego:
+ * <li>El tablero
+ * <li>La renderizadora del tablero
+ * <li>La controladora de movimiento?
+ * <li>El contador de puntos
+ * <li>Las pantallas de "pausa" y "game over"
+ * <li>La pantalla de puntuaciones
+ * 
+ * @author Ukos
+ *
+ */
 public class GameScreen implements Screen, InputProcessor, GestureListener,
 		Observer, IStopBlockListener {
 
 	/**
-	 * En el tablero se desarrola el juego.
-	 * TODO feo
+	 * Instancia de {@code Board} en que se desarrolla el juego.
 	 */
 	private Board tablero;
 	/**
 	 * Se encarga de renderizar la pantalla. 
 	 */
 	private BoardRenderer renderer;	
-	private TetrominoControladora controladora;
+	/**
+	 * Controla el movimento de las piezas
+	 */
+	private TetrominoController controladora;
+	/**
+	 * Pantalla de pausa
+	 */
 	private TransluscentMenuScreen pause;
+	/**
+	 * Pantalla de fin del juego
+	 */
 	private TransluscentMenuScreen over;
+	/**
+	 * Pantalla de puntuaciones
+	 */
 	private HighScoreLayer highScores;
+	/**
+	 * Contiene a las pantallas {@link #pause} y {@link #over}.
+	 */
 	private Stage stage;
+	/**
+	 * Asigna puntos cuando se forman lineas
+	 */
 	private ScoreCounter puntos;
+	/**
+	 * La musica del juego
+	 */
 	private Music musica;
 	
 	TweenManager tweenManager = new TweenManager();
@@ -56,10 +89,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener,
 	private Vector2 offset;
 
 	private enum State {
-		RUNNING, PAUSED, OVER
+		READY, RUNNING, PAUSED, OVER
 	}
 
-	static State state = State.RUNNING;
+	static State state = State.READY;
 
 	/**
 	 * Crea una nueva {@code GameScreen}.
@@ -87,7 +120,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener,
 	 * @see com.badlogic.gdx.Screen#render(float)
 	 * @see BoardRenderer#render(float)
 	 * @see Board#update(float)
-	 * @see TetrominoControladora#update(float)
+	 * @see TetrominoController#update(float)
 	 */
 	@Override
 	public void render(float delta) {
@@ -95,12 +128,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener,
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		Table.drawDebug(stage);
 		switch (state) {
-		case PAUSED:
-		case OVER:
-			break;
 		case RUNNING:
 			tablero.update(delta);
 			controladora.update(delta);
+			break;
+		default:
 			break;
 		}
 		renderer.render(delta);
@@ -110,8 +142,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener,
 	}
 
 	/**
-	 * Llamado cuando la pantalla cambia de tamaño. TODO
-	 * 
+	 * Llamado cuando la pantalla cambia de tamaño.
 	 * @see com.badlogic.gdx.Screen#resize(int, int)
 	 */
 	@Override
@@ -128,15 +159,16 @@ public class GameScreen implements Screen, InputProcessor, GestureListener,
 	 * Aqui se instancian: 
 	 *<li>el tablero. 
 	 *<li>el contador de puntuacion. 
-	 *<li>la controladora. 
+	 *<li>la controladora de movimiento?. 
 	 *<li>el renderizador del tablero. 
 	 *<li>las pantallas de pausa y de fin del juego. 
-	 *<li>TODO fix javadoc
+	 *<li>la musica.
 	 * 
 	 * @see com.badlogic.gdx.Screen#show()
 	 */
 	@Override
 	public void show() {
+		Gdx.input.setCatchBackKey(true);
 		tablero = new Board(10, 20);
 		tablero.setGhostActivated(GamePreferences.instance.ghost);
 		puntos = new ScoreCounter(tablero.getLevel());
@@ -145,7 +177,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener,
 
 		renderer = new BoardRenderer(tablero, puntos);
 		tablero.addBlockListener(renderer);
-		controladora = new TetrominoControladora(tablero);
+		controladora = new TetrominoController(tablero);
 
 		Skin menuSkin = new Skin(Gdx.files.internal("ui/mainMenuSkin.json"),
 				new TextureAtlas("ui/menu.pack"));
@@ -168,11 +200,12 @@ public class GameScreen implements Screen, InputProcessor, GestureListener,
 
 		Gdx.input.setInputProcessor(new InputMultiplexer(this,
 				new GestureDetector(this), pause.getStage()));
-		resume();
+		run();
 	}
 
 	@Override
 	public void hide() {
+		Gdx.input.setCatchBackKey(false);
 		dispose();
 	}
 
@@ -182,19 +215,24 @@ public class GameScreen implements Screen, InputProcessor, GestureListener,
 	 */
 	@Override
 	public void pause() {
-		state = State.PAUSED;
-		AudioManager.instance.pause(musica);
-		pause.fadeIn();
+		if(isRunning()){
+			state = State.PAUSED;
+			AudioManager.instance.pause();
+			pause.fadeIn();			
+		}
 	}
-
+	
 	/** 
-	 * Reanuda el juego y la musica.
+	 * Reanuda la musica y cambia el estado del juego a RUNNING.
 	 * @see com.badlogic.gdx.Screen#resume()
 	 */
-	@Override
-	public void resume() {
+	public void run(){
 		state = State.RUNNING;
 		AudioManager.instance.play(musica);
+	}
+
+	@Override
+	public void resume() {		
 	}
 
 	/**
@@ -214,10 +252,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener,
 	 * <li>Pausa el juego llamando al metodo {@link #pause()}.
 	 * <li>Esconde la pantalla de pausa llamando a su metodo {@link PauseScreen#fadeOut() fadeout()}.
 	 * <li>Cambia esta pantalla por una nueva pantalla {@link MainMenu}.
-	 * @see TetrominoControladora#leftPressed()
-	 * @see TetrominoControladora#rightPressed()
-	 * @see TetrominoControladora#downPressed()
-	 * @see TetrominoControladora#upPressed()
+	 * @see TetrominoController#leftPressed()
+	 * @see TetrominoController#rightPressed()
+	 * @see TetrominoController#downPressed()
+	 * @see TetrominoController#upPressed()
 	 * @see com.badlogic.gdx.InputProcessor#keyDown(int)
 	 */
 	@Override
@@ -249,10 +287,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener,
 
 	/**
 	 * Cuando se suelta una tecla, llama al metodo correspondiente de la controladora.
-	 * @see TetrominoControladora#leftReleased()
-	 * @see TetrominoControladora#rightReleased()
-	 * @see TetrominoControladora#downReleased()
-	 * @see TetrominoControladora#upReleased()
+	 * @see TetrominoController#leftReleased()
+	 * @see TetrominoController#rightReleased()
+	 * @see TetrominoController#downReleased()
+	 * @see TetrominoController#upReleased()
 	 * @see com.badlogic.gdx.InputProcessor#keyUp(int)
 	 */
 	@Override
@@ -275,12 +313,12 @@ public class GameScreen implements Screen, InputProcessor, GestureListener,
 
 	/**
 	 * Cuando la pantalla es tocada o un boton del mouse es oprimido, llama al metodo 
-	 *{@link TetrominoControladora#touchDown(float, float, int)}. 
+	 *{@link TetrominoController#touchDown(float, float, int)}. 
 	 * @see com.badlogic.gdx.InputProcessor#touchDown(int, int, int, int)
 	 */
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		if (state == State.RUNNING) {
+		if (isRunning()) {
 			return controladora.touchDown(screenX, Gdx.graphics.getHeight()
 					- screenY, PPM);
 			// return true;
@@ -290,12 +328,12 @@ public class GameScreen implements Screen, InputProcessor, GestureListener,
 
 	/** 
 	 * Cuando se suelta una tecla o un boton del mouse, llama al metodo 
-	 * {@link TetrominoControladora#downReleased()}.
+	 * {@link TetrominoController#downReleased()}.
 	 * @see com.badlogic.gdx.InputProcessor#touchUp(int, int, int, int)
 	 */
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		if (state == State.RUNNING) {
+		if (isRunning()) {
 			controladora.downReleased();
 			return false;
 		}
@@ -318,7 +356,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener,
 	}
 
 	/**
-	 * TODO falta
+	 * Llamado cuando se produce un cambio en {@link #pause} o en {@link #over}.
+	 * <br>La accion ejecutada por este metodo dependera 
+	 * del cambio ocurrido (Representado por {@code TransluscentMenuScreen#lastEvent}).
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	@Override
@@ -332,7 +372,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener,
 				break;
 			case FADE_OUT_PAUSE:
 			case FADE_OUT_OVER:
-				resume();
+				run();
 				break;
 			case RESET_CLICK:
 				resetLevel();
@@ -342,37 +382,47 @@ public class GameScreen implements Screen, InputProcessor, GestureListener,
 
 	/**
 	 * Resetea al tablero, al contador de puntos y a la renderizadora, reiniciando asi al juego en curso.
-	 * TODO esta feo.
 	 */
 	private void resetLevel() {
 		tablero.reset();
 		puntos.reset();
 		renderer.reset();
+		state = State.READY;
 		over.fadeOut();
 	}
 
 	/**
 	 * Chequea el estado del tablero para saber si ha terminado el juego.
 	 * Si el juego ha terminado entonces:
-	 * <li>Cambia el estado del juego a OVER.
-	 * <li>Muestra la pantalla "GameOver"
+	 * <li>Finaliza el juego mediante el metodo {@link #endGame()}.
 	 * <li>Si la puntuacion del jugador se encuentra entre las mejores muestra la pantalla "HighScores"
-	 * @see GameOverScreen#fadeIn()
 	 * @see HighScoreLayer#fadein(int) 
 	 * @see com.ukos.logics.IStopBlockListener#onStoppedBlock()
 	 */
 	@Override
 	public void onStoppedBlock() {
 		if (tablero.isGameOver()) {
-			state = State.OVER;
-			over.fadeIn();
+			endGame();
 			if(GamePreferences.instance.highscores){				
 				HighScores auxScores = ScoreService.retrieveScores();
-				if (puntos.getTotalScore() >= auxScores.lowestScore()) {
+				if (puntos.getTotalScore() > auxScores.lowestScore()) {
 					highScores.fadein(puntos.getTotalScore());
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Finaliza el juego, realizando las siguientes acciones:
+	 * <li>Cambia el estado del juego a OVER.
+	 * <li>Detiene la musica.
+	 * <li>Muestra la pantalla "GameOver" llamando a su metodo {@code fadeIn()}
+	 * @see GameOverScreen#fadeIn()
+	 */
+	public void endGame(){
+		state = State.OVER;
+		AudioManager.instance.stopMusic();
+		over.fadeIn();
 	}
 
 	@Override
@@ -381,12 +431,12 @@ public class GameScreen implements Screen, InputProcessor, GestureListener,
 	}
 
 	/**
-	 * Al tapear la pantalla se llama al metodo {@link TetrominoControladora#tap() tap()} de la controladora
+	 * Al tapear la pantalla se llama al metodo {@link TetrominoController#tap() tap()} de la controladora
 	 * @see com.badlogic.gdx.input.GestureDetector.GestureListener#tap(float, float, int, int)
 	 */
 	@Override
 	public boolean tap(float x, float y, int count, int button) {
-		if (state == State.RUNNING) {
+		if (isRunning()) {
 			controladora.tap();
 			return true;
 		}
@@ -404,20 +454,39 @@ public class GameScreen implements Screen, InputProcessor, GestureListener,
 	}
 
 	/**
-	 * Al deslizar el cursor sobre la pantalla se llama al metodo {@link TetrominoControladora#pan(float, int) pan()} de la controladora
+	 * Al deslizar el cursor sobre la pantalla se llama al metodo {@link TetrominoController#pan(float, int) pan()} de la controladora
 	 * @see com.badlogic.gdx.input.GestureDetector.GestureListener#pan(float, float, float, float)
 	 */
 	@Override
 	public boolean pan(float x, float y, float deltaX, float deltaY) {
-		if (state == State.RUNNING) {
+		if (isRunning()) {
 			controladora.pan(deltaX, PPM);
 			return true;
 		}
 		return false;
+//		if (state == State.RUNNING) {
+//			Point punto = new Point((int)(x/PPM) + offset.x, (int)(y/PPM) + offset.y);
+//			if(deltaX > 0){
+//				if(!tablero.getFallingPiece().isAtX(punto)){
+//					controladora.rightPressed();
+//				} else controladora.rightReleased();
+//			} else if(deltaX < 0){
+//				if(!tablero.getFallingPiece().isAtX(punto)){
+//					controladora.leftPressed();
+//				} else controladora.leftReleased();
+//			}
+//			return true;
+//		}
+//		return false;
 	}
 
 	@Override
 	public boolean panStop(float x, float y, int pointer, int button) {
+		if(isRunning()){
+			controladora.rightReleased();
+			controladora.leftReleased();
+			return true;
+		}
 		return false;
 	}
 
@@ -432,6 +501,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener,
 		return false;
 	}
 
+	private boolean isRunning(){
+		if(state == State.RUNNING) return true;
+		return false;
+	}
 //	public void setHighScoreLayer(HighScoreLayer layerHighScore) {
 //		highScores = layerHighScore;
 //	}

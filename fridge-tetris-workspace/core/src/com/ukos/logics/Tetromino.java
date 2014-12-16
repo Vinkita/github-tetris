@@ -132,6 +132,18 @@ public class Tetromino {
     private Tetromino(){
     }
     
+    public static Array<RotatablePiece> allPieces(){
+    	Array<RotatablePiece> arraux = new Array<RotatablePiece>();
+    	arraux.add(I_SHAPE);    	
+    	arraux.add(J_SHAPE);    	
+    	arraux.add(L_SHAPE);  	
+    	arraux.add(O_SHAPE);  	
+    	arraux.add(S_SHAPE);  	
+    	arraux.add(T_SHAPE);  	
+    	arraux.add(Z_SHAPE);
+    	return arraux;
+    }
+    
 //    public Tetromino(int maxRots, int curRotation, String shape) {
 //        this(maxRots, curRotation);
 ////        this.shape = this.initialRotation(curRotation, shape);

@@ -4,6 +4,8 @@ com.badlogic.gdx.graphics.g2d.BitmapFont: {
 	"white64": { "file": "fonts/white64.fnt" },
 	"black64": { "file": "fonts/black64.fnt" },
 	"opificio15": { "file": "fonts/Opificio_15.fnt" },
+	"opificio20": { "file": "fonts/Opificio_20.fnt" },
+	"opificio32": { "file": "fonts/Opificio_32.fnt" },
 	"opificio64": { "file": "fonts/Opificio_64.fnt" }
 },
 com.badlogic.gdx.graphics.Color: {
@@ -12,7 +14,8 @@ com.badlogic.gdx.graphics.Color: {
 	"gray": { "r": 0.3, "g": 0.3, "b": 0.3, "a": 1 },
 	"red": { "r": 1, "g": 0, "b": 0, "a": 1 },
 	"green": { "r": 0, "g": 1, "b": 0, "a": 1 },
-	"blue": { "r": 0, "g": 0, "b": 1, "a": 1 }
+	"blue": { "r": 0, "g": 0, "b": 1, "a": 1 },
+	"lightBlue": { "r": 0.192f, "g": 0.192f, "b": 1, "a": 1 }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 	dialogDim: { name: white, color: { r: 0, g: 0, b: 0, a: 0.45 } }
@@ -26,7 +29,9 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	toggle: { down: default-round-down, up: default-round, checked: default-round-down, font: default-font, fontColor: white, downFontColor: red },
 	"pink": { "up": "pink.up", "down": "pink.down", "font": opificio64, "pressedOffsetX": 1, "pressedOffsetY": -1 },
 	"green": { "up": "green.up", "down": "green.down", "font": opificio64, "pressedOffsetX": 1, "pressedOffsetY": -1 },
+	"greenSmall": { "up": "green.up", "down": "green.down", "font": opificio32, "pressedOffsetX": 1, "pressedOffsetY": -1 },
 	"blue": { "up": "blue.up", "down": "blue.down", "font": opificio64, "pressedOffsetX": 1, "pressedOffsetY": -1 },
+	"blueSmall": { "up": "blue.up", "down": "blue.down", "font": opificio32, "pressedOffsetX": 1, "pressedOffsetY": -1 },
 	"orange": { "up": "orange.up", "down": "orange.down", "font": opificio64, "pressedOffsetX": 1, "pressedOffsetY": -1 }
 },
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
@@ -57,6 +62,10 @@ com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
 },
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	default: { font: default-font, fontColor: white },
+	blueLarge: { "font": opificio64, "fontColor": lightBlue },
+	blueMedium: { "font": opificio32, "fontColor": lightBlue },
+	tetrisSmall: { "font": opificio20, "fontColor": white },
+	tetrisMedium: { "font": opificio32, "fontColor": white },
 	tetris: { "font": opificio64, "fontColor": white }
 },
 com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
@@ -64,7 +73,7 @@ com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
 },
 com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
 	default: { checkboxOn: check-on, checkboxOff: check-off, font: default-font, fontColor: white },
-	"tetris": { "checkboxOn": "tick.on", "checkboxOff": "tick.off", "font": opificio15, "fontColor": white  }
+	"tetris": { "checkboxOn": "tick.on", "checkboxOff": "tick.off", "font": opificio32, "fontColor": white  }
 },
 com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
 	default: { fontColorUnselected: white, selection: selection, fontColorSelected: white, font: default-font }

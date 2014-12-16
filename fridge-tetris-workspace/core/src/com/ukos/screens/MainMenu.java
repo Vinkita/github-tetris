@@ -23,8 +23,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.ukos.fridgetetris.AudioManager;
 import com.ukos.fridgetetris.GamePreferences;
@@ -32,8 +32,7 @@ import com.ukos.tween.ActorAccessor;
 
 /**
  * El Menu Principal. 
- * <br>Esta compuesto de diversas capas, cada una agrupando distintas secciones del menu.
- * TODO
+ * <br>Esta compuesto de diversas capas, cada una agrupa distintas secciones del menu.
  * @author Ukos
  */
 public class MainMenu implements Screen {
@@ -147,7 +146,7 @@ public class MainMenu implements Screen {
 	
 	/**
 	 * Se encarga de la creacion de la capa "background".
-	 * TODO @return
+	 * @return la capa "background".
 	 */
 	private Table buildBackgroundLayer(){
 		Table auxBG = new Table(skin);
@@ -163,8 +162,8 @@ public class MainMenu implements Screen {
 	 * <br>
 	 * <li>Instancia la imagen de cabecera.
 	 * <li>Instancia los botones y setea sus propiedades graficas. 
-	 * <li>TODO Crea los listeners de cada boton.  
-	 * <li>TODO Ubica los componentes del menu en sus lugares.
+	 * <li>Crea los listeners de cada boton.  
+	 * <li>Ubica los componentes del menu en sus lugares.
 	 * @return  la capa "Menu".
 	 */
 	private Table buildMenuLayer(){
@@ -249,27 +248,25 @@ public class MainMenu implements Screen {
 	/**
 	 * Se encarga de la creacion de la capa "Preferencias".
 	 * <br>
-	 * <li>TODO argh!!!!!!!!
+	 * <li>Instancia los diferentes elementos que componen este menu.
 	 * <li>Instancia los botones y setea sus propiedades graficas. 
-	 * <li>TODO Crea los listeners de cada boton.  
-	 * <li>TODO Ubica los componentes de la capa en sus lugares.
+	 * <li>Crea los listeners de cada boton.  
+	 * <li>Ubica cada elemento en su correspondiente lugar.
 	 * @return  la capa "Preferencias".
 	 */
 	private Table buildSettingsLayer(){
 		Table auxSett = new Table(skin);
+		Window win = new Window("", skin);
+		win.setMovable(false);
 		auxSett.setFillParent(true);		
-//		auxSett.debug();
 		
 		chkGhost = new CheckBox("Ghost Piece", skin, "tetris");
 		selNumPrevs = new SelectBox<Integer>(skin);
 		selNumPrevs.setItems(GamePreferences.PreviewNumbers);	
 		
-		chkMusic = new CheckBox("Music", skin, "tetris");
-		sldMusic = new Slider(0, 1, .1f, false, skin);
-		
-		buttonSave = new TextButton("Save", skin, "green");
+		buttonSave = new TextButton("Save", skin, "greenSmall");
 		buttonSave.pad(15);
-		buttonCancel = new TextButton("Cancel", skin, "blue");
+		buttonCancel = new TextButton("Cancel", skin, "blueSmall");
 		buttonCancel.pad(15);
 		
 		//listeners
@@ -278,30 +275,44 @@ public class MainMenu implements Screen {
 			public void clicked(InputEvent event, float x, float y) {
 				saveSettings();
 				hideSettings();
-				AudioManager.instance.onSettingsUpdated();
 			}
 		});
 		buttonCancel.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y) {				
 				hideSettings();
-				AudioManager.instance.onSettingsUpdated();
 			}
 		});
 		
 //		auxSett.add(heading).spaceBottom(100).row();
-		auxSett.add(new Label("SETTINGS", skin, "tetris")).colspan(2).row();
-		auxSett.add(chkGhost).row();
-		auxSett.add(selNumPrevs);
-		auxSett.add(new Label("Number of Preview Pieces", skin)).row();
-		auxSett.add(chkMusic);
-		auxSett.add(sldMusic).row();
-		auxSett.add(buttonSave).width(buttonCancel.getWidth()).uniformX();//.width(buttonWidth);
-		auxSett.add(buttonCancel).uniformX();
+		win.add(new Label("SETTINGS", skin, "tetris")).colspan(2).spaceBottom(100).row();
+		win.add(new Label("Game", skin, "blueMedium")).colspan(2).row();
+		win.add(chkGhost).left().padLeft(5).padBottom(10).row();
+		win.add(new Label("Number of Preview Pieces:", skin, "tetrisMedium")).left().colspan(2).padLeft(5).row();
+		win.add(selNumPrevs).fillX().colspan(2).pad(0, 5, 0, 5).row();
+		win.add(buildAudioMenu()).colspan(2).fillX().padTop(15).row();
+		win.add().padBottom(50).row();
+		win.add(buttonSave).width(buttonCancel.getWidth()).uniformX();//.width(buttonWidth);
+		win.add(buttonCancel).uniformX();
 		
+		auxSett.add(win);
 		auxSett.setVisible(false);
 		
 		return auxSett;	
+	}
+	
+	/**
+	 * @return el submenu "audio" de la capa settings
+	 */
+	private Table buildAudioMenu(){
+		Table audio = new Table(skin);
+		chkMusic = new CheckBox("Music", skin, "tetris");
+		sldMusic = new Slider(0, 1, .1f, false, skin);
+		
+		audio.add(new Label("Audio", skin, "blueMedium")).colspan(2).row();
+		audio.add(chkMusic).left().padLeft(5).padRight(15);
+		audio.add(sldMusic).expandX().fillX().padRight(10);
+		return audio;
 	}
 	
 	/**
@@ -412,6 +423,7 @@ public class MainMenu implements Screen {
 		.push(Tween.set(layerSettings, ActorAccessor.VISIBILITY).target(0))
 		.end().start(tweenManager);
 		tweenManager.update(Gdx.graphics.getDeltaTime());
+		AudioManager.instance.onSettingsUpdated();
 	}
 	
 	/**

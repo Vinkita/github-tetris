@@ -4,31 +4,23 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.ukos.fridgetetris.BoardRenderer;
 
 
 public class BlockDrawable implements Cloneable{
 	
-	/**
-	 * Punto que representa la ubicacion de este BlockDrawable
-	 */
+	/** Punto que representa la ubicacion de este {@code BlockDrawable} */
 	private Point point;
-	//El objetivo de style es contener el string que indica que textura se debe cargar
-	/**
-	 * Éste String indica qué textura se debera cargar 
-	 * TODO hate
-	 */
+	/** Codigo de textura, utilizado por {@link BoardRenderer} para determinar 
+	 * la textura correspondiente a este bloque */
 	private String style;
-	/**
-	 * Si esta variable es true, el bloque será dibujado con semitranparencia
-	 */
+	/** La textura del {@code BlockDrawable} */
+	private TextureRegion texture;
+	/** Si esta variable es true, el bloque será dibujado con semitranparencia */
 	private boolean ghost;
-	/**
-	 * El ancho del bloque
-	 */
+	/** El ancho del bloque */
 	private float width;
-	/**
-	 * La altura del bloque
-	 */
+	/** La altura del bloque */
 	private float height;
 	
 	/**
@@ -37,8 +29,8 @@ public class BlockDrawable implements Cloneable{
 	 * @param style  el codigo de estilo
 	 * @param ghost  si el bloque debe ser dibujado como "fantasma" o no
 	 */
-	public BlockDrawable(Point point, String style, boolean ghost) {
-		init(point, style, ghost);
+	public BlockDrawable(Point point, String style, boolean ghost, TextureRegion texture) {
+		init(point, style, ghost, texture);
 	}
 	
 	/**
@@ -48,19 +40,28 @@ public class BlockDrawable implements Cloneable{
 	 */
 	public BlockDrawable(Point point, String style) {
 //		init(point, style);
-		this(point, style, false);
+		this(point, style, false, null);
 	}
 	
 //	private void init(Point point, String style){
 //		init(point, style, false);
 //	}
 
+	public TextureRegion getTexture() {
+		return texture;
+	}
+
+	public void setTexture(TextureRegion texture) {
+		this.texture = texture;
+	}
+
 	/**
-	 * Es llamada por el costructor para inicializar el BLockDrawable
+	 * Es llamada por el costructor para inicializar el BlockDrawable
 	 */
-	private void init(Point point, String style, boolean ghost){
+	private void init(Point point, String style, boolean ghost, TextureRegion texture){
 		this.point = point;
 		this.style = style;
+		this.texture = texture;
 		width = height = 1;
 		this.ghost = ghost;
 	}
@@ -95,6 +96,14 @@ public class BlockDrawable implements Cloneable{
 		this.style = style;
 	}
 	
+	public float getWidth(){
+		return width;
+	}
+	
+	public float getHeight(){
+		return height;
+	}
+	
 	/**
 	 * Dibuja un bloque
 	 * @param batch  el objeto Batch 
@@ -107,6 +116,17 @@ public class BlockDrawable implements Cloneable{
 		batch.draw(texture, offset.x + point.X(), offset.y + point.Y(), width, height);		
 		if(ghost)
 			batch.setColor(1, 1, 1, 1);
+	}
+	
+	/**
+	 * Dibuja un bloque, utilizando la textura almacenada en el mismo.
+	 * @param batch  el objeto Batch 
+	 * @param offset  la posicion relativa dentro de la pantalla
+	 */
+	public void draw(Batch batch, Vector2 offset){
+		if(texture != null){
+			draw(batch, texture, offset);		
+		}
 	}
 	
 	@Override

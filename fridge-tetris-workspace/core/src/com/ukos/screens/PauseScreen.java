@@ -11,8 +11,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.ukos.screens.TransluscentMenuScreen.Event;
 import com.ukos.tween.ActorAccessor;
 
+/**
+ * Pantalla de pausa
+ * @author Ukos
+ */
 public class PauseScreen extends TransluscentMenuScreen {
 
+	/**
+	 * @see TransluscentMenuScreen#TransluscentMenuScreen(Stage, Skin)
+	 */
 	public PauseScreen(Stage stage, Skin skin) {
 		super(stage, skin);
 	}
@@ -22,9 +29,14 @@ public class PauseScreen extends TransluscentMenuScreen {
 		backButtonText = "Back";
 	}
 	@Override
-	protected Event getBackEvent() {
+	protected Event getButtonBackEvent() {
 		return Event.BACK_CLICK;
 	}
+	/**
+	 * Esconde esta TransluscentMenuScreen, desvaneciendola gradualmente. Al terminar
+	 * esta accion, llama al metodo {@link #fireEvent(Event)}.
+	 * @see com.ukos.screens.TransluscentMenuScreen#fadeOut()
+	 */
 	@Override
 	public void fadeOut() {
 		Timeline.createSequence().beginSequence()
@@ -35,7 +47,7 @@ public class PauseScreen extends TransluscentMenuScreen {
 			@Override
 			public void onEvent(int type, BaseTween<?> source) {
 //				GameScreen.releasePause();
-				setEvent(Event.FADE_OUT_PAUSE);
+				fireEvent(Event.FADE_OUT_PAUSE);
 			}
 		});
 		

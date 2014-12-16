@@ -10,13 +10,13 @@ import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.esotericsoftware.tablelayout.Cell;
 import com.ukos.fridgetetris.HighScores;
@@ -27,39 +27,24 @@ import com.ukos.tween.ActorAccessor;
 /**
  * Menu de HighScores (Puntuaciones mas altas).
  * <br> Este menu esta pensado para ser agregado como elemento a otro menu o pantalla.
- * TODO
  * @author Ukos
  */
 public class HighScoreLayer extends Stack {
 	TweenManager tweenManager;
-	/**
-	 * Contiene las puntuaciones mas altas y los nombres de los jugadores que las obtuvieron.
-	 */
+	/** Contiene las puntuaciones mas altas y los nombres de los jugadores que las obtuvieron. */
 	HighScores scores;
-	/**
-	 * Determina la apariencia de la {@code HighScoreLayer}. 
-	 */
+	/** Determina la apariencia de la {@code HighScoreLayer}. */
 	Skin skin;
-	/**
-	 * La puntuacion obtenida por el jugador al final del juego.
-	 */
+	/** La puntuacion obtenida por el jugador al final del juego. */
 	int newScore;
 	
-	/**
-	 * La capa de fondo, contiene la imagen de fondo de this.
-	 */
+	/** La capa de fondo, contiene la imagen de fondo de {@code this}. */
 	Table backgroundLayer;
-	/**
-	 * La capa de puntuaciones, utilizada para mostrar las puntuaciones mas altas en forma de lista. 
-	 */
+	/** La capa de puntuaciones, utilizada para mostrar las puntuaciones mas altas en forma de lista. */
 	Table scoresLayer;
-	/**
-	 * La capa de botones. Contiene los botones utilizados para ocultar this.
-	 */
+	/** La capa de botones. Contiene los botones utilizados para ocultar {@code this}. */
 	Table buttonsLayer;
-	/**
-	 * La capa "Dialog". Permite al jugador introducir su nombre para luego guardar su puntuacion.
-	 */
+	/** La capa "Dialog". Permite al jugador introducir su nombre para luego guardar su puntuacion. */
 	Table dialogLayer;
 	
 	/**
@@ -118,9 +103,14 @@ public class HighScoreLayer extends Stack {
 		buttonsLayer = buildButtonsLayer();
 		dialogLayer = setupDialog();
 		
+		Table tab = new Table(skin);
+		tab.setFillParent(true);
+		tab.add(new Label("HighScores", skin, "tetris")).padTop(50).row();
+		tab.add(scoresLayer).expandY().fillY().row();
+		tab.add(buttonsLayer).fillX().bottom().padBottom(20);
+		
 		this.add(backgroundLayer);
-		this.add(scoresLayer);
-		this.add(buttonsLayer);
+		this.add(tab);
 		this.add(dialogLayer);
 		this.setVisible(false);
 	}
@@ -145,7 +135,7 @@ public class HighScoreLayer extends Stack {
 			}
 		});
 		//boton dialogo
-		okButton = new TextButton("Ok", skin, "green");
+		okButton = new TextButton("Ok", skin, "greenSmall");
 		okButton.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -178,9 +168,7 @@ public class HighScoreLayer extends Stack {
 	 */
 	private Table buildButtonsLayer(){
 		Table btable = new Table();
-		btable.setFillParent(true);
-		btable.bottom().center();
-		buttonCell = btable.add(backButton).bottom().center();
+		buttonCell = btable.add(backButton).width(backButton.getHeight() * 1.5f);
 		return btable;
 	}
 	
@@ -194,13 +182,14 @@ public class HighScoreLayer extends Stack {
 			taux.clear();			
 		} else {
 			taux = new Table();
-			taux.setFillParent(true);
 			taux.debug();
 		}
+		taux.add().prefWidth(8*30);
+		taux.add().prefWidth(8*10).row();
 		int i = 1;
 		for (HighScore hs : scores.getList()){
-			taux.add(new Label(i + ". " + hs.name, skin));
-			taux.add(new Label("" + hs.score, skin));
+			taux.add(new Label(i + ". " + hs.name, skin)).left();
+			taux.add(new Label("" + hs.score, skin)).right();
 			taux.row();
 			i++;
 		}		
@@ -215,16 +204,22 @@ public class HighScoreLayer extends Stack {
 	 * @return la capa "Dialog".
 	 */
 	private Table setupDialog() {
-		Table taux = new Table();
-		lblName = new Label("Name: ", skin);
+		Table tbaux = new Table();
+		Window taux = new Window("", skin);//, "dialog");
+		taux.setModal(true);
+		lblName = new Label("Name: ", skin, "tetrisSmall");
 		txtName = new TextField("", skin);
+		txtName.setMaxLength(20);
 
+		taux.row().padTop(20);
 		taux.add(lblName);
 		taux.add(txtName);
 		taux.row();
-		taux.add(okButton);
-		taux.setVisible(false);
-		return taux;
+		taux.add(okButton).width(okButton.getHeight() * 1.5f).colspan(2).center().padTop(40);
+		
+		tbaux.add(taux);
+		tbaux.setVisible(false);
+		return tbaux;
 	}
 
 	/**

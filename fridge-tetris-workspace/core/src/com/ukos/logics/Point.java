@@ -3,7 +3,7 @@ package com.ukos.logics;
 import com.badlogic.gdx.math.Vector2;
 
 /**
- * 
+ * Igual al Vector2 pero inmutable TODO explicar como un ser humano
  * @author Ukita
  */
 public class Point{

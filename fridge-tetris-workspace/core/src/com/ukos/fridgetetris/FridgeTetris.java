@@ -15,12 +15,6 @@ public class FridgeTetris extends Game {
 	public void create () {
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		Tween.setCombinedAttributesLimit(5);
-		GamePreferences.instance.load();
-		if(Gdx.app.getType() == ApplicationType.Android || Gdx.app.getType() == ApplicationType.Desktop){
-			GamePreferences.instance.highscores = false;
-			GamePreferences.instance.save();
-		}
-		Gdx.input.setCatchBackKey(true);
 		setScreen(new MainMenu());
 	}
 

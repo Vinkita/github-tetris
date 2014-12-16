@@ -3,7 +3,7 @@ package com.ukos.logics;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -63,7 +63,7 @@ public class Board implements Grid{
 	 * Cuando se remueve una (o varias) fila, la informacion de estilo de sus bloques es guardada aquí.
 	 * Luego, el BoardRenderer utiliza esta informacion para crear el efecto de explosión de las filas. 
 	 */
-	private ArrayMap<Integer, String[]> deletedRowsInfo = new ArrayMap<Integer, String[]>();
+	private ArrayMap<Integer, TextureRegion[]> deletedRowsInfo = new ArrayMap<Integer, TextureRegion[]>();
 
     
     /** Crea un nuevo Board, con el ancho y la altura especificados
@@ -218,7 +218,7 @@ public class Board implements Grid{
 	private void copyToBoard(FallingPiece piece) {
     	tablero.reverse();
     	for (BlockDrawable block : piece.allBlocks()){
-    		BlockDrawable aux = new BlockDrawable(piece.toOuterPoint(block.getPoint()), block.getStyle()); 
+    		BlockDrawable aux = new BlockDrawable(piece.toOuterPoint(block.getPoint()), block.getStyle(), false, block.getTexture()); 
 			tablero.add(aux);
 		}
     	tablero.reverse();
@@ -231,11 +231,12 @@ public class Board implements Grid{
      */
     private void deleteRow(float row){
         if(row >= 0){
-        	deletedRowsInfo.insert(deletedRowsInfo.size, Integer.valueOf((int)row), new String[10]);
+//        	deletedRowsInfo.insert(deletedRowsInfo.size, Integer.valueOf((int)row), new String[10]);
+        	deletedRowsInfo.insert(deletedRowsInfo.size, Integer.valueOf((int)row), new TextureRegion[10]);
         	for (Iterator<BlockDrawable> blocks = tablero.iterator(); blocks.hasNext();){
         		BlockDrawable block = blocks.next();
         		if (block.getPoint().Y() == row){
-        			deletedRowsInfo.get((int)row)[(int)block.getPoint().X()] = block.getStyle();
+        			deletedRowsInfo.get((int)row)[(int)block.getPoint().X()] = block.getTexture();
         			blocks.remove();
         		}
         		else if (block.getPoint().Y() > row)
@@ -318,15 +319,17 @@ public class Board implements Grid{
      * <li>No debe moverse demasiado rápido.
      * <li>No debe conflictuar con el tablero o con otras piezas.
      */
-    public void movePieceToLeft() {
+    public boolean movePieceToLeft() {
+    	boolean moved = false;
         if (hasFalling()){
         	if(!moveTooFast()){
         		lastMove = TimeUtils.nanoTime();
-        		moveIfNoConflict(falling.moveLeft(), falling);
+        		moved = moveIfNoConflict(falling.moveLeft(), falling);
         		if(isGhostActivated())
         			generateGhost();
             }
         }
+        return moved;
     }
     
     /**
@@ -349,15 +352,17 @@ public class Board implements Grid{
      * <li>No debe moverse demasiado rápido.
      * <li>No debe conflictuar con el tablero o con otras piezas.
      */
-    public void movePieceToRight(){
+    public boolean movePieceToRight(){
+    	boolean moved = false;
         if (hasFalling()){
         	if(!moveTooFast()){
         		lastMove = TimeUtils.nanoTime();
-        		moveIfNoConflict(falling.moveRight(), falling);
+        		moved = moveIfNoConflict(falling.moveRight(), falling);
         		if(isGhostActivated())
         			generateGhost();
             }
         }
+        return moved;
     }
     
     /**
@@ -438,7 +443,7 @@ public class Board implements Grid{
     
     /**
      * Intenta "patear" la pieza test en ambas direcciones (sucesivamente) para luego mover realPiece a la posicion de test.
-     * TODO @param test
+     * @param test
      * @param realPiece  la pieza real, que tomará el lugar de la pieza test si la "patada" fue exitosa.     
      */
     private void Kick(FallingPiece test, FallingPiece realPiece){
@@ -451,7 +456,7 @@ public class Board implements Grid{
     
     /**
      * Intenta "patear" la pieza test hacia la derecha y luego mover realPiece a la posicion de test.
-     * TODO @param test
+     * @param test
      * @param realPiece  la pieza real, que tomará el lugar de la pieza test si la "patada" fue exitosa. 
      * @param iterations  el numero maximo de movimientos hacia la derecha que podrán ser intentados. 
      * @return  true, si se pudo patear la pieza.
@@ -467,7 +472,7 @@ public class Board implements Grid{
     
     /**
      * Intenta "patear" la pieza test hacia la izquierda y luego mover realPiece a la posicion de test.
-     * TODO @param test
+     * @param test
      * @param realPiece  la pieza real, que tomará el lugar de la pieza test si la "patada" fue exitosa. 
      * @param iterations  el numero maximo de movimientos hacia la derecha que podrán ser intentados. 
      * @return  true, si se pudo patear la pieza.
@@ -641,15 +646,11 @@ public class Board implements Grid{
 	/**
      * Crea y devuelve un Array que contiene todos los BlockDrawable de la pieza fantasma.
      */
-	public Array<BlockDrawable> getGhostBlocksToDraw() {
-		Array<BlockDrawable> blocksToDraw = new Array<BlockDrawable>();		
+	public Array<BlockDrawable> getGhostBlocksToDraw() {		
 		if(hasFalling()){
-//			for(BlockDrawable block : ghost.allOuterBlocks())
-//				if (!collidesWithPiece(block.getPoint(), falling))
-//					blocksToDraw.add(block);
 			return ghost.allOuterBlocks();
 		}		
-		return blocksToDraw;
+		return new Array<BlockDrawable>();
 	}
 	
 	private boolean collidesWithPiece(Point punto, FallingPiece piece){
@@ -697,7 +698,6 @@ public class Board implements Grid{
 	 * @return 
 	 */
 	private boolean moveTooFast() {
-		System.out.println("I'm the rat king!");
 		return moveTooFast(moveRate);
 	}
 	
@@ -728,7 +728,7 @@ public class Board implements Grid{
 	/**
 	 * @return  el Array que contiene la informacion de las filas removidas.
 	 */
-	public ArrayMap<Integer, String[]> getDeletedRows() {
+	public ArrayMap<Integer, TextureRegion[]> getDeletedRows() {
 		return deletedRowsInfo;
 	}
 	

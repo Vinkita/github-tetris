@@ -123,6 +123,16 @@ public class RotatablePiece implements RotatableGrid{
 	public Array<BlockDrawable> allBlocks() {
 		return getCurrentShape().allBlocks();
 	}
+	
+	/**
+	 * @return  todos los bloques de todas las rotaciones de la pieza.
+	 */
+	public Array<BlockDrawable> allShapesBlocks(){
+		Array<BlockDrawable> arraux = new Array<BlockDrawable>();
+		for(FixedShape shape : rotations)
+			arraux.addAll(shape.allBlocks());
+		return arraux;
+	}
 
 	/**
 	 * @return  el código de textura de la pieza actual

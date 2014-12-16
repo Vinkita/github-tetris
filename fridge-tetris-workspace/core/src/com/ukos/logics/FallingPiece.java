@@ -150,14 +150,14 @@ public class FallingPiece implements Cloneable{
     public Array<BlockDrawable> allOuterBlocks(){
     	Array<BlockDrawable> allBlocks = new Array<BlockDrawable>();
     	for (BlockDrawable block : innerPiece.allBlocks())
-    		allBlocks.add(new BlockDrawable(toOuterPoint(block.getPoint()), block.getStyle(), block.isGhost()));
+    		allBlocks.add(new BlockDrawable(toOuterPoint(block.getPoint()), block.getStyle(), block.isGhost(), block.getTexture()));
     	return allBlocks;
     }
     
     /**
      * Convierte las coordenadas exteriores de un Point a coordenadas interiores de la pieza, 
      * segun la posicion de la misma 
-     * TODO @param punto
+     * @param punto
      * @return
      */
     private Point toInnerPoint(Point punto){
@@ -168,7 +168,7 @@ public class FallingPiece implements Cloneable{
     /**
      * Convierte las coordenadas de un Point a coordenadas exteriores a la pieza, 
      * segun la posicion de la misma 
-     *TODO @param punto
+     * @param punto
      * @return
      */
     public Point toOuterPoint(Point punto){
@@ -187,6 +187,14 @@ public class FallingPiece implements Cloneable{
         	if (block.X() == inner.X() && block.Y() == inner.Y())
         		return true;
         return false;
+    }
+    
+    public boolean isAtX(Point punto) {
+    	Point inner = toInnerPoint(punto);
+    	for (Point block : innerPiece.getPoints())
+    		if (block.X() == inner.X())
+    			return true;
+    	return false;
     }
     
     @Override

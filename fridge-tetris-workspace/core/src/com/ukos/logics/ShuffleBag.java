@@ -39,7 +39,6 @@ public class ShuffleBag {
 	 * Inicializa "UnshuffledBag"
 	 */
 	private void fillUnshuffled() {
-		UnShuffledBag = new ArrayList<RotatablePiece>();
 		UnShuffledBag.add(0, Tetromino.I_SHAPE);
 		UnShuffledBag.add(1, Tetromino.O_SHAPE);
 		UnShuffledBag.add(2, Tetromino.T_SHAPE);
@@ -53,13 +52,10 @@ public class ShuffleBag {
 	 * Llena "ShuffledBag" con piezas aleatorizadas
 	 */
 	private void refillShuffled() {
-		@SuppressWarnings("unchecked")
-		ArrayList<RotatablePiece> auxMap = (ArrayList<RotatablePiece>) UnShuffledBag
-				.clone();
-
 		Random rand = new Random();
-		while (!auxMap.isEmpty())
-			ShuffledBag.add(auxMap.remove(rand.nextInt(auxMap.size())));
+		while (!UnShuffledBag.isEmpty())
+			ShuffledBag.add(UnShuffledBag.remove(rand.nextInt(UnShuffledBag.size())));
+		fillUnshuffled();
 	}
 
 	/**

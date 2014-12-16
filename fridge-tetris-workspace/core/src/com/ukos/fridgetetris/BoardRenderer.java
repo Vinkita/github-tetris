@@ -9,6 +9,7 @@ import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.TweenManager;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -31,27 +32,34 @@ import com.ukos.logics.BlockDrawable;
 import com.ukos.logics.Board;
 import com.ukos.logics.IStopBlockListener;
 import com.ukos.logics.Point;
+import com.ukos.logics.RotatablePiece;
 import com.ukos.logics.ScoreCounter;
 import com.ukos.logics.Tetromino;
 import com.ukos.logics.Tetromino.shape;
+import com.ukos.screens.GameScreen;
 import com.ukos.tween.BmFontAccessor;
 
+/**
+ * Se encarga de mostrar por pantalla los elementos de {@link #tablero} y de {@link #puntos}.
+ * @author Ukos
+ *
+ */
 public class BoardRenderer implements IStopBlockListener{
-
+//TODO javadoc variables?
 	private OrthographicCamera camera;
 	private OrthographicCamera cameraGUI;
 	private SpriteBatch batch;
 	private Board tablero;
 	private ScoreCounter puntos;	
 	TweenManager tweenManager;
+	private int prevCant;
 	
 	//TEXTURAS
 	private TextureAtlas atlas;
-	private ArrayMap<String, TextureRegion> texRegions;
 	private ArrayMap<String, TextureRegion> prevRegions;	
 	private Array<BlockDrawable> previewList;	
 	private TextureRegion heladera;
-	private Texture rayas;
+	private TextureRegion fondo;
 	
 	//FUENTES
 	private BitmapFont labelFont; 
@@ -63,7 +71,6 @@ public class BoardRenderer implements IStopBlockListener{
 	private String scoreString;
 	private int score;	
 	private int scoreVisual;	
-	private int prevCant;
 	
 	//DIMENSIONES PANTALLA Y UBICACION ELEMENTOS
 	private int boardWidth;
@@ -81,14 +88,22 @@ public class BoardRenderer implements IStopBlockListener{
 	private ParticleEffectPool pool;
 	private Array<PooledEffect> effects;
 	private ExplosionChecker explosionChecker = new ExplosionChecker();
-	private Timeline boing;
+	private Timeline scorePopUp;
 	
+	/**
+	 * Inicializa un nuevo {@code BoardRenderer}
+	 * @param tablero
+	 * @param puntos
+	 */
 	public BoardRenderer(Board tablero, ScoreCounter puntos) {
 		this.tablero = tablero;
 		this.puntos = puntos;
 		init();
 	}
 	
+	/**
+	 * Inicializa este {@code BoardRenderer}
+	 */
 	public void init(){
 		boardWidth = (int) (tablero.getWidth() + 2);
 		boardHeight = (int) (tablero.getHeight() + 2);
@@ -107,11 +122,17 @@ public class BoardRenderer implements IStopBlockListener{
 		initTween();
 	}
 	
+	/**
+	 * Setea los valores de la puntuacion mostrada por pantalla a cero.
+	 */
 	public void reset(){
 		score = scoreVisual = 0;
 		updateScore();
 	}
 	
+	/**
+	 * Inicializa los efectos de particulas	TODO preguntar Uko
+	 */
 	private void initParticles(){
 		//ParticleEffect
 		particle = new ParticleEffect();
@@ -120,6 +141,9 @@ public class BoardRenderer implements IStopBlockListener{
 		effects = new Array<PooledEffect>();
 	}
 
+	/**
+	 * Inicializa ambas camaras.
+	 */
 	private void initCameras(){
 		calculateViewPortDimensions();
 		camera = new OrthographicCamera();
@@ -129,6 +153,7 @@ public class BoardRenderer implements IStopBlockListener{
 	}
 	
 	private void initFonts(){
+//Fuentes de puntuacion total
 		numberFont = new BitmapFont(Gdx.files.internal("fonts/Opificio_15.fnt"), true);
 		numberFont.setColor(Color.BLACK);
 		numberFont.setScale(1f);
@@ -136,57 +161,73 @@ public class BoardRenderer implements IStopBlockListener{
 		labelFont = new BitmapFont(Gdx.files.internal("fonts/Opificio_15.fnt"), true);
 		labelFont.setColor(Color.OLIVE);
 		labelFont.setScale(1.5f);
-		labelFont.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);				
+		labelFont.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+//Fuente del efecto "scorePopUp"
 		scoreCenterFont = new BitmapFont(Gdx.files.internal("fonts/Opificio_64.fnt"), true);
 		scoreCenterFont.setColor(Color.BLACK);
 		scoreCenterFont.setColor(Color.BLACK.r, Color.BLACK.g, Color.BLACK.b, 0);
 		scoreCenterFont.setScale(1f);
-		scoreCenterFont.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);				
+		scoreCenterFont.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+//Strings indicadores
 		scoreLabel = "SCORE";
 		levelLabel = "LEVEL";
 		scoreVisual = score = 0;
 		levelString = "" + tablero.getLevel();
 	}
 	
+	/**
+	 * Inicializa el efecto "scorePopUp"
+	 */
 	private void initTween(){
 		tweenManager = new TweenManager();
 		Tween.registerAccessor(BitmapFont.class, new BmFontAccessor());
-		boing = Timeline.createParallel().beginParallel()
+		scorePopUp = Timeline.createParallel().beginParallel()
 				.push(Tween.to(scoreCenterFont, BmFontAccessor.SCALE, .5f).target(2).repeatYoyo(1, 0))
 				.push(Tween.to(scoreCenterFont, BmFontAccessor.COLOR, .5f).target(0, 0, 1).repeatYoyo(1, 0))
 				.push(Tween.to(scoreCenterFont, BmFontAccessor.ALPHA, .5f).target(1).repeatYoyo(1, 0).setCallback(new TweenCallback() {					
 					@Override
 					public void onEvent(int type, BaseTween<?> source) {
-						boing.pause();						
+						scorePopUp.pause();						
 					}
 				}))				
 				.repeat(-1, 0)
 				.end()
 				.start(tweenManager);
-		boing.pause();
+		scorePopUp.pause();
 //				tweenManager.update(Gdx.graphics.getDeltaTime());
 	}
 	
+	/**TODO
+	 * Calcula y setea las variables relacionadas con las dimensiones de la pantalla:
+	 * <li>{@link #viewportWidth}
+	 * <li>{@link #viewportHeight}
+	 * <li>{@link #PIXELS_PER_METER}
+	 * <li>{@link #scoreXPosition}
+	 * <li>{@link #scoreYPosition}
+	 */
 	private void calculateViewPortDimensions() {
 		int screenWidth = Gdx.graphics.getWidth();
 		int screenHeight = Gdx.graphics.getHeight();
-		float targetRatio = boardHeight / (boardWidth + 1);
-		float screenRatio = screenHeight / screenWidth;
+		float targetRatio = (float)boardHeight / (boardWidth + 2);
+		float screenRatio = (float)screenHeight / screenWidth;
 		
 		if(screenRatio > targetRatio){
-			viewportWidth = (boardWidth + 1);
+			viewportWidth = (boardWidth + 2);
 			PIXELS_PER_METER = (int) (screenWidth / viewportWidth);
 			viewportHeight = screenHeight / PIXELS_PER_METER;
 		} else {
 			viewportHeight = boardHeight;
 			PIXELS_PER_METER = (int) (screenHeight / viewportHeight);					
-			viewportWidth = (screenWidth / PIXELS_PER_METER)+.5f;
+			viewportWidth = (screenWidth / PIXELS_PER_METER)+2f;
 		} 	
 		
 		scoreXPosition = (boardWidth)*PIXELS_PER_METER;
 		scoreYPosition = (boardHeight/10)*PIXELS_PER_METER;
 	}
 
+	/**
+	 * Llamado para renderizar el tablero, puntajes y efectos(si fueran necesarios).
+	 */
 	public void render(float delta) {
 		camera.update();
       
@@ -195,10 +236,10 @@ public class BoardRenderer implements IStopBlockListener{
 		
 		//Draw current grid:
 		batch.begin();
-		batch.draw(rayas, 0, 0, viewportWidth, viewportHeight);
+		batch.draw(fondo, 0, 0, viewportWidth, viewportHeight);
 		batch.draw(heladera, 0, 0, boardWidth, boardHeight);		
 		for (BlockDrawable block : tablero.getAllBlocksToDraw())
-			block.draw(batch, texRegions.get(block.getStyle()), boardOffset );
+			block.draw(batch, boardOffset );
 
 		
 		explosionChecker.checkRowExplosion();
@@ -217,29 +258,39 @@ public class BoardRenderer implements IStopBlockListener{
 		renderPreview();
 		renderScore(delta);
 		tweenManager.update(delta);
-		renderBoing();
+		renderScorePopUp();
 		batch.end();
 		
 	}
 
+	/**
+	 * Llamado al cambiar el tamaño de la pantalla.
+	 * @param width
+	 * @param height
+	 * @see GameScreen#render(float)
+	 */
 	public void resize(int width, int height) {
 		calculateViewPortDimensions();
 		camera.setToOrtho(false, viewportWidth, viewportHeight);
 		cameraGUI.setToOrtho(true, width, height);
 	}
 	
+	/**
+	 * Asigna las {@link TextureRegion} apropiadas a cada {@link BlockDrawable} 
+	 * mediante su metodo {@link BlockDrawable#setTexture(TextureRegion)}
+	 */
 	private void setupPieceTextures(){
-		texRegions = new ArrayMap<String, TextureRegion>();		
-		for(Iterator<String[]> it = Tetromino.colors.values().iterator(); it.hasNext() ;) {
-			String[] arr = it.next();
-			for(int i = 0, j = arr.length; i < j; i++) {
-				texRegions.put(arr[i], new TextureRegion(atlas.findRegion(arr[i])));
-			}
-		}						
+		for(RotatablePiece piece : Tetromino.allPieces())
+			for(BlockDrawable block : piece.allShapesBlocks())
+				block.setTexture(new TextureRegion(atlas.findRegion(block.getStyle())));
 		heladera = atlas.findRegion("Fridge");
-		rayas = new Texture(Gdx.files.internal("ui/rayas.png")); 
+		fondo = atlas.findRegion("Rayas"); 
 	}
 	
+	/**
+	 * Agrega al {@code Array} {@link #prevRegions} las texturas corespondientes a cada tipo de {@link Tetromino}.
+	 * <br>Estas texturas seran utilizadas para renderizar la vista previa de las piezas. 
+	 */
 	private void setupPreviewTextures(){
 		prevRegions = new ArrayMap<String, TextureRegion>();
 		String type;
@@ -249,15 +300,24 @@ public class BoardRenderer implements IStopBlockListener{
 		}
 	}
 	
+	/**
+	 * Agrega al {@code Array} {@link #previewList} tantos {@link BlockDrawable} como numero de previews activadas.
+	 */
 	private void setupPreviewList(){
 		previewList = new Array<BlockDrawable>();
 		float pad = 0;
-		for(int i = 0, j = prevCant; i < j; i++){
+		for(int i = 0; i < prevCant; i++){
 			previewList.add(new BlockDrawable(new Point(0, 0 - i - pad), ""));
 			pad += .25f;
 		}
 	}
 	
+	/**
+	 * Actualiza el estado de los {@link BlockDrawable} dentro de {@link #previewList} cambiando:
+	 * <li>Su variable {@link BlockDrawable#texture texture}
+	 * <li>Sus variables {@link BlockDrawable#width width} y {@link BlockDrawable#height height}
+	 * <li>Su variable {@link BlockDrawable#style style} 
+	 */
 	private void updatePreview(){
 		String key;
 		float w , h;	
@@ -277,15 +337,27 @@ public class BoardRenderer implements IStopBlockListener{
 			BlockDrawable blaux = previewList.get(i);
 			blaux.setSize(w, h);
 			blaux.setStyle(key);
+			blaux.setTexture(prevRegions.get(key));
 		}
-	}
+	}	
 	
+	/**
+	 * Muestra por pantalla la vista previa de las piezas siguientes, llamando al metodo 
+	 * {@link BlockDrawable#draw(com.badlogic.gdx.graphics.g2d.Batch, Vector2) draw()} 
+	 * de cada {@code BlockDrawable} en {@link #previewList} 
+	 */
 	private void renderPreview(){
 		for (BlockDrawable blaux : previewList){
-			blaux.draw(batch, prevRegions.get(blaux.getStyle()), previewOffset);
+			blaux.draw(batch, previewOffset);
 		}
 	}
 	
+	/**
+	 * Actualiza las variables utilizadas para renderizar los indicadores de puntuacion y el nivel:
+	 * <li>{@link #score}
+	 * <li>{@link #scoreString}
+	 * <li>{@link #levelString}
+	 */
 	private void updateScore(){
 		scoreString = "";
 		for(char aux : String.valueOf(scoreVisual).toCharArray()){
@@ -295,36 +367,49 @@ public class BoardRenderer implements IStopBlockListener{
 		levelString = "" + (tablero.getLevel()+1);
 	}
 
+	/**
+	 * Se encarga de mostrar la puntuacion por pantalla
+	 * @param delta
+	 */
 	private void renderScore(float delta) {
 		batch.setProjectionMatrix(cameraGUI.combined);
 		if(scoreVisual < score){
 			scoreVisual = (int) Math.min(score, scoreVisual + 250 * (tablero.getLevel()+1) * delta);
 			updateScore();
 		} 
-//		else if (scoreVisual > score){
-//			scoreVisual = score;
-//		}
-//		BitmapFontCache cache = numberFont.getCache();
-//		cache.setWrappedText("" + levelLabel + "\r\n" + levelString 
-//							+ "\r\n\r\n" + scoreLabel + "\r\n" + scoreString,
-//							scoreXPosition, scoreYPosition, 
-//							(viewportWidth-boardWidth)*PIXELS_PER_METER, HAlignment.LEFT);
-//		cache.setColors(Color.OLIVE, 0, levelLabel.toCharArray().length);
-//		cache.setColors(Color.OLIVE, levelLabel.toCharArray().length + 1 , levelLabel.toCharArray().length + 1 + scoreLabel.toCharArray().length);
-//		cache.draw(batch);
+		//		else if (scoreVisual > score){
+		//		scoreVisual = score;
+		//	}
+		//	BitmapFontCache cache = numberFont.getCache();
+		//	cache.setWrappedText("" + levelLabel + "\r\n" + levelString 
+		//						+ "\r\n\r\n" + scoreLabel + "\r\n" + scoreString,
+		//						scoreXPosition, scoreYPosition, 
+		//						(viewportWidth-boardWidth)*PIXELS_PER_METER, HAlignment.LEFT);
+		//	cache.setColors(Color.OLIVE, 0, levelLabel.toCharArray().length);
+		//	cache.setColors(Color.OLIVE, levelLabel.toCharArray().length + 1 , levelLabel.toCharArray().length + 1 + scoreLabel.toCharArray().length);
+		//	cache.draw(batch);
 		numberFont.drawWrapped(batch, "" + levelLabel + "\r\n" + levelString 
 				+ "\r\n\r\n" + scoreLabel + "\r\n" + scoreString,
 				scoreXPosition, scoreYPosition, (viewportWidth-boardWidth)*PIXELS_PER_METER);
 	}
 	
+	/**
+	 * Al detenerse la pieza cayendo en el tablero, se actualizan la puntuacion y la vista previa.
+	 * Tambien se reanuda la animacion del efecto "scorePopUp" si se sumaron puntos.   
+	 * @see com.ukos.logics.IStopBlockListener#onStoppedBlock()
+	 */
 	@Override
 	public void onStoppedBlock() {
 		updateScore();	
 		updatePreview();
-		boing.resume();
+		if(puntos.getLastScore() > 0)
+			scorePopUp.resume();
 	}
 	
-	void renderBoing(){
+	/**
+	 * TODO Muestra el efecto "scorePopUp" por pantalla.
+	 */
+	void renderScorePopUp(){
 		if(puntos.getLastScore() != 0){
 			float centerX = PIXELS_PER_METER * boardWidth / 2;
 			float centerY = PIXELS_PER_METER * boardHeight / 2;
@@ -333,18 +418,22 @@ public class BoardRenderer implements IStopBlockListener{
 		}		
 	}
 	
+/**
+ * TODO preguntar Uko
+ * @author Ukos
+ *
+ */
 private class ExplosionChecker {
 		
 		private int x=0;
 		private long explodeRate = 5000000;
 		private long lastExplode=0;
-		private String imagePath = "";
 		
 		/*
 		 * OPTIMIZAR EL LLAMADO A getDeletedRows TANTAS VECES!!
 		 */
 		private void checkRowExplosion() {
-			ArrayMap<Integer, String[]> deletedRows = tablero.getDeletedRows();
+			ArrayMap<Integer, TextureRegion[]> deletedRows = tablero.getDeletedRows();
 			
 			if (x == 10) {
 				x = 0;
@@ -359,9 +448,7 @@ private class ExplosionChecker {
 						int y = deletedRows.getKeyAt(i);
 						PooledEffect effect = pool.obtain();
 						effect.setPosition(x+1.5f, y+1.5f);
-						imagePath = deletedRows.get(y)[x];
-						TextureRegion aux = texRegions.get(imagePath);
-						effect.getEmitters().first().setSprite(new Sprite(aux));
+						effect.getEmitters().first().setSprite(new Sprite(deletedRows.get(y)[x]));
 						effects.add(effect);
 					}
 				}
@@ -371,12 +458,15 @@ private class ExplosionChecker {
 		}
 	}
 
+	/**
+	 * Libera todos los recursos de este {@code BoardRenderer}.
+	 * @see com.badlogic.gdx.Screen#dispose()
+	 */
 	public void dispose() {
 		
 		batch.dispose();	
 		
 		atlas.dispose();
-		rayas.dispose();;
 		
 		labelFont.dispose(); 
 		numberFont.dispose(); 
@@ -388,6 +478,9 @@ private class ExplosionChecker {
 		
 	}
 
+	/**
+	 * @return {@link #PIXELS_PER_METER}
+	 */
 	public int getPPM() {
 		return PIXELS_PER_METER;
 	} 
