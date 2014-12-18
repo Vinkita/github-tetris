@@ -22,7 +22,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.ukos.fridgetetris.AudioManager;
-import com.ukos.fridgetetris.BoardRenderer;
 import com.ukos.fridgetetris.GamePreferences;
 import com.ukos.fridgetetris.HighScores;
 import com.ukos.fridgetetris.ScoreService;

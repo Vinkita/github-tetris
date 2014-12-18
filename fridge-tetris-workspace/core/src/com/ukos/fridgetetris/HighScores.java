@@ -18,7 +18,7 @@ public class HighScores implements Serializable{
 	/** La cantidad maxima de {@code HighScore} a almacenar */
 	public int listSize;
 	
-	/** Crea un nuevo {@code HighScores} con capacidad maxima = 10 TODO capacidad = 10?*/
+	/** Crea un nuevo {@code HighScores} con capacidad maxima = 10 */
 	public HighScores() {
 		scores = new Array<HighScore>();
 		listSize = 10;

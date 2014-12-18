@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class-diagram version="1.1.7" icons="true" automaticImage="PNG" always-add-relationships="false" generalizations="true" 
   realizations="true" associations="true" dependencies="false" nesting-relationships="true">  
-  <class id="1" language="java" name="com.ukos.screens.HighScoreLayer" project="Fridge Tetris-core" 
-    file="/Fridge Tetris-core/src/com/ukos/screens/HighScoreLayer.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="453" y="306"/>    
+  <class id="1" language="java" name="com.ukos.tween.BmFontAccessor" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/tween/BmFontAccessor.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="171" width="202" x="135" y="127"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="com.ukos.tween.ActorAccessor" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/tween/ActorAccessor.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="207" width="175" x="377" y="127"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      

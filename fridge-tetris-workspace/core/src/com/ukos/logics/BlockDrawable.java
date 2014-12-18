@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.ukos.fridgetetris.BoardRenderer;
+import com.ukos.screens.BoardRenderer;
 
 
 public class BlockDrawable implements Cloneable{

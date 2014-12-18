@@ -1,0 +1,673 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.7" icons="true" automaticImage="PNG" always-add-relationships="false" generalizations="true" 
+  realizations="true" associations="true" dependencies="false" nesting-relationships="true">  
+  <class id="1" language="java" name="com.ukos.logics.LevelHelper" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/logics/LevelHelper.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="153" width="187" x="207" y="-25"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="com.ukos.logics.Tetromino" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/logics/Tetromino.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="117" width="215" x="1320" y="3182"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="com.ukos.screens.GameOverScreen" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/screens/GameOverScreen.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="135" width="172" x="1854" y="1819"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="4" language="java" name="com.ukos.logics.IRowListener" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/logics/IRowListener.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="81" width="168" x="2458" y="3182"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <enumeration id="5" language="java" name="com.ukos.logics.Tetromino.shape" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/logics/Tetromino.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="207" width="119" x="1161" y="3717"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </enumeration>  
+  <class id="6" language="java" name="com.ukos.logics.ShuffleBag" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/logics/ShuffleBag.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="171" width="199" x="1750" y="3182"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" name="com.ukos.logics.FixedShape" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/logics/FixedShape.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="279" width="235" x="886" y="3717"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="com.ukos.screens.MainMenu" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/screens/MainMenu.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="729" width="189" x="1464" y="-25"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="com.ukos.logics.Point" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/logics/Point.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="297" width="138" x="2247" y="3717"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="10" language="java" name="com.ukos.tween.ActorAccessor" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/tween/ActorAccessor.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="207" width="175" x="434" y="-25"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="11" language="java" name="com.ukos.fridgetetris.AudioManager" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/fridgetetris/AudioManager.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="243" width="180" x="649" y="-25"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="12" language="java" name="com.ukos.screens.BoardRenderer" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/screens/BoardRenderer.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="1035" width="252" x="1399" y="744"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="13" language="java" name="com.ukos.screens.GameScreen" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/screens/GameScreen.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="711" width="262" x="1693" y="-25"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="14" language="java" name="com.ukos.tween.BmFontAccessor" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/tween/BmFontAccessor.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="171" width="202" x="879" y="-25"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <enumeration id="15" language="java" name="com.ukos.screens.TransluscentMenuScreen.Event" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/screens/TransluscentMenuScreen.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="171" width="151" x="2066" y="1819"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </enumeration>  
+  <class id="16" language="java" name="com.ukos.screens.BoardRenderer.ExplosionChecker" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/screens/BoardRenderer.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="153" width="155" x="1399" y="1819"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="17" language="java" name="com.ukos.logics.Board" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/logics/Board.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="1323" width="287" x="2458" y="1819"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="18" language="java" name="com.ukos.logics.ScoreCounter" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/logics/ScoreCounter.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="333" width="168" x="1646" y="1819"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="19" language="java" name="com.ukos.fridgetetris.HighScores.HighScore" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/fridgetetris/HighScores.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="153" width="151" x="918" y="3182"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="20" language="java" name="com.ukos.fridgetetris.FridgeTetris" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/fridgetetris/FridgeTetris.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="99" width="99" x="1121" y="-25"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="21" language="java" name="com.ukos.logics.RotatableGrid" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/logics/RotatableGrid.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="153" width="192" x="1989" y="4144"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <interface id="22" language="java" name="com.ukos.logics.IStopBlockListener" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/logics/IStopBlockListener.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="81" width="135" x="1575" y="3182"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="23" language="java" name="com.ukos.logics.RotatablePiece" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/logics/RotatablePiece.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="387" width="291" x="1320" y="3717"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="24" language="java" name="com.ukos.screens.TransluscentMenuScreen" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/screens/TransluscentMenuScreen.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="477" width="209" x="1902" y="744"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <enumeration id="25" language="java" name="com.ukos.fridgetetris.TetrominoController.Keys" 
+    project="Fridge Tetris-core" file="/Fridge Tetris-core/src/com/ukos/fridgetetris/TetrominoController.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="153" width="119" x="2785" y="1819"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </enumeration>  
+  <class id="26" language="java" name="com.ukos.fridgetetris.GamePreferences" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/fridgetetris/GamePreferences.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="333" width="154" x="1260" y="-25"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="27" language="java" name="com.ukos.logics.Grid" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/logics/Grid.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="99" width="115" x="1989" y="3182"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <enumeration id="28" language="java" name="com.ukos.screens.GameScreen.State" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/screens/GameScreen.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="153" width="119" x="1240" y="744"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </enumeration>  
+  <class id="29" language="java" name="com.ukos.logics.BlockDrawable" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/logics/BlockDrawable.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="459" width="274" x="2144" y="3182"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="30" language="java" name="com.ukos.logics.FallingPiece" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/logics/FallingPiece.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="495" width="219" x="2666" y="3182"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="31" language="java" name="com.ukos.screens.HighScoreLayer" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/screens/HighScoreLayer.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="567" width="180" x="1020" y="744"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="32" language="java" name="com.ukos.screens.PauseScreen" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/screens/PauseScreen.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="135" width="161" x="2257" y="1819"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="33" language="java" name="com.ukos.fridgetetris.HighScores" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/fridgetetris/HighScores.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="207" width="159" x="918" y="1819"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="34" language="java" name="com.ukos.fridgetetris.TetrominoController" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/fridgetetris/TetrominoController.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="369" width="231" x="2458" y="744"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="35" language="java" name="com.ukos.fridgetetris.ScoreService" project="Fridge Tetris-core" 
+    file="/Fridge Tetris-core/src/com/ukos/fridgetetris/ScoreService.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="207" width="165" x="815" y="744"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <association id="36">    
+    <end type="SOURCE" refId="24" navigable="false">      
+      <attribute id="37" name="lastEvent"/>      
+      <multiplicity id="38" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="15" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="39">    
+    <end type="SOURCE" refId="34" navigable="false">      
+      <attribute id="40" name="tablero"/>      
+      <multiplicity id="41" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="42">    
+    <end type="SOURCE" refId="29" navigable="false">      
+      <attribute id="43" name="point"/>      
+      <multiplicity id="44" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="45">    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="46" name="explosionChecker"/>      
+      <multiplicity id="47" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="16" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="48">    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="49" name="state"/>      
+      <multiplicity id="50" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="28" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="51">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="52" name="ShuffledBag"/>      
+      <multiplicity id="53" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="23" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="54">    
+    <end type="SOURCE" refId="17" navigable="false">      
+      <attribute id="55" name="falling"/>      
+      <multiplicity id="56" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="30" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="57">    
+    <end type="SOURCE" refId="17" navigable="false">      
+      <attribute id="58" name="ghost"/>      
+      <multiplicity id="59" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="30" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="60">    
+    <end type="SOURCE" refId="33"/>    
+    <end type="TARGET" refId="19"/>  
+  </nesting>  
+  <association id="61">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="62" name="J_SHAPE"/>      
+      <multiplicity id="63" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="23" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="64">    
+    <end type="SOURCE" refId="18"/>    
+    <end type="TARGET" refId="4"/>  
+  </realization>  
+  <association id="65">    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="66" name="instance"/>      
+      <multiplicity id="67" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="68">    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="69" name="pause"/>      
+      <multiplicity id="70" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="24" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="71">    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="72" name="renderer"/>      
+      <multiplicity id="73" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="12" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="74">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="5"/>  
+  </nesting>  
+  <generalization id="75">    
+    <end type="SOURCE" refId="32"/>    
+    <end type="TARGET" refId="24"/>  
+  </generalization>  
+  <association id="76">    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="77" name="controladora"/>      
+      <multiplicity id="78" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="34" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="79">    
+    <end type="SOURCE" refId="17"/>    
+    <end type="TARGET" refId="27"/>  
+  </realization>  
+  <association id="80">    
+    <bendpoint x="2415" y="3717"/>    
+    <end type="SOURCE" refId="30" navigable="false">      
+      <attribute id="81" name="innerPiece"/>      
+      <multiplicity id="82" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="21" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="83">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="84" name="O_SHAPE"/>      
+      <multiplicity id="85" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="23" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="86">    
+    <end type="SOURCE" refId="34"/>    
+    <end type="TARGET" refId="25"/>  
+  </nesting>  
+  <association id="87">    
+    <end type="SOURCE" refId="35" navigable="false">      
+      <attribute id="88" name="scores"/>      
+      <multiplicity id="89" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="33" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="90">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="91" name="L_SHAPE"/>      
+      <multiplicity id="92" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="23" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="93">    
+    <end type="SOURCE" refId="24"/>    
+    <end type="TARGET" refId="15"/>  
+  </nesting>  
+  <association id="94">    
+    <bendpoint x="2141" y="744"/>    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="95" name="tablero"/>      
+      <multiplicity id="96" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="97">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="98" name="UnShuffledBag"/>      
+      <multiplicity id="99" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="23" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="100">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="21"/>  
+  </realization>  
+  <association id="101">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="102" name="Z_SHAPE"/>      
+      <multiplicity id="103" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="23" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="104">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="24"/>  
+  </generalization>  
+  <realization id="105">    
+    <bendpoint x="1681" y="744"/>    
+    <bendpoint x="1615" y="1819"/>    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="22"/>  
+  </realization>  
+  <association id="106">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="107" name="S_SHAPE"/>      
+      <multiplicity id="108" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="23" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="109">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="110" name="T_SHAPE"/>      
+      <multiplicity id="111" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="23" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="112">    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="113" name="over"/>      
+      <multiplicity id="114" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="24" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="115">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="116" name="layerHighScore"/>      
+      <multiplicity id="117" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="31" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="118">    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="16"/>  
+  </nesting>  
+  <association id="119">    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="120" name="puntos"/>      
+      <multiplicity id="121" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="18" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="122">    
+    <end type="SOURCE" refId="26" navigable="false">      
+      <attribute id="123" name="instance"/>      
+      <multiplicity id="124" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="26" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="125">    
+    <end type="SOURCE" refId="23"/>    
+    <end type="TARGET" refId="21"/>  
+  </realization>  
+  <association id="126">    
+    <end type="SOURCE" refId="31" navigable="false">      
+      <attribute id="127" name="scores"/>      
+      <multiplicity id="128" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="33" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="129">    
+    <end type="SOURCE" refId="17" navigable="false">      
+      <attribute id="130" name="bolsita"/>      
+      <multiplicity id="131" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="132">    
+    <bendpoint x="1584" y="1819"/>    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="22"/>  
+  </realization>  
+  <association id="133">    
+    <end type="SOURCE" refId="17" navigable="false">      
+      <attribute id="134" name="listeners"/>      
+      <multiplicity id="135" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="136">    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="137" name="tablero"/>      
+      <multiplicity id="138" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="139">    
+    <bendpoint x="1702" y="744"/>    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="140" name="puntos"/>      
+      <multiplicity id="141" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="18" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="142">    
+    <bendpoint x="1998" y="3717"/>    
+    <end type="SOURCE" refId="21"/>    
+    <end type="TARGET" refId="27"/>  
+  </generalization>  
+  <association id="143">    
+    <end type="SOURCE" refId="30" navigable="false">      
+      <attribute id="144" name="coord"/>      
+      <multiplicity id="145" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="146">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="147" name="I_SHAPE"/>      
+      <multiplicity id="148" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="23" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="149">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="28"/>  
+  </nesting>  
+  <association id="150">    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="151" name="highScores"/>      
+      <multiplicity id="152" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="31" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="153">    
+    <end type="SOURCE" refId="17" navigable="false">      
+      <attribute id="154" name="blockListeners"/>      
+      <multiplicity id="155" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="22" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

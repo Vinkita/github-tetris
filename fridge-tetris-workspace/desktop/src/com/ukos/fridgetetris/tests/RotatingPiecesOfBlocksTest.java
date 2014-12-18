@@ -19,7 +19,7 @@ import com.ukos.logics.Point;
 /**
  * @author Esko Luontola
  */
-//@Ignore("contains no test") // TODO: uncomment me when you start doing these tests
+//@Ignore("contains no test") 
 @RunWith(NestedJUnit.class)
 public class RotatingPiecesOfBlocksTest extends Assert {
 
