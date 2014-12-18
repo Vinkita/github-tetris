@@ -45,13 +45,12 @@ import com.ukos.tween.BmFontAccessor;
  *
  */
 public class BoardRenderer implements IStopBlockListener{
-//TODO javadoc variables?
+
 	private OrthographicCamera camera;
 	private OrthographicCamera cameraGUI;
 	private SpriteBatch batch;
 	private Board tablero;
 	private ScoreCounter puntos;	
-	TweenManager tweenManager;
 	private int prevCant;
 	
 	//TEXTURAS
@@ -83,11 +82,14 @@ public class BoardRenderer implements IStopBlockListener{
 	private Vector2 boardOffset;
 	private Vector2 previewOffset;
 	
-//ParticleEffect
+	//EFECTO DE PARTICULAS
 	private ParticleEffect particle;
 	private ParticleEffectPool pool;
 	private Array<PooledEffect> effects;
 	private ExplosionChecker explosionChecker = new ExplosionChecker();
+
+	//EFECTO "POPUP" DE PUNTOS
+	TweenManager tweenManager;
 	private Timeline scorePopUp;
 	
 	/**
@@ -197,7 +199,7 @@ public class BoardRenderer implements IStopBlockListener{
 //				tweenManager.update(Gdx.graphics.getDeltaTime());
 	}
 	
-	/**TODO
+	/**
 	 * Calcula y setea las variables relacionadas con las dimensiones de la pantalla:
 	 * <li>{@link #viewportWidth}
 	 * <li>{@link #viewportHeight}
@@ -277,12 +279,12 @@ public class BoardRenderer implements IStopBlockListener{
 	
 	/**
 	 * Asigna las {@link TextureRegion} apropiadas a cada {@link BlockDrawable} 
-	 * mediante su metodo {@link BlockDrawable#setTexture(TextureRegion)}
+	 * mediante su metodo {@link BlockDrawable#setTextureRegion(TextureRegion)}
 	 */
 	private void setupPieceTextures(){
 		for(RotatablePiece piece : Tetromino.allPieces())
 			for(BlockDrawable block : piece.allShapesBlocks())
-				block.setTexture(new TextureRegion(atlas.findRegion(block.getStyle())));
+				block.setTextureRegion(new TextureRegion(atlas.findRegion(block.getStyle())));
 		heladera = atlas.findRegion("Fridge");
 		fondo = atlas.findRegion("Rayas"); 
 	}
@@ -337,7 +339,7 @@ public class BoardRenderer implements IStopBlockListener{
 			BlockDrawable blaux = previewList.get(i);
 			blaux.setSize(w, h);
 			blaux.setStyle(key);
-			blaux.setTexture(prevRegions.get(key));
+			blaux.setTextureRegion(prevRegions.get(key));
 		}
 	}	
 	
@@ -407,7 +409,7 @@ public class BoardRenderer implements IStopBlockListener{
 	}
 	
 	/**
-	 * TODO Muestra el efecto "scorePopUp" por pantalla.
+	 * Muestra el efecto "scorePopUp" por pantalla.
 	 */
 	void renderScorePopUp(){
 		if(puntos.getLastScore() != 0){
@@ -429,9 +431,6 @@ private class ExplosionChecker {
 		private long explodeRate = 5000000;
 		private long lastExplode=0;
 		
-		/*
-		 * OPTIMIZAR EL LLAMADO A getDeletedRows TANTAS VECES!!
-		 */
 		private void checkRowExplosion() {
 			ArrayMap<Integer, TextureRegion[]> deletedRows = tablero.getDeletedRows();
 			
@@ -439,22 +438,22 @@ private class ExplosionChecker {
 				x = 0;
 				deletedRows.clear();
 			}
-			if (deletedRows.size == 4) {
-				Gdx.app.log("Columna:", Integer.toString(x));
-			}
-			if (deletedRows.size > 0) {
-				if (TimeUtils.nanoTime() - lastExplode > explodeRate) {
-					for (int i = 0; i < deletedRows.size; i++) {
-						int y = deletedRows.getKeyAt(i);
-						PooledEffect effect = pool.obtain();
-						effect.setPosition(x+1.5f, y+1.5f);
-						effect.getEmitters().first().setSprite(new Sprite(deletedRows.get(y)[x]));
-						effects.add(effect);
-					}
+			
+			if (deletedRows.size == 0)
+				return;
+			
+			if (TimeUtils.nanoTime() - lastExplode > explodeRate) {
+				for (int i = 0; i < deletedRows.size; i++) {
+					int y = deletedRows.getKeyAt(i);
+					PooledEffect effect = pool.obtain();
+					effect.setPosition(x+1.5f, y+1.5f);
+					effect.getEmitters().get(0).setSprite(new Sprite(deletedRows.get(y)[x]));
+					effect.getEmitters().get(1).setSprite(new Sprite(deletedRows.get(y)[x]));
+					effects.add(effect);
 				}
-				x++;
-				lastExplode=TimeUtils.nanoTime();
 			}
+			x++;
+			lastExplode=TimeUtils.nanoTime();
 		}
 	}
 

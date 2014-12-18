@@ -7,6 +7,9 @@ package com.ukos.logics;
 import com.badlogic.gdx.utils.Array;
 
 /**  
+ * Utilizada para simular el movimiento de una instancia de {@link RotatableGrid}.
+ * <br>El estado de {@code FallingPiece} cambia para reflejar movimento, 
+ * mientras que el de la instancia de {@code RotatableGrid} permanece igual.
  * @author Ukos
  */
 public class FallingPiece implements Cloneable{
@@ -150,7 +153,7 @@ public class FallingPiece implements Cloneable{
     public Array<BlockDrawable> allOuterBlocks(){
     	Array<BlockDrawable> allBlocks = new Array<BlockDrawable>();
     	for (BlockDrawable block : innerPiece.allBlocks())
-    		allBlocks.add(new BlockDrawable(toOuterPoint(block.getPoint()), block.getStyle(), block.isGhost(), block.getTexture()));
+    		allBlocks.add(new BlockDrawable(toOuterPoint(block.getPoint()), block.getStyle(), block.isGhost(), block.getTextureRegion()));
     	return allBlocks;
     }
     

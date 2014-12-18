@@ -36,7 +36,7 @@ import com.ukos.logics.ScoreCounter;
  * Contiene y coordina los elementos necesarios para ejecutar el juego:
  * <li>El tablero
  * <li>La renderizadora del tablero
- * <li>La controladora de movimiento?
+ * <li>La controladora de movimiento de piezas
  * <li>El contador de puntos
  * <li>Las pantallas de "pausa" y "game over"
  * <li>La pantalla de puntuaciones
@@ -82,7 +82,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener,
 	/**
 	 * La musica del juego
 	 */
-	private Music musica;
+	private Music musica;	
+	/**
+	 * Musica despues del nivel 10
+	 */
+	private Music sabre;
 	
 	TweenManager tweenManager = new TweenManager();
 	private int PPM;
@@ -102,16 +106,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener,
 			this.highScores = new HighScoreLayer(new Skin(Gdx.files.internal("ui/mainMenuSkin.json"), 
 												 new TextureAtlas("ui/menu.pack")));
 	}
-
-//	/**
-//	 * Crea una nueva {@code GameScreen}.
-//	 * 
-//	 * @param hs la capa "HighScores" de esta pantalla.
-//	 */
-//	public GameScreen(HighScoreLayer hs) {
-//		this.highScores = hs;
-//		// highScores.setSkin(skin);
-//	}
 
 	/**
 	 * Renderiza la pantalla. Además si el estado del juego es RUNNING, actualiza<br>
@@ -196,7 +190,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener,
 		if(GamePreferences.instance.highscores)
 			stage.addActor(highScores);
 
-		musica = Gdx.audio.newMusic(Gdx.files.internal("music/bicycle.mp3"));
+		musica = Gdx.audio.newMusic(Gdx.files.internal("music/Bradinsky.mp3"));
 
 		Gdx.input.setInputProcessor(new InputMultiplexer(this,
 				new GestureDetector(this), pause.getStage()));
@@ -320,7 +314,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener,
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		if (isRunning()) {
 			return controladora.touchDown(screenX, Gdx.graphics.getHeight()
-					- screenY, PPM);
+					- screenY, PPM, offset);
 			// return true;
 		}
 		return false;
@@ -409,6 +403,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener,
 					highScores.fadein(puntos.getTotalScore());
 				}
 			}
+		} else {
+			if(tablero.getLevel() >= 9 && sabre == null){
+				musica = sabre = Gdx.audio.newMusic(Gdx.files.internal("music/SabreDance.mp3"));;
+				AudioManager.instance.play(musica);
+			}
 		}
 	}
 	
@@ -464,20 +463,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener,
 			return true;
 		}
 		return false;
-//		if (state == State.RUNNING) {
-//			Point punto = new Point((int)(x/PPM) + offset.x, (int)(y/PPM) + offset.y);
-//			if(deltaX > 0){
-//				if(!tablero.getFallingPiece().isAtX(punto)){
-//					controladora.rightPressed();
-//				} else controladora.rightReleased();
-//			} else if(deltaX < 0){
-//				if(!tablero.getFallingPiece().isAtX(punto)){
-//					controladora.leftPressed();
-//				} else controladora.leftReleased();
-//			}
-//			return true;
-//		}
-//		return false;
 	}
 
 	@Override
@@ -505,8 +490,5 @@ public class GameScreen implements Screen, InputProcessor, GestureListener,
 		if(state == State.RUNNING) return true;
 		return false;
 	}
-//	public void setHighScoreLayer(HighScoreLayer layerHighScore) {
-//		highScores = layerHighScore;
-//	}
 
 }

@@ -6,11 +6,15 @@ import java.util.Map;
 import com.badlogic.gdx.math.Vector2;
 import com.ukos.logics.Board;
 
+/**
+ * Controla los movimientos de la pieza cayendo segun los controles ingresados por el usuario.
+ * @author Ukos
+ *
+ */
 public class TetrominoController {
 	
 	private Board tablero;
 	private int horizIters = 0;
-	private float horizPrevPos = 0;
 	private float horizCurPos = 0;
 	
 	public TetrominoController(Board tablero) {
@@ -21,6 +25,10 @@ public class TetrominoController {
 		LEFT, RIGHT, DOWN, UP
 	}
 	
+	/**
+	 * En este mapa se guarda el estado de cada control (si es {@code true} significa que 
+	 * esta siendo presionado)
+	 */
 	static Map<Keys, Boolean> keys = new HashMap<Keys, Boolean>();
 	static {
 		keys.put(Keys.LEFT, false);
@@ -29,83 +37,72 @@ public class TetrominoController {
 		keys.put(Keys.UP, false);
 	}
 
+	/** Cambia el estado de la tecla "izquierda" a {@code true} (presionado) */
 	public void leftPressed() {
 		keys.put(Keys.LEFT, true);
 	}
+	/** Cambia el estado de la tecla "derecha" a {@code true} (presionado) */
 	public void rightPressed() {
 		keys.put(Keys.RIGHT, true);
 	}
+	/** Cambia el estado de la tecla "abajo" a {@code true} (presionado) */
 	public void downPressed() {
 		keys.put(Keys.DOWN, true);
 	}
+	/** Cambia el estado de la tecla "arriba" a {@code true} (presionado) */
 	public void upPressed() {
 		keys.put(Keys.UP, true);
 	}
+	/** Cambia el estado de la tecla "izquierda" a {@code false} (no presionado) */
 	public void leftReleased() {
 		keys.put(Keys.LEFT, false);
 	}
+	/** Cambia el estado de la tecla "derecha" a {@code false} (no presionado) */
 	public void rightReleased() {
 		keys.put(Keys.RIGHT, false);
 	}
+	/** Cambia el estado de la tecla "abajo" a {@code false} (no presionado) */
 	public void downReleased() {
 		keys.put(Keys.DOWN, false);
 	}
+	/** Cambia el estado de la tecla "arriba" a {@code false} (no presionado) */
 	public void upReleased() {
 		keys.put(Keys.UP, false);
 	}
 	
+	/**
+	 * Equivale al metodo {@link #upPressed()}.
+	 */
 	public void tap(){
 		upPressed();
 	}
 	
+	/**
+	 * Mueve la pieza cayendo hacia la izquierda o derecha dependiendo del valor de {@code deltaX}.
+	 * <br>La cantidad de espacios que se mueva la pieza dependera de la relacion entre {@code deltaX} y {@code ppm}
+	 * @param deltaX
+	 * @param ppm
+	 */
 	public void pan(float deltaX, int ppm) {
-		horizPrevPos = horizCurPos;
 		horizCurPos += deltaX;				
-//		horizIters = (int) Math.floor(horizCurPos / ppm);
 		horizIters = (int) Math.copySign(Math.floor(Math.abs(horizCurPos) / ppm), horizCurPos);
 		if(horizIters != 0){
 			for (int i = 0; i < horizIters; i++)			
-				tablero.movePieceToRight();	
+				tablero.testMovePieceToRight();	
 			for (int i = 0; i > horizIters; i--)
-				tablero.movePieceToLeft();
+				tablero.testMovePieceToLeft();
 			horizCurPos = (horizCurPos % horizIters);
 			horizIters = 0;
 		}
 		
 	}
 	
-//	public void pan2(float x, Vector2 offset, int ppm) {
-//		horizPrevPos = horizCurPos;
-//		horizCurPos = (int) (x/ppm) + offset.x;
-//		if(horizCurPos < 0)
-//			horizCurPos = 0;
-//		else if(horizCurPos > tablero.getWidth())
-//			horizCurPos = tablero.getWidth();
-//		if(horizCurPos > tablero.getFallingPiece().getX()){			
-//			while(horizCurPos > tablero.getFallingPiece().getX()){
-//				tablero.movePieceToRight();
-////				horizPrevPos++;
-//			}
-//		} else if (horizCurPos < tablero.getFallingPiece().getX()){
-//			while(horizCurPos < tablero.getFallingPiece().getX()){
-//				tablero.movePieceToLeft();
-////				horizPrevPos--;
-//			}			
-//		}		
-//	}
-//
-	
-	public void pan3(float x, Vector2 offset, int ppm){
-		int pos = (int) (x/ppm + offset.x);
-		tablero.slideToPoint(pos);
-	}
-	
-	/** The main update method. It recalculates the actual inputs. **/
+	/** Recalcula las entradas actuales. **/
 	public void update(float delta) {
 		processInput();
 	}
 
-	/** Change Board's state and parameters based on input controls **/
+	/** Cambia el estado del tablero segun las teclas presionadas. **/
 	private void processInput() {
 		if (keys.get(Keys.LEFT)) {
 			tablero.movePieceToLeft();
@@ -118,12 +115,20 @@ public class TetrominoController {
 		}
 		if (keys.get(Keys.UP)) {
 			tablero.rotatePieceRight();
-			//Only do one rotation per press:
 			upReleased();
 		}
 	}
-	public boolean touchDown(float x, float y, int ppm) {
-		if(y / ppm <=  2){
+	/**
+	 * Equivale a {@link #touchDown(float, float, int, Vector2) touchDown()},
+	 * siempre y cuando el parametro {@code y} este debajo de cierto limite. 
+	 * @param x
+	 * @param y
+	 * @param ppm pixeles por metro
+	 * @param offset
+	 * @return
+	 */
+	public boolean touchDown(float x, float y, int ppm, Vector2 offset) {
+		if((offset.y + y) / ppm <=  4){
 			downPressed();
 			return true;
 		}

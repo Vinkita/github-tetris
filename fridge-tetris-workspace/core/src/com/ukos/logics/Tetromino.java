@@ -46,12 +46,6 @@ public class Tetromino {
 			}
 			
 		}
-		
-//		Usamos este for para ver que se carguen bien los nombres de las texturas
-//		for (Iterator<String[]> aux = colors.values().iterator(); aux.hasNext();) {
-//			for (String aux2 : aux.next())
-//				System.out.println(aux2);
-//		}
 			
 	}	
 	
@@ -143,80 +137,5 @@ public class Tetromino {
     	arraux.add(Z_SHAPE);
     	return arraux;
     }
-    
-//    public Tetromino(int maxRots, int curRotation, String shape) {
-//        this(maxRots, curRotation);
-////        this.shape = this.initialRotation(curRotation, shape);
-//        Piece piece = firstRotation(new Piece(shape), curRotation);
-//        this.rotations = fillRotations(piece, maxRots);
-//    }
-//    
-//    private Piece firstRotation(Piece piece, int curRotation){
-//        for(int i = 0; i < curRotation; i++){
-//            piece = piece.rotateRight();
-//        }
-//        return piece;
-//    }
-//    
-//    private Piece[] fillRotations(Piece piece, int maxRots){
-//        Piece[] arr = new Piece[maxRots];
-//        arr[0] = piece;
-//        for(int i = 1; i < maxRots; i++){
-//            arr[i] = arr[i - 1].rotateRight();
-//        }
-//        return arr;
-//    }
-//    
-//    private Tetromino(int curRotation, Grid[] rotations) {
-//        this(rotations.length, curRotation);
-//        this.rotations = rotations;
-//    }
-//    
-//    private Tetromino(int maxRots, int curRotation) {
-//        if(curRotation >= maxRots)
-//            curRotation = 0;
-//        else if (curRotation < 0)
-//            curRotation = maxRots - 1;
-//        this.curRotation = curRotation;
-//    }
-//    
-//    @Override
-//    public Tetromino rotateRight(){
-//        return new Tetromino(curRotation + 1, rotations);
-//    }
-//    
-//    @Override
-//    public Tetromino rotateLeft(){
-//        return new Tetromino(curRotation - 1, rotations);
-//    }
-//    
-//    private Grid myGrid(){
-//        return rotations[curRotation];
-//    }
-//
-//    @Override
-//    public int rows() {
-//        return myGrid().rows();
-//    }
-//
-//    @Override
-//    public int cols() {
-//        return myGrid().cols();
-//    }
-//
-//    @Override
-//    public char cellAt(Point punto) {
-//        return myGrid().cellAt(punto);
-//    }
-//
-//    @Override
-//    public String toString() {
-//        return GridStatics.toString(this);
-//    }
-//    
-//    @Override
-//    public boolean equals(Object o){
-//        return this.toString().equals(o.toString());
-//    }
-//       
+       
 }

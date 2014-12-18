@@ -1,14 +1,11 @@
 package com.ukos.logics;
 
 /**
- * Se encarga de determinar la velocidad de cada nivel del juego
+ * Se encarga de cambiar la velocidad del juego segun el nivel actual.
  * @author Ukos
  *
  */
 public class LevelHelper {
-//	private int level;
-//	private long lv1autoFallRate = 1000000000;
-//	private long lv1moveRate     = 200000000;
 
 	/**
 	 * Setea la velocidad de caida de las piezas según el nivel actual

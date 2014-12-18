@@ -47,11 +47,11 @@ public class BlockDrawable implements Cloneable{
 //		init(point, style, false);
 //	}
 
-	public TextureRegion getTexture() {
+	public TextureRegion getTextureRegion() {
 		return texture;
 	}
 
-	public void setTexture(TextureRegion texture) {
+	public void setTextureRegion(TextureRegion texture) {
 		this.texture = texture;
 	}
 

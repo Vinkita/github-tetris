@@ -24,7 +24,6 @@ public class ScoreService {
 	/**
 	 * Recupera y lee el archivo donde se guardan las puntuaciones. 
 	 * La informacion obtenida es luego convertida de formato JSON a un objeto {@code HighScores}.
-	 * TODO no me gusta.
 	 * @return 
 	 */
 	public static HighScores retrieveScores() {
@@ -55,9 +54,8 @@ public class ScoreService {
 	}
 
 	/**
-	 * Convierte {@code scores} a un String en formato JSON, para luego guardarlo en el archivo de scores.
+	 * Convierte {@code scores} a un String en formato JSON, lo codifica en formato Base64, y lo guarda en un archivo.
 	 * @param scores la instancia de {@code HighScores} a ser persistida.
-	 * TODO no me gusta.
 	 */
 	protected static void persist(HighScores scores) {
 		Json json = new Json();
@@ -91,13 +89,11 @@ public class ScoreService {
 	}
 	
 	/**
-	 * TODO filehandle
-	 * @return
+	 * @return la instancia de {@code FileHandle} apropiada segun el tipo de aplicacion. 
 	 */
 	private static FileHandle getFileHandle(){
 		FileHandle auxHandle;
-		//TODO probar en tablet
-		if(Gdx.app.getType() == ApplicationType.Android)// && !Gdx.files.isExternalStorageAvailable())			
+		if(Gdx.app.getType() == ApplicationType.Android)			
 			auxHandle = Gdx.files.local(PROFILE_DATA_FILE);
 		else
 			auxHandle = Gdx.files.external(PROFILE_DATA_FILE);

@@ -1,9 +1,8 @@
 package com.ukos.tween;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-
 import aurelienribon.tweenengine.TweenAccessor;
+
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 public class BmFontAccessor implements TweenAccessor<BitmapFont> {
 	

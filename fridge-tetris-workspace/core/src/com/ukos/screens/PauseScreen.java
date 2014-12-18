@@ -46,13 +46,11 @@ public class PauseScreen extends TransluscentMenuScreen {
 			
 			@Override
 			public void onEvent(int type, BaseTween<?> source) {
-//				GameScreen.releasePause();
 				fireEvent(Event.FADE_OUT_PAUSE);
 			}
 		});
 		
 		tweenManager.update(Gdx.graphics.getDeltaTime());
-//		table.setVisible(false);
 	}
 	
 	

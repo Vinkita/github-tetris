@@ -111,8 +111,14 @@ public class AudioManager {
 		if (playingMusic == null)
 			return;
 		playingMusic.setVolume(GamePreferences.instance.musicVolume);
-		if(GamePreferences.instance.music)
-			playingMusic.play();		
+		if(GamePreferences.instance.music){
+			if(!playingMusic.isPlaying())
+				playingMusic.play();
+			else {
+				playingMusic.pause();
+				playingMusic.play();
+			}
+		}
 		else
 			playingMusic.stop();;
 	}

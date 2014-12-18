@@ -62,6 +62,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
 },
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	default: { font: default-font, fontColor: white },
+	default-red: { font: default-font, fontColor: red },
 	blueLarge: { "font": opificio64, "fontColor": lightBlue },
 	blueMedium: { "font": opificio32, "fontColor": lightBlue },
 	tetrisSmall: { "font": opificio20, "fontColor": white },

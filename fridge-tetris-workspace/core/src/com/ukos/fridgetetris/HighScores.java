@@ -8,7 +8,8 @@ import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.JsonValue;
 
 /**
- * TODO descripcion de la clase.
+ * Contiene una lista de {@link HighScore} ordenada de mayor a menor segun el valor de {@link HighScore#score}.
+ * 
  * @author Ukos
  */
 public class HighScores implements Serializable{
@@ -24,22 +25,28 @@ public class HighScores implements Serializable{
 	}
 		
 	/**
-	 * Agrega, de manera ordenada, un nuevo {@code HighScore} a {@code scores}.
-	 * TODO <strike>de manera ordenada</strike>?
+	 * Agrega, un nuevo {@code HighScore} a {@code scores}.
+	 * <br>El lugar del nuevo {@code HighScore} en el Array sera determinado por el valor de {@link HighScore#score score}
 	 * @param newScore
+	 * @return la posicion del nuevo elemento en el arreglo, o -1 si este no pudo insertarse.
 	 */
-	public void add(HighScore newScore){
+	public int add(HighScore newScore){
 		boolean flag = false;
+		int rank = -1;
 		for (int i = 0, j = scores.size; i < j && !flag; i++){
 			if(newScore.compareTo(scores.get(i)) > 0){
 				flag = true;
 				scores.insert(i, newScore);
+				rank = i;
 			}
 		}
-		if(flag == false && scores.size < listSize)
+		if(flag == false && scores.size < listSize){
 			scores.add(newScore);
+			rank = scores.size - 1;
+		}
 		if(scores.size > listSize)
-			scores.removeRange(listSize - 1, scores.size - 1);		
+			scores.removeRange(listSize - 1, scores.size - 1);	
+		return rank;
 	}
 	
 	/**
@@ -55,7 +62,7 @@ public class HighScores implements Serializable{
 		return scores;
 	}
 	
-	/* TODO (non-Javadoc)
+	/* (non-Javadoc)
 	 * @see com.badlogic.gdx.utils.Json.Serializable#read(com.badlogic.gdx.utils.Json, com.badlogic.gdx.utils.JsonValue)
 	 */
 	@Override
@@ -66,7 +73,7 @@ public class HighScores implements Serializable{
 		this.scores.addAll(json.readValue( "highScores", Array.class, HighScore.class, jsonData ));		
 	}
 
-	/* TODO (non-Javadoc)
+	/* (non-Javadoc)
 	 * @see com.badlogic.gdx.utils.Json.Serializable#write(com.badlogic.gdx.utils.Json)
 	 */
 	@Override

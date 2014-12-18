@@ -45,10 +45,6 @@ public abstract class TransluscentMenuScreen extends Observable{
 	TextButton buttonBack;
 	TextButton buttonMenu;
 	TextButton buttonExit;
-
-//	public PauseScreen(){
-//		this(new Stage(), new Skin(new TextureAtlas("ui/menu.pack")));
-//	}
 	
 	/**
 	 * Crea una nueva pantalla.
@@ -66,8 +62,7 @@ public abstract class TransluscentMenuScreen extends Observable{
 	}
 	
 	/**
-	 * Define los textos apropiados segun cada subclase.
-	 * TODO explicar mejor (Template)
+	 * Define las "Etiquetas" de los botones y el titulo de la pantalla.
 	 */
 	protected abstract void setStrings();
 	/**
@@ -101,13 +96,11 @@ public abstract class TransluscentMenuScreen extends Observable{
 		
 		table.debug();
 		
-//		tweenManager = new TweenManager();
 		Tween.registerAccessor(Actor.class, new ActorAccessor());
 	}
 	
 	/**
 	 * Instancia y configura los botones del menu. 
-	 * TODO explicar template?
 	 */
 	private void setupButtons(){
 		setStrings();

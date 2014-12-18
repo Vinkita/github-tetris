@@ -12,14 +12,14 @@ mainIce
   index: -1
 title
   rotate: false
-  xy: 480, 516
-  size: 469, 221
-  orig: 469, 221
+  xy: 480, 657
+  size: 461, 80
+  orig: 461, 80
   offset: 0, 0
   index: -1
 blue.down
   rotate: false
-  xy: 480, 465
+  xy: 480, 606
   size: 51, 51
   split: 24, 24, 24, 24
   orig: 51, 51
@@ -27,7 +27,7 @@ blue.down
   index: -1
 blue.up
   rotate: false
-  xy: 480, 414
+  xy: 480, 555
   size: 51, 51
   split: 24, 24, 24, 24
   orig: 51, 51
@@ -35,7 +35,7 @@ blue.up
   index: -1
 green.down
   rotate: false
-  xy: 531, 465
+  xy: 531, 606
   size: 51, 51
   split: 24, 24, 24, 24
   orig: 51, 51
@@ -43,7 +43,7 @@ green.down
   index: -1
 green.up
   rotate: false
-  xy: 480, 363
+  xy: 480, 504
   size: 51, 51
   split: 24, 24, 24, 24
   orig: 51, 51
@@ -51,7 +51,7 @@ green.up
   index: -1
 orange.down
   rotate: false
-  xy: 531, 414
+  xy: 531, 555
   size: 51, 51
   split: 24, 24, 24, 24
   orig: 51, 51
@@ -59,7 +59,7 @@ orange.down
   index: -1
 orange.up
   rotate: false
-  xy: 582, 465
+  xy: 582, 606
   size: 51, 51
   split: 24, 24, 24, 24
   orig: 51, 51
@@ -67,7 +67,7 @@ orange.up
   index: -1
 pink.down
   rotate: false
-  xy: 480, 312
+  xy: 480, 453
   size: 51, 51
   split: 24, 24, 24, 24
   orig: 51, 51
@@ -75,7 +75,7 @@ pink.down
   index: -1
 pink.up
   rotate: false
-  xy: 531, 363
+  xy: 531, 504
   size: 51, 51
   split: 24, 24, 24, 24
   orig: 51, 51
@@ -83,14 +83,14 @@ pink.up
   index: -1
 tick.off
   rotate: false
-  xy: 582, 437
+  xy: 582, 578
   size: 28, 28
   orig: 28, 28
   offset: 0, 0
   index: -1
 tick.on
   rotate: false
-  xy: 633, 488
+  xy: 633, 629
   size: 28, 28
   orig: 28, 28
   offset: 0, 0
@@ -104,7 +104,7 @@ black
   index: -1
 black50
   rotate: false
-  xy: 949, 736
+  xy: 941, 736
   size: 1, 1
   orig: 1, 1
   offset: 0, 0

@@ -3,7 +3,8 @@ package com.ukos.logics;
 import com.badlogic.gdx.math.Vector2;
 
 /**
- * Igual al Vector2 pero inmutable TODO explicar como un ser humano
+ * Representa la posicion de un elemento.
+ * <br> Es similar a la clase {@link Vector2}, con la diferencia de que {@code Point} que inmutable.
  * @author Ukita
  */
 public class Point{

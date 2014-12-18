@@ -30,7 +30,7 @@ public class GamePreferences {
 	public float soundVolume;
 	/** Indica el volumen de la musica. */
 	public float musicVolume;
-	/** Indica si las puntuaciones mas altas estan activadas. TODO highscores suena feo */
+	/** Indica si las "High Scores" estan activados. */
 	public boolean highscores;
 	/** Indica si debe cifrarse el archivo de puntuaciones */
 	public boolean encrypt;
@@ -44,12 +44,12 @@ public class GamePreferences {
 	private Preferences prefs;
 
 	
-	/** Las posibles cantidades de fichas a mostrar en la vista previa TODO queda bien?*/ 
+	/** Las posibles cantidades de fichas a mostrar en la vista previa */ 
 	public static Integer[] PreviewNumbers = 
 			new Integer[]{ 0,1,2,3 };
 	
 	/**
-	 * Recupera la instancia de {@link GamePreferences} de la aplicacion. TODO si?
+	 * Recupera la instancia de {@link GamePreferences} de la aplicacion.
 	 * El constructor es privado para evitar instanciacion por parte de otras clases y
 	 * asegurar que solo exista una instancia de esta clase (Singleton).
 	 */

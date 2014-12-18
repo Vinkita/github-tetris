@@ -89,15 +89,10 @@ public class HighScoreLayer extends Stack {
 	public HighScoreLayer(Skin skin) {
 		scores = ScoreService.retrieveScores();
 		this.skin = skin;
-		this.setFillParent(true);	
-//		this.bottom().left();
-//		this.setBackground(skin.getDrawable("black50"));
+		this.setFillParent(true);
 		tweenManager = new TweenManager();
 		setupButtons();
 		
-//		scoresLayer = new Table();
-//		buttonsLayer = new Table();
-//		tabla.setBackground(skin.getDrawable("black50"));
 		backgroundLayer = buildBackgroundLayer();
 		scoresLayer = rebuildScores(scoresLayer);
 		buttonsLayer = buildButtonsLayer();
@@ -126,6 +121,7 @@ public class HighScoreLayer extends Stack {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				fadeOut();
+				rebuildScores(scoresLayer);
 			}
 		});
 		backButton.addListener(new ClickListener(){
@@ -139,9 +135,7 @@ public class HighScoreLayer extends Stack {
 		okButton.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				scores.add(new HighScore(txtName.getText(), newScore));
-				ScoreService.persist();
-				rebuildScores(scoresLayer);
+				persistScore();
 				Timeline.createSequence().beginSequence()
 				.push(Tween.to(dialogLayer, ActorAccessor.ALPHA, .5f).target(0))
 				.push(Tween.set(dialogLayer, ActorAccessor.VISIBILITY).target(0))
@@ -149,7 +143,7 @@ public class HighScoreLayer extends Stack {
 			}
 		});
 	}
-
+	
 	/**
 	 * Construye la capa "Background".
 	 * @return la capa "Background".
@@ -174,29 +168,42 @@ public class HighScoreLayer extends Stack {
 	
 	/**
 	 * Construye (o reconstruye, segun el caso) la capa "Scores".
+	 * <br> La última puntuacion obtenida es resaltada. 
 	 * @param taux
+	 * @param latestScore la ultima puntuacion en ser agregada
 	 * @return La capa "Scores".
 	 */
-	private Table rebuildScores(Table taux) {
-		if(taux != null){
+	private Table rebuildScores(Table taux, int latestScore) {
+		if(taux != null)
 			taux.clear();			
-		} else {
+		else 
 			taux = new Table();
-			taux.debug();
-		}
+		if(latestScore > -1) latestScore++;
+		
 		taux.add().prefWidth(8*30);
 		taux.add().prefWidth(8*10).row();
 		int i = 1;
+		String style = "default";
 		for (HighScore hs : scores.getList()){
-			taux.add(new Label(i + ". " + hs.name, skin)).left();
-			taux.add(new Label("" + hs.score, skin)).right();
+			if(latestScore == i)
+				style = "default-red";
+			else 
+				style = "default";
+			taux.add(new Label(i + ". " + hs.name, skin, style)).left();
+			taux.add(new Label("" + hs.score, skin, style)).right();
 			taux.row();
 			i++;
 		}		
 		
-//		taux.add(backButton).bottom().center();
-//		taux.add(fadeOutButton).bottom().center();
 		return taux;
+	}
+	/**
+	 * Construye (o reconstruye, segun el caso) la capa "Scores".
+	 * @param taux
+	 * @return La capa "Scores".
+	 */
+	private Table rebuildScores(Table taux) {
+		return rebuildScores(taux, -1);
 	}
 	
 	/**
@@ -205,7 +212,7 @@ public class HighScoreLayer extends Stack {
 	 */
 	private Table setupDialog() {
 		Table tbaux = new Table();
-		Window taux = new Window("", skin);//, "dialog");
+		Window taux = new Window("", skin);
 		taux.setModal(true);
 		lblName = new Label("Name: ", skin, "tetrisSmall");
 		txtName = new TextField("", skin);
@@ -222,6 +229,15 @@ public class HighScoreLayer extends Stack {
 		return tbaux;
 	}
 
+	/**
+	 * Inserta una nueva instancia de HighScores en {@code scores} y persiste los cambios.
+	 */
+	private void persistScore(){
+		int rank = scores.add(new HighScore(txtName.getText(), newScore));
+		ScoreService.persist();
+		rebuildScores(scoresLayer, rank);
+	}
+	
 	/**
 	 * Muestra esta {@code HighScoreLayer}, haciendola visible gradualmente.
 	 */
@@ -249,21 +265,12 @@ public class HighScoreLayer extends Stack {
 		dialogLayer.setVisible(true);
 		dialogLayer.getColor().a = 1;
 		fadein();
-		Timeline.createSequence().beginSequence()
-		.push(Tween.set(this, ActorAccessor.ALPHA).target(0))		
-		.push(Tween.set(this, ActorAccessor.VISIBILITY).target(1))
-		.push(Tween.set(dialogLayer, ActorAccessor.VISIBILITY).target(1))
-		.push(Tween.set(dialogLayer, ActorAccessor.ALPHA).target(1))
-		.push(Tween.to(this, ActorAccessor.ALPHA, .5f).target(1))
-		.end().start(tweenManager);
 	}
 	
 	/**
 	 * Esconde esta {@code HighScoreLayer}, desvaneciendola gradualmente.  
 	 */
 	public void fadeOut() {
-//		okButton.setVisible(true);
-//		fadeOutButton.setVisible(false);
 		Timeline.createSequence().beginSequence()
 		.push(Tween.to(this, ActorAccessor.ALPHA, .5f).target(0))
 		.push(Tween.set(dialogLayer, ActorAccessor.VISIBILITY).target(0))

@@ -9,6 +9,7 @@ import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -46,6 +47,7 @@ public class MainMenu implements Screen {
 	private Table layerSettings;
 	private HighScoreLayer layerHighScore;
 	private TweenManager tweenManager;
+	private Music menuMusic;
 	
 	//Main menu
 	TextButton buttonPlay;
@@ -65,9 +67,7 @@ public class MainMenu implements Screen {
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-//		TextButton.drawDebug(stage);
-		
+				
 		stage.act(delta);		
 		stage.draw();		
 		
@@ -80,9 +80,6 @@ public class MainMenu implements Screen {
 		stage.setViewport(new ExtendViewport(width, height));
 		stage.getViewport().update(width, height, true);
 		stack.invalidateHierarchy();
-//		layerBackground.invalidateHierarchy();
-//		layerMenu.invalidateHierarchy();
-//		layerSettings.invalidateHierarchy();
 	}
 
 	@Override
@@ -93,16 +90,9 @@ public class MainMenu implements Screen {
 
 		skin = new Skin(Gdx.files.internal("ui/mainMenuSkin.json"), new TextureAtlas("ui/menu.pack"));
 		
-		
-//		stage.addActor(imgBackground);
-		
 		layerBackground = buildBackgroundLayer();
 		layerMenu = buildMenuLayer();
 		layerSettings = buildSettingsLayer();
-//		layerHighScore.debug();
-//		layerHighScore.background(skin.getDrawable("black"));//borrar estas dos lineas
-//		layerHighScore.setColor(layerHighScore.getColor().r, layerHighScore.getColor().g, layerHighScore.getColor().b, .5f);
-//		layerHighScore.setVisible(true);
 		
 		stack = new Stack();
 		stack.setFillParent(true);
@@ -116,7 +106,9 @@ public class MainMenu implements Screen {
 			layerHighScore.setPreviousLayer(layerMenu);
 			stack.add(layerHighScore);
 		}
-//		layerSettings.setX(Gdx.graphics.getWidth());
+		
+		menuMusic = Gdx.audio.newMusic(Gdx.files.internal("music/Main Menu.mp3"));
+		AudioManager.instance.play(menuMusic);
 		showMenu();
 		
 
@@ -151,8 +143,6 @@ public class MainMenu implements Screen {
 	private Table buildBackgroundLayer(){
 		Table auxBG = new Table(skin);
 		auxBG.setFillParent(true);
-//		imgBackground = new Image(skin.getDrawable("mainIce"));
-//		imgBackground.setFillParent(true);
 		auxBG.setBackground(skin.getDrawable("mainIce"));
 		return auxBG;
 	}
@@ -168,18 +158,16 @@ public class MainMenu implements Screen {
 	 */
 	private Table buildMenuLayer(){
 		Table auxMenu = new Table(skin);
-		auxMenu.setFillParent(true);		
-//		auxMenu.debug();
+		auxMenu.setFillParent(true);
 		int buttonPad = 10;
 				
 		heading = new Image(skin.getDrawable("title"));
 		
-//		creating buttons
+//		CREACION DE BOTONES
 		buttonPlay = new TextButton("PLAY", skin, "pink");
 		buttonPlay.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-//				((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(layerHighScore));
 				((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen());
 			}
 		});
@@ -200,7 +188,6 @@ public class MainMenu implements Screen {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
 					showScores();
-	//				layerHighScore.fadein(10000);
 				}
 			});
 			buttonScores.pad(buttonPad);
@@ -216,7 +203,6 @@ public class MainMenu implements Screen {
 				.setCallback(new TweenCallback() {					
 					@Override
 					public void onEvent(int type, BaseTween<?> source) {
-//						((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenu());
 						Gdx.app.exit();
 					}
 				})
@@ -284,7 +270,6 @@ public class MainMenu implements Screen {
 			}
 		});
 		
-//		auxSett.add(heading).spaceBottom(100).row();
 		win.add(new Label("SETTINGS", skin, "tetris")).colspan(2).spaceBottom(100).row();
 		win.add(new Label("Game", skin, "blueMedium")).colspan(2).row();
 		win.add(chkGhost).left().padLeft(5).padBottom(10).row();
@@ -292,7 +277,7 @@ public class MainMenu implements Screen {
 		win.add(selNumPrevs).fillX().colspan(2).pad(0, 5, 0, 5).row();
 		win.add(buildAudioMenu()).colspan(2).fillX().padTop(15).row();
 		win.add().padBottom(50).row();
-		win.add(buttonSave).width(buttonCancel.getWidth()).uniformX();//.width(buttonWidth);
+		win.add(buttonSave).width(buttonCancel.getWidth()).uniformX();
 		win.add(buttonCancel).uniformX();
 		
 		auxSett.add(win);
@@ -346,11 +331,11 @@ public class MainMenu implements Screen {
 	 * (solo se muestra la capa background) y el menu principal.
 	 */
 	private void showMenu(){
-//		creating animations
+//		CREACION DE ANIMACIONES
 		tweenManager = new TweenManager();
 		Tween.registerAccessor(Actor.class, new ActorAccessor());
 		
-//		heading and buttons fade-in
+//		ANIMACION DE ENCABEZADO Y BOTONES
 		if(GamePreferences.instance.highscores){			
 		Timeline.createSequence().beginSequence()
 			.push(Tween.set(buttonPlay, ActorAccessor.ALPHA).target(0))
@@ -376,7 +361,7 @@ public class MainMenu implements Screen {
 			.end().start(tweenManager);
 		}
 
-		//	table fade-in
+		//	ANIMACION DE LA TABLA "MENU"
 		Tween.from(layerMenu, ActorAccessor.ALPHA, .5f).target(0).start(tweenManager);
 		Tween.from(layerMenu, ActorAccessor.Y, .5f).target(Gdx.graphics.getHeight() / 4).start(tweenManager);
 		
@@ -411,7 +396,6 @@ public class MainMenu implements Screen {
 	 */
 	private void hideSettings(){
 		Timeline.createSequence().beginSequence()
-//		.push(Tween.set(layerMenu, ActorAccessor.X).target(layerMenu.getWidth()))
 		.push(Tween.set(layerMenu, ActorAccessor.X).target(-layerMenu.getWidth()))
 		.push(Tween.set(layerMenu, ActorAccessor.VISIBILITY).target(1))
 		.push(
@@ -444,21 +428,5 @@ public class MainMenu implements Screen {
 		.end().start(tweenManager);
 		tweenManager.update(Gdx.graphics.getDeltaTime());
 	}
-	
-//	private void hideScores(){
-//		Timeline.createSequence().beginSequence()
-////		.push(Tween.set(layerMenu, ActorAccessor.X).target(layerMenu.getWidth()))
-//		.push(Tween.set(layerMenu, ActorAccessor.X).target(layerMenu.getWidth()))
-//		.push(Tween.set(layerMenu, ActorAccessor.VISIBILITY).target(1))
-//		.push(
-//			Timeline.createParallel().beginParallel()
-//			.push(Tween.to(layerHighScore, ActorAccessor.X, .8f).target(-layerHighScore.getWidth()))
-//			.push(Tween.to(layerMenu, ActorAccessor.X, .8f).target(0))
-//			.end()
-//		)		
-//		.push(Tween.set(layerHighScore, ActorAccessor.VISIBILITY).target(0))
-//		.end().start(tweenManager);
-//		tweenManager.update(Gdx.graphics.getDeltaTime());
-//	}
 
 }
