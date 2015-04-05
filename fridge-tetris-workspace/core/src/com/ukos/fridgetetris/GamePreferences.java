@@ -73,7 +73,7 @@ public class GamePreferences {
 		soundVolume = MathUtils.clamp(prefs.getFloat("soundVolume", 1), 0, 1);
 		musicVolume = MathUtils.clamp(prefs.getFloat("musicVolume", 1), 0, 1);
 		highscores = prefs.getBoolean("highscores", true);
-		encrypt = prefs.getBoolean("encrypt", false);
+		encrypt = prefs.getBoolean("encrypt", true);
 		scoresEncrypted = prefs.getBoolean("scoresEncrypted", false);
 	}
 	

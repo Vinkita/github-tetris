@@ -86,6 +86,7 @@ public class Board implements Grid{
     	falling = null;
     	gameOver = false;
     	level = 0;
+    	totalRows = 0;
     	LevelHelper.setLevelSpeed(level, this);
     }
     
@@ -737,6 +738,10 @@ public class Board implements Grid{
 	 */
 	protected void setMoveRate(long moveRate) {
 		this.moveRate = moveRate;
+	}
+
+	public void hardDrop() {
+		while(moveIfNoConflict(falling.moveDown(), falling));		
 	}
 
 	

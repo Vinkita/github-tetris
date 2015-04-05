@@ -90,6 +90,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener,
 	TweenManager tweenManager = new TweenManager();
 	private int PPM;
 	private Vector2 offset;
+	private Vector2 lastTouched;
+	private Vector2 newTouched;
 
 	private enum State {
 		READY, RUNNING, PAUSED, OVER
@@ -190,6 +192,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener,
 			stage.addActor(highScores);
 
 		musica = Gdx.audio.newMusic(Gdx.files.internal("music/Bradinsky.mp3"));
+		
+		lastTouched = new Vector2();
+		newTouched = new Vector2();
 
 		Gdx.input.setInputProcessor(new InputMultiplexer(this,
 				new GestureDetector(this), pause.getStage()));
@@ -448,6 +453,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener,
 
 	@Override
 	public boolean fling(float velocityX, float velocityY, int button) {
+		if (velocityY > 0)
+			controladora.swipeDown();
 		return false;
 	}
 

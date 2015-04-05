@@ -136,5 +136,10 @@ public class TetrominoController {
 		
 	}
 	
+	public boolean swipeDown(){
+		tablero.hardDrop();
+		return false;
+	}
+	
 
 }

@@ -49,6 +49,7 @@ public class GameOverScreen extends TransluscentMenuScreen {
 		.push(Tween.to(black, ActorAccessor.ALPHA, .5f).target(1))
 		.push(Tween.set(table, ActorAccessor.ALPHA).target(0))
 		.push(Tween.to(black, ActorAccessor.ALPHA, 1f).target(0))
+		.push(Tween.set(black, ActorAccessor.VISIBILITY).target(0.0f))
 		.push(Tween.set(table, ActorAccessor.VISIBILITY).target(0.0f))
 		.end().start(tweenManager).setCallback(new TweenCallback() {
 			
